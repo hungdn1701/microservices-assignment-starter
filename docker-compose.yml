@@ -1,16 +1,292 @@
-version: '3.8'
 services:
-  service-a:
-    build: ./services/service-a
+  # Database
+  postgres:
+    image: postgres:13
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=healthcare_default
     ports:
-      - "5001:5000"
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-  service-b:
-    build: ./services/service-b
-    ports:
-      - "5002:5000"
+  # Common Auth Library
+  common-auth:
+    build: ./services/common-auth
+    volumes:
+      - ./services/common-auth:/app
 
-  gateway:
-    build: ./gateway
+  # Redis for caching, session management and message broker
+  redis:
+    image: redis:7-alpine
     ports:
-      - "8080:8000"
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # API Gateway
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "4000:4000"
+      - "4443:4443"
+    environment:
+      - PORT=4000
+      - HTTPS_PORT=4443
+      - HTTPS_ENABLED=${HTTPS_ENABLED:-false}
+      - NODE_ENV=${NODE_ENV:-development}
+      - JWT_SECRET=${JWT_SECRET:-HS256_JWT_SECRET_KEY_SHOULD_BE_AT_LEAST_32_CHARS_LONG}
+      - REDIS_URL=redis://redis:6379/0
+      - SESSION_TTL=86400
+      - SESSION_COOKIE_NAME=healthcare_session
+      - SESSION_COOKIE_SECURE=false
+      - SESSION_COOKIE_HTTPONLY=true
+      - SESSION_COOKIE_SAMESITE=Lax
+      - MAX_SESSIONS_PER_USER=5
+      - ROTATE_REFRESH_TOKENS=false
+      - USER_SERVICE_URL=http://user-service:8000
+      - MEDICAL_RECORD_SERVICE_URL=http://medical-record-service:8001
+      - APPOINTMENT_SERVICE_URL=http://appointment-service:8002
+      - BILLING_SERVICE_URL=http://billing-service:8003
+      - PHARMACY_SERVICE_URL=http://pharmacy-service:8004
+      - LAB_SERVICE_URL=http://laboratory-service:8005
+      - NOTIFICATION_SERVICE_URL=http://notification-service:8006
+      - FRONTEND_URL=${FRONTEND_URL:-http://localhost:3000}
+    command: >
+      sh -c "
+        npm install swagger-jsdoc swagger-ui-express yamljs &&
+        npm start
+      "
+    depends_on:
+      - redis
+      - user-service
+    volumes:
+      - ./api-gateway:/app:delegated
+      - api_gateway_node_modules:/app/node_modules
+
+  # User Service (Authentication, Authorization & User Management)
+  user-service:
+    build:
+      context: .
+      dockerfile: ./services/user-service/Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    environment:
+      - DEBUG=True
+      - SECRET_KEY=your_secret_key
+      - JWT_SECRET=${JWT_SECRET:-HS256_JWT_SECRET_KEY_SHOULD_BE_AT_LEAST_32_CHARS_LONG}
+      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/healthcare_user
+      - REDIS_URL=redis://redis:6379/0
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./services/user-service:/app
+      - ./services/common-auth:/app/common-auth
+      - api_specs:/api-specs
+
+  # Medical Record Service
+  medical-record-service:
+    build:
+      context: .
+      dockerfile: ./services/medical-record-service/Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    environment:
+      - DEBUG=True
+      - SECRET_KEY=your_secret_key
+      - JWT_SECRET=${JWT_SECRET:-HS256_JWT_SECRET_KEY_SHOULD_BE_AT_LEAST_32_CHARS_LONG}
+      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/healthcare_medical
+      - REDIS_URL=redis://redis:6379/0
+      - API_GATEWAY_URL=http://api-gateway:4000
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./services/medical-record-service:/app
+      - ./services/common-auth:/app/common-auth
+      - api_specs:/api-specs
+
+  # Appointment Service
+  appointment-service:
+    build:
+      context: .
+      dockerfile: ./services/appointment-service/Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    environment:
+      - DEBUG=True
+      - SECRET_KEY=your_secret_key
+      - JWT_SECRET=${JWT_SECRET:-HS256_JWT_SECRET_KEY_SHOULD_BE_AT_LEAST_32_CHARS_LONG}
+      - DATABASE_NAME=healthcare_appointments
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=postgres
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+      - API_GATEWAY_URL=http://api-gateway:4000
+      - USER_SERVICE_URL=http://user-service:8000
+      - MEDICAL_RECORD_SERVICE_URL=http://medical-record-service:8001
+      - PHARMACY_SERVICE_URL=http://pharmacy-service:8004
+      - LAB_SERVICE_URL=http://laboratory-service:8005
+      - NOTIFICATION_SERVICE_URL=http://notification-service:8006
+    ports:
+      - "8002:8002"
+    volumes:
+      - ./services/appointment-service:/app
+      - ./services/common-auth:/app/common-auth
+      - api_specs:/api-specs
+
+  # Billing Service
+  billing-service:
+    build:
+      context: .
+      dockerfile: ./services/billing-service/Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    environment:
+      - DEBUG=True
+      - SECRET_KEY=your_secret_key
+      - JWT_SECRET=${JWT_SECRET:-HS256_JWT_SECRET_KEY_SHOULD_BE_AT_LEAST_32_CHARS_LONG}
+      - DATABASE_NAME=healthcare_billing
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=postgres
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+      - API_GATEWAY_URL=http://api-gateway:4000
+      - USER_SERVICE_URL=http://user-service:8000
+      - MEDICAL_RECORD_SERVICE_URL=http://medical-record-service:8001
+    ports:
+      - "8003:8003"
+    volumes:
+      - ./services/billing-service:/app
+      - ./services/common-auth:/app/common-auth
+      - api_specs:/api-specs
+
+  # Pharmacy Service
+  pharmacy-service:
+    build:
+      context: .
+      dockerfile: ./services/pharmacy-service/Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    environment:
+      - DEBUG=True
+      - SECRET_KEY=your_secret_key
+      - JWT_SECRET=${JWT_SECRET:-HS256_JWT_SECRET_KEY_SHOULD_BE_AT_LEAST_32_CHARS_LONG}
+      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/healthcare_pharmacy
+      - API_GATEWAY_URL=http://api-gateway:4000
+      - USER_SERVICE_URL=http://user-service:8000
+      - MEDICAL_RECORD_SERVICE_URL=http://medical-record-service:8001
+    ports:
+      - "8004:8004"
+    volumes:
+      - ./services/pharmacy-service:/app
+      - ./services/common-auth:/app/common-auth
+      - api_specs:/api-specs
+
+  # Notification Service
+  notification-service:
+    build:
+      context: .
+      dockerfile: ./services/notification-service/Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    environment:
+      - DEBUG=True
+      - SECRET_KEY=your_secret_key
+      - JWT_SECRET=${JWT_SECRET:-HS256_JWT_SECRET_KEY_SHOULD_BE_AT_LEAST_32_CHARS_LONG}
+      - DATABASE_NAME=healthcare_notification
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=postgres
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+      - API_GATEWAY_URL=http://api-gateway:4000
+      - USER_SERVICE_URL=http://user-service:8000
+      - MEDICAL_RECORD_SERVICE_URL=http://medical-record-service:8001
+      - APPOINTMENT_SERVICE_URL=http://appointment-service:8002
+      - BILLING_SERVICE_URL=http://billing-service:8003
+      - PHARMACY_SERVICE_URL=http://pharmacy-service:8004
+      - LABORATORY_SERVICE_URL=http://laboratory-service:8005
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - CHANNEL_LAYERS_HOST=redis://redis:6379/1
+    ports:
+      - "8006:8006"
+    volumes:
+      - ./services/notification-service:/app
+      - ./services/common-auth:/app/common-auth
+      - api_specs:/api-specs
+    command: >  # Override the default command to run Daphne for WebSocket support
+      sh -c "
+        python manage.py migrate &&
+        python manage.py collectstatic --noinput &&
+        daphne -b 0.0.0.0 -p 8006 core.asgi:application
+      "
+
+  # Laboratory Service
+  laboratory-service:
+    build:
+      context: .
+      dockerfile: ./services/laboratory-service/Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    environment:
+      - DEBUG=True
+      - SECRET_KEY=your_secret_key
+      - JWT_SECRET=${JWT_SECRET:-HS256_JWT_SECRET_KEY_SHOULD_BE_AT_LEAST_32_CHARS_LONG}
+      - DATABASE_NAME=healthcare_laboratory
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=postgres
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+      - API_GATEWAY_URL=http://api-gateway:4000
+      - USER_SERVICE_URL=http://user-service:8000
+      - MEDICAL_RECORD_SERVICE_URL=http://medical-record-service:8001
+    ports:
+      - "8005:8005"
+    volumes:
+      - ./services/laboratory-service:/app
+      - ./services/common-auth:/app/common-auth
+      - api_specs:/api-specs
+
+volumes:
+  postgres_data:
+  redis_data:
+  api_gateway_node_modules:
+  api_specs:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${PWD}/docs/api-specs

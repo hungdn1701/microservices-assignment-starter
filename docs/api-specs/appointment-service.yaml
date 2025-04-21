@@ -1,0 +1,1829 @@
+swagger: '2.0'
+info:
+  title: Appointment Service API
+  description: API for managing appointments in the healthcare system
+  termsOfService: https://www.example.com/terms/
+  contact:
+    email: contact@example.com
+  license:
+    name: BSD License
+  version: v1
+host: localhost:8002
+schemes:
+- http
+basePath: /api
+consumes:
+- application/json
+produces:
+- application/json
+securityDefinitions:
+  Bearer:
+    type: apiKey
+    in: header
+    name: Authorization
+    description: 'JWT Authorization header using the Bearer scheme. Example: "Bearer
+      {token}"'
+security:
+- Bearer: []
+paths:
+  /appointment-reasons/:
+    get:
+      operationId: appointment-reasons_list
+      summary: API endpoint để lấy danh sách lý do khám.
+      description: |-
+        Query parameters:
+        - department: Lọc theo khoa (optional)
+        - priority: Lọc theo mức độ ưu tiên (optional)
+        - search: Tìm kiếm theo tên hoặc mô tả (optional)
+        - is_active: Lọc theo trạng thái hoạt động (optional, mặc định là True)
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - appointment-reasons
+    parameters: []
+  /appointments/:
+    get:
+      operationId: appointments_list
+      summary: API endpoint for managing appointments.
+      description: |-
+        Supports both URL structures:
+        - /api/appointments/
+        - /api/appointments/appointments/ (nested)
+      parameters:
+      - name: patient_id
+        in: query
+        description: patient_id
+        required: false
+        type: string
+      - name: time_slot__doctor_id
+        in: query
+        description: time_slot__doctor_id
+        required: false
+        type: string
+      - name: time_slot__date
+        in: query
+        description: time_slot__date
+        required: false
+        type: string
+      - name: status
+        in: query
+        description: status
+        required: false
+        type: string
+        enum:
+        - PENDING
+        - CONFIRMED
+        - CHECKED_IN
+        - IN_PROGRESS
+        - COMPLETED
+        - CANCELLED
+        - NO_SHOW
+        - RESCHEDULED
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Appointment'
+      tags:
+      - appointments
+    post:
+      operationId: appointments_create
+      summary: API endpoint for managing appointments.
+      description: |-
+        Supports both URL structures:
+        - /api/appointments/
+        - /api/appointments/appointments/ (nested)
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/AppointmentCreate'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/AppointmentCreate'
+      tags:
+      - appointments
+    parameters: []
+  /appointments/patient_appointments/:
+    get:
+      operationId: appointments_patient_appointments
+      description: |-
+        Get all appointments for the current patient.
+        This endpoint specifically addresses the API call to /api/appointments/patient-appointments/
+      parameters:
+      - name: patient_id
+        in: query
+        description: patient_id
+        required: false
+        type: string
+      - name: time_slot__doctor_id
+        in: query
+        description: time_slot__doctor_id
+        required: false
+        type: string
+      - name: time_slot__date
+        in: query
+        description: time_slot__date
+        required: false
+        type: string
+      - name: status
+        in: query
+        description: status
+        required: false
+        type: string
+        enum:
+        - PENDING
+        - CONFIRMED
+        - CHECKED_IN
+        - IN_PROGRESS
+        - COMPLETED
+        - CANCELLED
+        - NO_SHOW
+        - RESCHEDULED
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Appointment'
+      tags:
+      - appointments
+    parameters: []
+  /appointments/upcoming/:
+    get:
+      operationId: appointments_upcoming
+      description: Get upcoming appointments for the current user.
+      parameters:
+      - name: patient_id
+        in: query
+        description: patient_id
+        required: false
+        type: string
+      - name: time_slot__doctor_id
+        in: query
+        description: time_slot__doctor_id
+        required: false
+        type: string
+      - name: time_slot__date
+        in: query
+        description: time_slot__date
+        required: false
+        type: string
+      - name: status
+        in: query
+        description: status
+        required: false
+        type: string
+        enum:
+        - PENDING
+        - CONFIRMED
+        - CHECKED_IN
+        - IN_PROGRESS
+        - COMPLETED
+        - CANCELLED
+        - NO_SHOW
+        - RESCHEDULED
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Appointment'
+      tags:
+      - appointments
+    parameters: []
+  /appointments/{id}/:
+    get:
+      operationId: appointments_read
+      summary: API endpoint for managing appointments.
+      description: |-
+        Supports both URL structures:
+        - /api/appointments/
+        - /api/appointments/appointments/ (nested)
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Appointment'
+      tags:
+      - appointments
+    put:
+      operationId: appointments_update
+      summary: API endpoint for managing appointments.
+      description: |-
+        Supports both URL structures:
+        - /api/appointments/
+        - /api/appointments/appointments/ (nested)
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Appointment'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Appointment'
+      tags:
+      - appointments
+    patch:
+      operationId: appointments_partial_update
+      summary: API endpoint for managing appointments.
+      description: |-
+        Supports both URL structures:
+        - /api/appointments/
+        - /api/appointments/appointments/ (nested)
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Appointment'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Appointment'
+      tags:
+      - appointments
+    delete:
+      operationId: appointments_delete
+      summary: API endpoint for managing appointments.
+      description: |-
+        Supports both URL structures:
+        - /api/appointments/
+        - /api/appointments/appointments/ (nested)
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - appointments
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this Appointment.
+      required: true
+      type: integer
+  /appointments/{id}/cancel/:
+    post:
+      operationId: appointments_cancel
+      summary: Cancel an appointment.
+      description: |-
+        Không cho phép hủy lịch hẹn trong vòng 24 giờ trước giờ hẹn,
+        trừ khi người hủy là bác sĩ hoặc admin.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Appointment'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Appointment'
+      tags:
+      - appointments
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this Appointment.
+      required: true
+      type: integer
+  /appointments/{id}/complete/:
+    post:
+      operationId: appointments_complete
+      description: Mark an appointment as completed.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Appointment'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Appointment'
+      tags:
+      - appointments
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this Appointment.
+      required: true
+      type: integer
+  /appointments/{id}/create_follow_up/:
+    post:
+      operationId: appointments_create_follow_up
+      description: Tạo lịch hẹn tái khám từ lịch hẹn hiện tại
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Appointment'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Appointment'
+      tags:
+      - appointments
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this Appointment.
+      required: true
+      type: integer
+  /appointments/{id}/reschedule/:
+    post:
+      operationId: appointments_reschedule
+      summary: Reschedule an appointment to a new time slot.
+      description: |-
+        Cho phép đổi lịch hẹn thay vì hủy hoàn toàn.
+        Nếu thởi gian còn lại ít hơn 24 giờ, chỉ bác sĩ hoặc admin mới có thể đổi lịch.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Appointment'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Appointment'
+      tags:
+      - appointments
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this Appointment.
+      required: true
+      type: integer
+  /doctor-availabilities/:
+    get:
+      operationId: doctor-availabilities_list
+      description: ''
+      parameters:
+      - name: doctor_id
+        in: query
+        description: doctor_id
+        required: false
+        type: string
+      - name: weekday
+        in: query
+        description: weekday
+        required: false
+        type: string
+        enum:
+        - 0
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+        - 6
+      - name: is_available
+        in: query
+        description: is_available
+        required: false
+        type: string
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/DoctorAvailability'
+      tags:
+      - doctor-availabilities
+    post:
+      operationId: doctor-availabilities_create
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/DoctorAvailability'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/DoctorAvailability'
+      tags:
+      - doctor-availabilities
+    parameters: []
+  /doctor-availabilities/create_schedule_with_slots/:
+    post:
+      operationId: doctor-availabilities_create_schedule_with_slots
+      description: |-
+        Tạo lịch làm việc cho bác sĩ và tự động tạo khung giờ khám bệnh trong một lần gọi.
+        Hỗ trợ tạo lịch hàng tuần, lịch tạm thởi hoặc lịch nghỉ phép.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/DoctorAvailability'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/DoctorAvailability'
+      tags:
+      - doctor-availabilities
+    parameters: []
+  /doctor-availabilities/{id}/:
+    get:
+      operationId: doctor-availabilities_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/DoctorAvailability'
+      tags:
+      - doctor-availabilities
+    put:
+      operationId: doctor-availabilities_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/DoctorAvailability'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/DoctorAvailability'
+      tags:
+      - doctor-availabilities
+    patch:
+      operationId: doctor-availabilities_partial_update
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/DoctorAvailability'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/DoctorAvailability'
+      tags:
+      - doctor-availabilities
+    delete:
+      operationId: doctor-availabilities_delete
+      description: ''
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - doctor-availabilities
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this Doctor Availability.
+      required: true
+      type: integer
+  /patient-visits/:
+    get:
+      operationId: patient-visits_list
+      summary: API endpoint for managing patient visits (check-ins).
+      description: |-
+        Supports both URL structures:
+        - /api/patient-visits/
+        - /api/appointments/visits/
+      parameters:
+      - name: appointment
+        in: query
+        description: appointment
+        required: false
+        type: string
+      - name: status
+        in: query
+        description: status
+        required: false
+        type: string
+        enum:
+        - WAITING
+        - WITH_NURSE
+        - WITH_DOCTOR
+        - COMPLETED
+        - CANCELLED
+      - name: checked_in_at
+        in: query
+        description: checked_in_at
+        required: false
+        type: string
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/PatientVisit'
+      tags:
+      - patient-visits
+    post:
+      operationId: patient-visits_create
+      summary: API endpoint for managing patient visits (check-ins).
+      description: |-
+        Supports both URL structures:
+        - /api/patient-visits/
+        - /api/appointments/visits/
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/PatientVisit'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/PatientVisit'
+      tags:
+      - patient-visits
+    parameters: []
+  /patient-visits/check_in/:
+    post:
+      operationId: patient-visits_check_in
+      description: Check in a patient for their appointment.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/PatientVisit'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/PatientVisit'
+      tags:
+      - patient-visits
+    parameters: []
+  /patient-visits/{id}/:
+    get:
+      operationId: patient-visits_read
+      summary: API endpoint for managing patient visits (check-ins).
+      description: |-
+        Supports both URL structures:
+        - /api/patient-visits/
+        - /api/appointments/visits/
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/PatientVisit'
+      tags:
+      - patient-visits
+    put:
+      operationId: patient-visits_update
+      summary: API endpoint for managing patient visits (check-ins).
+      description: |-
+        Supports both URL structures:
+        - /api/patient-visits/
+        - /api/appointments/visits/
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/PatientVisit'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/PatientVisit'
+      tags:
+      - patient-visits
+    patch:
+      operationId: patient-visits_partial_update
+      summary: API endpoint for managing patient visits (check-ins).
+      description: |-
+        Supports both URL structures:
+        - /api/patient-visits/
+        - /api/appointments/visits/
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/PatientVisit'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/PatientVisit'
+      tags:
+      - patient-visits
+    delete:
+      operationId: patient-visits_delete
+      summary: API endpoint for managing patient visits (check-ins).
+      description: |-
+        Supports both URL structures:
+        - /api/patient-visits/
+        - /api/appointments/visits/
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - patient-visits
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this Patient Visit.
+      required: true
+      type: integer
+  /patient-visits/{id}/update_status/:
+    post:
+      operationId: patient-visits_update_status
+      description: Update the status of a patient visit.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/PatientVisit'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/PatientVisit'
+      tags:
+      - patient-visits
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this Patient Visit.
+      required: true
+      type: integer
+  /time-slots/:
+    get:
+      operationId: time-slots_list
+      summary: API endpoint for managing time slots.
+      description: |-
+        Supports both URL structures:
+        - /api/time-slots/
+        - /api/appointments/time-slots/
+      parameters:
+      - name: doctor_id
+        in: query
+        description: doctor_id
+        required: false
+        type: string
+      - name: date
+        in: query
+        description: date
+        required: false
+        type: string
+      - name: status
+        in: query
+        description: status
+        required: false
+        type: string
+        enum:
+        - AVAILABLE
+        - BOOKED
+        - CANCELLED
+        - BLOCKED
+      - name: is_active
+        in: query
+        description: is_active
+        required: false
+        type: string
+      - name: location
+        in: query
+        description: location
+        required: false
+        type: string
+      - name: department
+        in: query
+        description: department
+        required: false
+        type: string
+      - name: room
+        in: query
+        description: room
+        required: false
+        type: string
+      - name: source_type
+        in: query
+        description: source_type
+        required: false
+        type: string
+        enum:
+        - REGULAR
+        - TEMPORARY
+        - MANUAL
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: search
+        in: query
+        description: A search term.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/TimeSlot'
+      tags:
+      - time-slots
+    post:
+      operationId: time-slots_create
+      summary: API endpoint for managing time slots.
+      description: |-
+        Supports both URL structures:
+        - /api/time-slots/
+        - /api/appointments/time-slots/
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/TimeSlot'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/TimeSlot'
+      tags:
+      - time-slots
+    parameters: []
+  /time-slots/available/:
+    get:
+      operationId: time-slots_available
+      summary: Get available time slots for a specific doctor and date range.
+      description: |-
+        Query parameters:
+        - doctor_id: ID của bác sĩ (optional)
+        - start_date: Ngày bắt đầu (YYYY-MM-DD) (optional)
+        - end_date: Ngày kết thúc (YYYY-MM-DD) (optional)
+        - department: Khoa/Phòng (optional)
+        - location: Địa điểm (optional)
+        - time_from: Thời gian bắt đầu trong ngày (HH:MM) (optional)
+        - time_to: Thời gian kết thúc trong ngày (HH:MM) (optional)
+        - weekday: Ngày trong tuần (0-6, 0 là thứ 2) (optional)
+      parameters:
+      - name: doctor_id
+        in: query
+        description: doctor_id
+        required: false
+        type: string
+      - name: date
+        in: query
+        description: date
+        required: false
+        type: string
+      - name: status
+        in: query
+        description: status
+        required: false
+        type: string
+        enum:
+        - AVAILABLE
+        - BOOKED
+        - CANCELLED
+        - BLOCKED
+      - name: is_active
+        in: query
+        description: is_active
+        required: false
+        type: string
+      - name: location
+        in: query
+        description: location
+        required: false
+        type: string
+      - name: department
+        in: query
+        description: department
+        required: false
+        type: string
+      - name: room
+        in: query
+        description: room
+        required: false
+        type: string
+      - name: source_type
+        in: query
+        description: source_type
+        required: false
+        type: string
+        enum:
+        - REGULAR
+        - TEMPORARY
+        - MANUAL
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: search
+        in: query
+        description: A search term.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/TimeSlot'
+      tags:
+      - time-slots
+    parameters: []
+  /time-slots/{id}/:
+    get:
+      operationId: time-slots_read
+      summary: API endpoint for managing time slots.
+      description: |-
+        Supports both URL structures:
+        - /api/time-slots/
+        - /api/appointments/time-slots/
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/TimeSlot'
+      tags:
+      - time-slots
+    put:
+      operationId: time-slots_update
+      summary: API endpoint for managing time slots.
+      description: |-
+        Supports both URL structures:
+        - /api/time-slots/
+        - /api/appointments/time-slots/
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/TimeSlot'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/TimeSlot'
+      tags:
+      - time-slots
+    patch:
+      operationId: time-slots_partial_update
+      summary: API endpoint for managing time slots.
+      description: |-
+        Supports both URL structures:
+        - /api/time-slots/
+        - /api/appointments/time-slots/
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/TimeSlot'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/TimeSlot'
+      tags:
+      - time-slots
+    delete:
+      operationId: time-slots_delete
+      summary: API endpoint for managing time slots.
+      description: |-
+        Supports both URL structures:
+        - /api/time-slots/
+        - /api/appointments/time-slots/
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - time-slots
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this Time Slot.
+      required: true
+      type: integer
+definitions:
+  AppointmentReason:
+    required:
+    - name
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      name:
+        title: Name
+        description: Tên lý do khám
+        type: string
+        maxLength: 100
+        minLength: 1
+      description:
+        title: Description
+        description: Mô tả chi tiết
+        type: string
+        x-nullable: true
+      department:
+        title: Department
+        description: Khoa/Phòng liên quan
+        type: string
+        maxLength: 100
+        x-nullable: true
+      priority:
+        title: Priority
+        description: Mức độ ưu tiên (cao hơn = ưu tiên hơn)
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+      estimated_duration:
+        title: Estimated duration
+        description: Thời gian ước tính (phút)
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+      is_active:
+        title: Is active
+        type: boolean
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true
+  AppointmentReminder:
+    required:
+    - appointment
+    - reminder_type
+    - scheduled_time
+    - message
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      appointment:
+        title: Appointment
+        type: integer
+      reminder_type:
+        title: Reminder type
+        type: string
+        enum:
+        - EMAIL
+        - SMS
+        - PUSH
+      reminder_type_name:
+        title: Reminder type name
+        type: string
+        readOnly: true
+        minLength: 1
+      scheduled_time:
+        title: Scheduled time
+        description: Thời gian dự kiến gửi nhắc nhở
+        type: string
+        format: date-time
+      status:
+        title: Status
+        type: string
+        enum:
+        - PENDING
+        - SENT
+        - FAILED
+      status_name:
+        title: Status name
+        type: string
+        readOnly: true
+        minLength: 1
+      sent_at:
+        title: Sent at
+        type: string
+        format: date-time
+        readOnly: true
+        x-nullable: true
+      message:
+        title: Message
+        description: Nội dung tin nhắn nhắc nhở
+        type: string
+        minLength: 1
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true
+  PatientVisit:
+    required:
+    - appointment
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      appointment:
+        title: Appointment
+        type: integer
+      status:
+        title: Status
+        type: string
+        enum:
+        - WAITING
+        - WITH_NURSE
+        - WITH_DOCTOR
+        - COMPLETED
+        - CANCELLED
+      status_name:
+        title: Status name
+        type: string
+        readOnly: true
+        minLength: 1
+      checked_in_at:
+        title: Checked in at
+        type: string
+        format: date-time
+        readOnly: true
+        x-nullable: true
+      checked_in_by:
+        title: Checked in by
+        description: ID người check-in (nhân viên)
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+        x-nullable: true
+      nurse_id:
+        title: Nurse id
+        description: ID y tá phụ trách
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+        x-nullable: true
+      vitals_recorded:
+        title: Vitals recorded
+        description: Dấu hiệu sinh tồn đã được ghi nhận
+        type: boolean
+      vitals_recorded_at:
+        title: Vitals recorded at
+        type: string
+        format: date-time
+        x-nullable: true
+      doctor_start_time:
+        title: Doctor start time
+        description: Thời gian bắt đầu khám với bác sĩ
+        type: string
+        format: date-time
+        x-nullable: true
+      doctor_end_time:
+        title: Doctor end time
+        description: Thời gian kết thúc khám với bác sĩ
+        type: string
+        format: date-time
+        x-nullable: true
+      waiting_time:
+        title: Waiting time
+        description: Thời gian chờ (phút)
+        type: integer
+        readOnly: true
+        x-nullable: true
+      waiting_time_display:
+        title: Waiting time display
+        type: string
+        readOnly: true
+      notes:
+        title: Notes
+        type: string
+        x-nullable: true
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true
+  Appointment:
+    required:
+    - patient_id
+    - time_slot
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      patient_id:
+        title: Patient id
+        description: ID của bệnh nhân trong user-service
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+      doctor_id:
+        title: Doctor id
+        type: integer
+        readOnly: true
+      time_slot:
+        title: Time slot
+        type: integer
+      appointment_date:
+        title: Appointment date
+        type: string
+        format: date
+        readOnly: true
+      start_time:
+        title: Start time
+        type: string
+        readOnly: true
+      end_time:
+        title: End time
+        type: string
+        readOnly: true
+      status:
+        title: Status
+        type: string
+        enum:
+        - PENDING
+        - CONFIRMED
+        - CHECKED_IN
+        - IN_PROGRESS
+        - COMPLETED
+        - CANCELLED
+        - NO_SHOW
+        - RESCHEDULED
+      status_name:
+        title: Status name
+        type: string
+        readOnly: true
+        minLength: 1
+      appointment_type:
+        title: Appointment type
+        type: string
+        enum:
+        - REGULAR
+        - FOLLOW_UP
+        - EMERGENCY
+        - CONSULTATION
+      appointment_type_name:
+        title: Appointment type name
+        type: string
+        readOnly: true
+        minLength: 1
+      priority:
+        title: Priority
+        type: integer
+        enum:
+        - 0
+        - 1
+        - 2
+      priority_name:
+        title: Priority name
+        type: string
+        readOnly: true
+        minLength: 1
+      reason_text:
+        title: Reason text
+        description: Lý do khám chi tiết
+        type: string
+        x-nullable: true
+      reason_category:
+        title: Reason category
+        type: integer
+        x-nullable: true
+      reason_category_details:
+        $ref: '#/definitions/AppointmentReason'
+      is_recurring:
+        title: Is recurring
+        type: boolean
+      recurrence_pattern:
+        title: Recurrence pattern
+        description: 'Mẫu lặp lại (ví dụ: weekly, monthly)'
+        type: string
+        maxLength: 50
+        x-nullable: true
+      recurrence_end_date:
+        title: Recurrence end date
+        type: string
+        format: date
+        x-nullable: true
+      parent_appointment:
+        title: Parent appointment
+        type: integer
+        x-nullable: true
+      is_follow_up:
+        title: Is follow up
+        type: boolean
+      follow_up_to:
+        title: Follow up to
+        type: integer
+        x-nullable: true
+      notes:
+        title: Notes
+        type: string
+        x-nullable: true
+      reminders:
+        type: array
+        items:
+          $ref: '#/definitions/AppointmentReminder'
+        readOnly: true
+      visit_data:
+        $ref: '#/definitions/PatientVisit'
+      medical_record_id:
+        title: Medical record id
+        description: ID hồ sơ y tế liên quan
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+        x-nullable: true
+      prescription_id:
+        title: Prescription id
+        description: ID đơn thuốc liên quan
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+        x-nullable: true
+      lab_request_id:
+        title: Lab request id
+        description: ID yêu cầu xét nghiệm liên quan
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+        x-nullable: true
+      billing_id:
+        title: Billing id
+        description: ID hóa đơn liên quan
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+        x-nullable: true
+      location:
+        title: Location
+        type: string
+        readOnly: true
+        minLength: 1
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true
+  AppointmentCreate:
+    required:
+    - time_slot_id
+    type: object
+    properties:
+      patient_id:
+        title: Patient id
+        type: integer
+        readOnly: true
+      time_slot_id:
+        title: Time slot id
+        type: integer
+      reason_text:
+        title: Reason text
+        description: Lý do khám chi tiết
+        type: string
+        x-nullable: true
+      reason_category_id:
+        title: Reason category id
+        type: integer
+      appointment_type:
+        title: Appointment type
+        type: string
+        enum:
+        - REGULAR
+        - FOLLOW_UP
+        - EMERGENCY
+        - CONSULTATION
+      priority:
+        title: Priority
+        type: integer
+        enum:
+        - 0
+        - 1
+        - 2
+      notes:
+        title: Notes
+        type: string
+        x-nullable: true
+      created_by:
+        title: Created by
+        type: integer
+      doctor_name:
+        title: Doctor name
+        type: string
+        readOnly: true
+        minLength: 1
+      is_recurring:
+        title: Is recurring
+        type: boolean
+      recurrence_pattern:
+        title: Recurrence pattern
+        description: 'Mẫu lặp lại (ví dụ: weekly, monthly)'
+        type: string
+        maxLength: 50
+        x-nullable: true
+      recurrence_end_date:
+        title: Recurrence end date
+        type: string
+        format: date
+        x-nullable: true
+      is_follow_up:
+        title: Is follow up
+        type: boolean
+      follow_up_to:
+        title: Follow up to
+        type: integer
+        x-nullable: true
+      medical_record_id:
+        title: Medical record id
+        description: ID hồ sơ y tế liên quan
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+        x-nullable: true
+      insurance_id:
+        title: Insurance id
+        description: Mã bảo hiểm
+        type: string
+        maxLength: 100
+        x-nullable: true
+  DoctorAvailability:
+    required:
+    - doctor_id
+    - weekday
+    - start_time
+    - end_time
+    - effective_date
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      doctor_id:
+        title: Doctor id
+        description: ID của bác sĩ trong user-service
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+      weekday:
+        title: Weekday
+        description: 'Ngày trong tuần (0: Thứ 2, 6: Chủ nhật)'
+        type: integer
+        enum:
+        - 0
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+        - 6
+      weekday_name:
+        title: Weekday name
+        type: string
+        readOnly: true
+        minLength: 1
+      start_time:
+        title: Start time
+        description: Giờ bắt đầu làm việc
+        type: string
+      end_time:
+        title: End time
+        description: Giờ kết thúc làm việc
+        type: string
+      is_available:
+        title: Is available
+        description: Trạng thái hoạt động của lịch làm việc
+        type: boolean
+      is_active:
+        title: Is active
+        description: Lịch làm việc có đang hoạt động hay không
+        type: boolean
+      location:
+        title: Location
+        description: Địa điểm làm việc
+        type: string
+        maxLength: 255
+        x-nullable: true
+      department:
+        title: Department
+        description: Khoa/Phòng
+        type: string
+        maxLength: 100
+        x-nullable: true
+      room:
+        title: Room
+        description: Phòng khám
+        type: string
+        maxLength: 50
+        x-nullable: true
+      schedule_type:
+        title: Schedule type
+        description: Loại lịch làm việc
+        type: string
+        enum:
+        - REGULAR
+        - TEMPORARY
+        - DAY_OFF
+        default: REGULAR
+      schedule_type_name:
+        title: Schedule type name
+        type: string
+        readOnly: true
+        minLength: 1
+      recurring_pattern:
+        title: Recurring pattern
+        description: Mẫu lặp lại cho lịch làm việc
+        type: string
+        enum:
+        - WEEKLY
+        - BIWEEKLY
+        - MONTHLY
+        - CUSTOM
+      recurring_pattern_name:
+        title: Recurring pattern name
+        type: string
+        readOnly: true
+        minLength: 1
+      effective_date:
+        title: Effective date
+        description: Ngày áp dụng (cho lịch tạm thời hoặc nghỉ phép)
+        type: string
+        format: date
+        x-nullable: true
+      start_date:
+        title: Start date
+        description: Ngày bắt đầu áp dụng lịch làm việc
+        type: string
+        format: date
+        x-nullable: true
+      end_date:
+        title: End date
+        description: Ngày kết thúc áp dụng lịch làm việc
+        type: string
+        format: date
+        x-nullable: true
+      slot_duration:
+        title: Slot duration
+        description: Thời lượng mỗi khung giờ (phút)
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+      max_patients_per_slot:
+        title: Max patients per slot
+        description: Số lượng bệnh nhân tối đa cho mỗi khung giờ
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+      notes:
+        title: Notes
+        description: Ghi chú
+        type: string
+        x-nullable: true
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true
+  TimeSlot:
+    required:
+    - doctor_id
+    - date
+    - start_time
+    - end_time
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      doctor_id:
+        title: Doctor id
+        description: ID của bác sĩ trong user-service
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+      doctor_info:
+        title: Doctor info
+        type: string
+        readOnly: true
+      date:
+        title: Date
+        description: Ngày khám
+        type: string
+        format: date
+      start_time:
+        title: Start time
+        description: Giờ bắt đầu
+        type: string
+      end_time:
+        title: End time
+        description: Giờ kết thúc
+        type: string
+      status:
+        title: Status
+        description: Trạng thái khung giờ
+        type: string
+        enum:
+        - AVAILABLE
+        - BOOKED
+        - CANCELLED
+        - BLOCKED
+      status_name:
+        title: Status name
+        type: string
+        readOnly: true
+        minLength: 1
+      is_active:
+        title: Is active
+        description: Khung giờ có đang hoạt động hay không
+        type: boolean
+      source_type:
+        title: Source type
+        description: Nguồn gốc của khung giờ
+        type: string
+        enum:
+        - REGULAR
+        - TEMPORARY
+        - MANUAL
+      source_type_name:
+        title: Source type name
+        type: string
+        readOnly: true
+        minLength: 1
+      availability_id:
+        title: Availability id
+        type: integer
+        readOnly: true
+      location:
+        title: Location
+        description: Địa điểm khám
+        type: string
+        maxLength: 255
+        x-nullable: true
+      department:
+        title: Department
+        description: Khoa/Phòng
+        type: string
+        maxLength: 100
+        x-nullable: true
+      room:
+        title: Room
+        description: Phòng khám
+        type: string
+        maxLength: 50
+        x-nullable: true
+      duration:
+        title: Duration
+        description: Thời lượng khám (phút)
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+      max_patients:
+        title: Max patients
+        description: Số lượng bệnh nhân tối đa
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+      current_patients:
+        title: Current patients
+        description: Số lượng bệnh nhân hiện tại
+        type: integer
+        readOnly: true
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true

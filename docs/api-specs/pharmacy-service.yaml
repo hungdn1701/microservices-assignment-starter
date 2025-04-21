@@ -1,0 +1,4005 @@
+swagger: '2.0'
+info:
+  title: Pharmacy Service API
+  description: API for managing prescriptions, medications, and pharmacy inventory
+  termsOfService: https://www.example.com/terms/
+  contact:
+    email: contact@example.com
+  license:
+    name: BSD License
+  version: v1
+host: localhost:8004
+schemes:
+- http
+basePath: /api
+consumes:
+- application/json
+produces:
+- application/json
+securityDefinitions:
+  Bearer:
+    type: apiKey
+    in: header
+    name: Authorization
+    description: 'JWT Authorization header using the Bearer scheme. Example: "Bearer
+      {token}"'
+security:
+- Bearer: []
+paths:
+  /dispensing-items/:
+    get:
+      operationId: dispensing-items_list
+      description: API endpoint for managing dispensing items.
+      parameters:
+      - name: dispensing
+        in: query
+        description: dispensing
+        required: false
+        type: string
+      - name: prescription_item
+        in: query
+        description: prescription_item
+        required: false
+        type: string
+      - name: inventory
+        in: query
+        description: inventory
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/DispensingItem'
+      tags:
+      - dispensing-items
+    post:
+      operationId: dispensing-items_create
+      description: API endpoint for managing dispensing items.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/DispensingItem'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/DispensingItem'
+      tags:
+      - dispensing-items
+    parameters: []
+  /dispensing-items/{id}/:
+    get:
+      operationId: dispensing-items_read
+      description: API endpoint for managing dispensing items.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/DispensingItem'
+      tags:
+      - dispensing-items
+    put:
+      operationId: dispensing-items_update
+      description: API endpoint for managing dispensing items.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/DispensingItem'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/DispensingItem'
+      tags:
+      - dispensing-items
+    patch:
+      operationId: dispensing-items_partial_update
+      description: API endpoint for managing dispensing items.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/DispensingItem'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/DispensingItem'
+      tags:
+      - dispensing-items
+    delete:
+      operationId: dispensing-items_delete
+      description: API endpoint for managing dispensing items.
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - dispensing-items
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this dispensing item.
+      required: true
+      type: integer
+  /dispensings/:
+    get:
+      operationId: dispensings_list
+      description: API endpoint for managing dispensing.
+      parameters:
+      - name: prescription
+        in: query
+        description: prescription
+        required: false
+        type: string
+      - name: pharmacist_id
+        in: query
+        description: pharmacist_id
+        required: false
+        type: string
+      - name: status
+        in: query
+        description: status
+        required: false
+        type: string
+        enum:
+        - PENDING
+        - COMPLETED
+        - CANCELLED
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Dispensing'
+      tags:
+      - dispensings
+    post:
+      operationId: dispensings_create
+      description: API endpoint for managing dispensing.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/DispensingCreate'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/DispensingCreate'
+      tags:
+      - dispensings
+    parameters: []
+  /dispensings/{id}/:
+    get:
+      operationId: dispensings_read
+      description: API endpoint for managing dispensing.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Dispensing'
+      tags:
+      - dispensings
+    put:
+      operationId: dispensings_update
+      description: API endpoint for managing dispensing.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Dispensing'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Dispensing'
+      tags:
+      - dispensings
+    patch:
+      operationId: dispensings_partial_update
+      description: API endpoint for managing dispensing.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Dispensing'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Dispensing'
+      tags:
+      - dispensings
+    delete:
+      operationId: dispensings_delete
+      description: API endpoint for managing dispensing.
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - dispensings
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this dispensing.
+      required: true
+      type: integer
+  /dispensings/{id}/cancel/:
+    post:
+      operationId: dispensings_cancel
+      description: Cancel a dispensing.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Dispensing'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Dispensing'
+      tags:
+      - dispensings
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this dispensing.
+      required: true
+      type: integer
+  /dispensings/{id}/complete/:
+    post:
+      operationId: dispensings_complete
+      description: Mark a dispensing as completed.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Dispensing'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Dispensing'
+      tags:
+      - dispensings
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this dispensing.
+      required: true
+      type: integer
+  /inventory/:
+    get:
+      operationId: inventory_list
+      description: API endpoint for managing inventory.
+      parameters:
+      - name: medication
+        in: query
+        description: medication
+        required: false
+        type: string
+      - name: batch_number
+        in: query
+        description: batch_number
+        required: false
+        type: string
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Inventory'
+      tags:
+      - inventory
+    post:
+      operationId: inventory_create
+      description: API endpoint for managing inventory.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Inventory'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Inventory'
+      tags:
+      - inventory
+    parameters: []
+  /inventory/expiring_soon/:
+    get:
+      operationId: inventory_expiring_soon
+      description: Get inventory items expiring within 30 days.
+      parameters:
+      - name: medication
+        in: query
+        description: medication
+        required: false
+        type: string
+      - name: batch_number
+        in: query
+        description: batch_number
+        required: false
+        type: string
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Inventory'
+      tags:
+      - inventory
+    parameters: []
+  /inventory/low_stock/:
+    get:
+      operationId: inventory_low_stock
+      description: Get inventory items with low stock (less than 10 units).
+      parameters:
+      - name: medication
+        in: query
+        description: medication
+        required: false
+        type: string
+      - name: batch_number
+        in: query
+        description: batch_number
+        required: false
+        type: string
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Inventory'
+      tags:
+      - inventory
+    parameters: []
+  /inventory/{id}/:
+    get:
+      operationId: inventory_read
+      description: API endpoint for managing inventory.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Inventory'
+      tags:
+      - inventory
+    put:
+      operationId: inventory_update
+      description: API endpoint for managing inventory.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Inventory'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Inventory'
+      tags:
+      - inventory
+    patch:
+      operationId: inventory_partial_update
+      description: API endpoint for managing inventory.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Inventory'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Inventory'
+      tags:
+      - inventory
+    delete:
+      operationId: inventory_delete
+      description: API endpoint for managing inventory.
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - inventory
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this inventory.
+      required: true
+      type: integer
+  /medications/:
+    get:
+      operationId: medications_list
+      description: API endpoint for managing medications.
+      parameters:
+      - name: category
+        in: query
+        description: category
+        required: false
+        type: string
+        enum:
+        - ANTIBIOTIC
+        - ANALGESIC
+        - ANTIVIRAL
+        - ANTIHISTAMINE
+        - ANTIDEPRESSANT
+        - ANTIHYPERTENSIVE
+        - ANTIDIABETIC
+        - ANTIINFLAMMATORY
+        - VITAMIN
+        - SUPPLEMENT
+        - OTHER
+      - name: dosage_form
+        in: query
+        description: dosage_form
+        required: false
+        type: string
+        enum:
+        - TABLET
+        - CAPSULE
+        - LIQUID
+        - INJECTION
+        - CREAM
+        - OINTMENT
+        - DROPS
+        - INHALER
+        - PATCH
+        - OTHER
+      - name: requires_prescription
+        in: query
+        description: requires_prescription
+        required: false
+        type: string
+      - name: manufacturer
+        in: query
+        description: manufacturer
+        required: false
+        type: string
+      - name: search
+        in: query
+        description: A search term.
+        required: false
+        type: string
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Medication'
+      tags:
+      - medications
+    post:
+      operationId: medications_create
+      description: API endpoint for managing medications.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Medication'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Medication'
+      tags:
+      - medications
+    parameters: []
+  /medications/search/:
+    get:
+      operationId: medications_search
+      description: Search medications by name, description, or category.
+      parameters:
+      - name: category
+        in: query
+        description: category
+        required: false
+        type: string
+        enum:
+        - ANTIBIOTIC
+        - ANALGESIC
+        - ANTIVIRAL
+        - ANTIHISTAMINE
+        - ANTIDEPRESSANT
+        - ANTIHYPERTENSIVE
+        - ANTIDIABETIC
+        - ANTIINFLAMMATORY
+        - VITAMIN
+        - SUPPLEMENT
+        - OTHER
+      - name: dosage_form
+        in: query
+        description: dosage_form
+        required: false
+        type: string
+        enum:
+        - TABLET
+        - CAPSULE
+        - LIQUID
+        - INJECTION
+        - CREAM
+        - OINTMENT
+        - DROPS
+        - INHALER
+        - PATCH
+        - OTHER
+      - name: requires_prescription
+        in: query
+        description: requires_prescription
+        required: false
+        type: string
+      - name: manufacturer
+        in: query
+        description: manufacturer
+        required: false
+        type: string
+      - name: search
+        in: query
+        description: A search term.
+        required: false
+        type: string
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Medication'
+      tags:
+      - medications
+    parameters: []
+  /medications/{id}/:
+    get:
+      operationId: medications_read
+      description: API endpoint for managing medications.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Medication'
+      tags:
+      - medications
+    put:
+      operationId: medications_update
+      description: API endpoint for managing medications.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Medication'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Medication'
+      tags:
+      - medications
+    patch:
+      operationId: medications_partial_update
+      description: API endpoint for managing medications.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Medication'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Medication'
+      tags:
+      - medications
+    delete:
+      operationId: medications_delete
+      description: API endpoint for managing medications.
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - medications
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this medication.
+      required: true
+      type: integer
+  /pharmacy/dispensing-items/:
+    get:
+      operationId: pharmacy_dispensing-items_list
+      description: API endpoint for managing dispensing items.
+      parameters:
+      - name: dispensing
+        in: query
+        description: dispensing
+        required: false
+        type: string
+      - name: prescription_item
+        in: query
+        description: prescription_item
+        required: false
+        type: string
+      - name: inventory
+        in: query
+        description: inventory
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/DispensingItem'
+      tags:
+      - pharmacy
+    post:
+      operationId: pharmacy_dispensing-items_create
+      description: API endpoint for managing dispensing items.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/DispensingItem'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/DispensingItem'
+      tags:
+      - pharmacy
+    parameters: []
+  /pharmacy/dispensing-items/{id}/:
+    get:
+      operationId: pharmacy_dispensing-items_read
+      description: API endpoint for managing dispensing items.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/DispensingItem'
+      tags:
+      - pharmacy
+    put:
+      operationId: pharmacy_dispensing-items_update
+      description: API endpoint for managing dispensing items.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/DispensingItem'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/DispensingItem'
+      tags:
+      - pharmacy
+    patch:
+      operationId: pharmacy_dispensing-items_partial_update
+      description: API endpoint for managing dispensing items.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/DispensingItem'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/DispensingItem'
+      tags:
+      - pharmacy
+    delete:
+      operationId: pharmacy_dispensing-items_delete
+      description: API endpoint for managing dispensing items.
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - pharmacy
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this dispensing item.
+      required: true
+      type: integer
+  /pharmacy/dispensings/:
+    get:
+      operationId: pharmacy_dispensings_list
+      description: API endpoint for managing dispensing.
+      parameters:
+      - name: prescription
+        in: query
+        description: prescription
+        required: false
+        type: string
+      - name: pharmacist_id
+        in: query
+        description: pharmacist_id
+        required: false
+        type: string
+      - name: status
+        in: query
+        description: status
+        required: false
+        type: string
+        enum:
+        - PENDING
+        - COMPLETED
+        - CANCELLED
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Dispensing'
+      tags:
+      - pharmacy
+    post:
+      operationId: pharmacy_dispensings_create
+      description: API endpoint for managing dispensing.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/DispensingCreate'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/DispensingCreate'
+      tags:
+      - pharmacy
+    parameters: []
+  /pharmacy/dispensings/{id}/:
+    get:
+      operationId: pharmacy_dispensings_read
+      description: API endpoint for managing dispensing.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Dispensing'
+      tags:
+      - pharmacy
+    put:
+      operationId: pharmacy_dispensings_update
+      description: API endpoint for managing dispensing.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Dispensing'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Dispensing'
+      tags:
+      - pharmacy
+    patch:
+      operationId: pharmacy_dispensings_partial_update
+      description: API endpoint for managing dispensing.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Dispensing'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Dispensing'
+      tags:
+      - pharmacy
+    delete:
+      operationId: pharmacy_dispensings_delete
+      description: API endpoint for managing dispensing.
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - pharmacy
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this dispensing.
+      required: true
+      type: integer
+  /pharmacy/dispensings/{id}/cancel/:
+    post:
+      operationId: pharmacy_dispensings_cancel
+      description: Cancel a dispensing.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Dispensing'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Dispensing'
+      tags:
+      - pharmacy
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this dispensing.
+      required: true
+      type: integer
+  /pharmacy/dispensings/{id}/complete/:
+    post:
+      operationId: pharmacy_dispensings_complete
+      description: Mark a dispensing as completed.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Dispensing'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Dispensing'
+      tags:
+      - pharmacy
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this dispensing.
+      required: true
+      type: integer
+  /pharmacy/inventory/:
+    get:
+      operationId: pharmacy_inventory_list
+      description: API endpoint for managing inventory.
+      parameters:
+      - name: medication
+        in: query
+        description: medication
+        required: false
+        type: string
+      - name: batch_number
+        in: query
+        description: batch_number
+        required: false
+        type: string
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Inventory'
+      tags:
+      - pharmacy
+    post:
+      operationId: pharmacy_inventory_create
+      description: API endpoint for managing inventory.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Inventory'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Inventory'
+      tags:
+      - pharmacy
+    parameters: []
+  /pharmacy/inventory/expiring_soon/:
+    get:
+      operationId: pharmacy_inventory_expiring_soon
+      description: Get inventory items expiring within 30 days.
+      parameters:
+      - name: medication
+        in: query
+        description: medication
+        required: false
+        type: string
+      - name: batch_number
+        in: query
+        description: batch_number
+        required: false
+        type: string
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Inventory'
+      tags:
+      - pharmacy
+    parameters: []
+  /pharmacy/inventory/low_stock/:
+    get:
+      operationId: pharmacy_inventory_low_stock
+      description: Get inventory items with low stock (less than 10 units).
+      parameters:
+      - name: medication
+        in: query
+        description: medication
+        required: false
+        type: string
+      - name: batch_number
+        in: query
+        description: batch_number
+        required: false
+        type: string
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Inventory'
+      tags:
+      - pharmacy
+    parameters: []
+  /pharmacy/inventory/{id}/:
+    get:
+      operationId: pharmacy_inventory_read
+      description: API endpoint for managing inventory.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Inventory'
+      tags:
+      - pharmacy
+    put:
+      operationId: pharmacy_inventory_update
+      description: API endpoint for managing inventory.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Inventory'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Inventory'
+      tags:
+      - pharmacy
+    patch:
+      operationId: pharmacy_inventory_partial_update
+      description: API endpoint for managing inventory.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Inventory'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Inventory'
+      tags:
+      - pharmacy
+    delete:
+      operationId: pharmacy_inventory_delete
+      description: API endpoint for managing inventory.
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - pharmacy
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this inventory.
+      required: true
+      type: integer
+  /pharmacy/medications/:
+    get:
+      operationId: pharmacy_medications_list
+      description: API endpoint for managing medications.
+      parameters:
+      - name: category
+        in: query
+        description: category
+        required: false
+        type: string
+        enum:
+        - ANTIBIOTIC
+        - ANALGESIC
+        - ANTIVIRAL
+        - ANTIHISTAMINE
+        - ANTIDEPRESSANT
+        - ANTIHYPERTENSIVE
+        - ANTIDIABETIC
+        - ANTIINFLAMMATORY
+        - VITAMIN
+        - SUPPLEMENT
+        - OTHER
+      - name: dosage_form
+        in: query
+        description: dosage_form
+        required: false
+        type: string
+        enum:
+        - TABLET
+        - CAPSULE
+        - LIQUID
+        - INJECTION
+        - CREAM
+        - OINTMENT
+        - DROPS
+        - INHALER
+        - PATCH
+        - OTHER
+      - name: requires_prescription
+        in: query
+        description: requires_prescription
+        required: false
+        type: string
+      - name: manufacturer
+        in: query
+        description: manufacturer
+        required: false
+        type: string
+      - name: search
+        in: query
+        description: A search term.
+        required: false
+        type: string
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Medication'
+      tags:
+      - pharmacy
+    post:
+      operationId: pharmacy_medications_create
+      description: API endpoint for managing medications.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Medication'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Medication'
+      tags:
+      - pharmacy
+    parameters: []
+  /pharmacy/medications/search/:
+    get:
+      operationId: pharmacy_medications_search
+      description: Search medications by name, description, or category.
+      parameters:
+      - name: category
+        in: query
+        description: category
+        required: false
+        type: string
+        enum:
+        - ANTIBIOTIC
+        - ANALGESIC
+        - ANTIVIRAL
+        - ANTIHISTAMINE
+        - ANTIDEPRESSANT
+        - ANTIHYPERTENSIVE
+        - ANTIDIABETIC
+        - ANTIINFLAMMATORY
+        - VITAMIN
+        - SUPPLEMENT
+        - OTHER
+      - name: dosage_form
+        in: query
+        description: dosage_form
+        required: false
+        type: string
+        enum:
+        - TABLET
+        - CAPSULE
+        - LIQUID
+        - INJECTION
+        - CREAM
+        - OINTMENT
+        - DROPS
+        - INHALER
+        - PATCH
+        - OTHER
+      - name: requires_prescription
+        in: query
+        description: requires_prescription
+        required: false
+        type: string
+      - name: manufacturer
+        in: query
+        description: manufacturer
+        required: false
+        type: string
+      - name: search
+        in: query
+        description: A search term.
+        required: false
+        type: string
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Medication'
+      tags:
+      - pharmacy
+    parameters: []
+  /pharmacy/medications/{id}/:
+    get:
+      operationId: pharmacy_medications_read
+      description: API endpoint for managing medications.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Medication'
+      tags:
+      - pharmacy
+    put:
+      operationId: pharmacy_medications_update
+      description: API endpoint for managing medications.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Medication'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Medication'
+      tags:
+      - pharmacy
+    patch:
+      operationId: pharmacy_medications_partial_update
+      description: API endpoint for managing medications.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Medication'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Medication'
+      tags:
+      - pharmacy
+    delete:
+      operationId: pharmacy_medications_delete
+      description: API endpoint for managing medications.
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - pharmacy
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this medication.
+      required: true
+      type: integer
+  /pharmacy/pharmacy/dispensing-items/:
+    get:
+      operationId: pharmacy_pharmacy_dispensing-items_list
+      description: API endpoint for managing dispensing items.
+      parameters:
+      - name: dispensing
+        in: query
+        description: dispensing
+        required: false
+        type: string
+      - name: prescription_item
+        in: query
+        description: prescription_item
+        required: false
+        type: string
+      - name: inventory
+        in: query
+        description: inventory
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/DispensingItem'
+      tags:
+      - pharmacy
+    post:
+      operationId: pharmacy_pharmacy_dispensing-items_create
+      description: API endpoint for managing dispensing items.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/DispensingItem'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/DispensingItem'
+      tags:
+      - pharmacy
+    parameters: []
+  /pharmacy/pharmacy/dispensing-items/{id}/:
+    get:
+      operationId: pharmacy_pharmacy_dispensing-items_read
+      description: API endpoint for managing dispensing items.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/DispensingItem'
+      tags:
+      - pharmacy
+    put:
+      operationId: pharmacy_pharmacy_dispensing-items_update
+      description: API endpoint for managing dispensing items.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/DispensingItem'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/DispensingItem'
+      tags:
+      - pharmacy
+    patch:
+      operationId: pharmacy_pharmacy_dispensing-items_partial_update
+      description: API endpoint for managing dispensing items.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/DispensingItem'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/DispensingItem'
+      tags:
+      - pharmacy
+    delete:
+      operationId: pharmacy_pharmacy_dispensing-items_delete
+      description: API endpoint for managing dispensing items.
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - pharmacy
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this dispensing item.
+      required: true
+      type: integer
+  /pharmacy/pharmacy/dispensings/:
+    get:
+      operationId: pharmacy_pharmacy_dispensings_list
+      description: API endpoint for managing dispensing.
+      parameters:
+      - name: prescription
+        in: query
+        description: prescription
+        required: false
+        type: string
+      - name: pharmacist_id
+        in: query
+        description: pharmacist_id
+        required: false
+        type: string
+      - name: status
+        in: query
+        description: status
+        required: false
+        type: string
+        enum:
+        - PENDING
+        - COMPLETED
+        - CANCELLED
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Dispensing'
+      tags:
+      - pharmacy
+    post:
+      operationId: pharmacy_pharmacy_dispensings_create
+      description: API endpoint for managing dispensing.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/DispensingCreate'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/DispensingCreate'
+      tags:
+      - pharmacy
+    parameters: []
+  /pharmacy/pharmacy/dispensings/{id}/:
+    get:
+      operationId: pharmacy_pharmacy_dispensings_read
+      description: API endpoint for managing dispensing.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Dispensing'
+      tags:
+      - pharmacy
+    put:
+      operationId: pharmacy_pharmacy_dispensings_update
+      description: API endpoint for managing dispensing.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Dispensing'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Dispensing'
+      tags:
+      - pharmacy
+    patch:
+      operationId: pharmacy_pharmacy_dispensings_partial_update
+      description: API endpoint for managing dispensing.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Dispensing'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Dispensing'
+      tags:
+      - pharmacy
+    delete:
+      operationId: pharmacy_pharmacy_dispensings_delete
+      description: API endpoint for managing dispensing.
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - pharmacy
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this dispensing.
+      required: true
+      type: integer
+  /pharmacy/pharmacy/dispensings/{id}/cancel/:
+    post:
+      operationId: pharmacy_pharmacy_dispensings_cancel
+      description: Cancel a dispensing.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Dispensing'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Dispensing'
+      tags:
+      - pharmacy
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this dispensing.
+      required: true
+      type: integer
+  /pharmacy/pharmacy/dispensings/{id}/complete/:
+    post:
+      operationId: pharmacy_pharmacy_dispensings_complete
+      description: Mark a dispensing as completed.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Dispensing'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Dispensing'
+      tags:
+      - pharmacy
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this dispensing.
+      required: true
+      type: integer
+  /pharmacy/pharmacy/inventory/:
+    get:
+      operationId: pharmacy_pharmacy_inventory_list
+      description: API endpoint for managing inventory.
+      parameters:
+      - name: medication
+        in: query
+        description: medication
+        required: false
+        type: string
+      - name: batch_number
+        in: query
+        description: batch_number
+        required: false
+        type: string
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Inventory'
+      tags:
+      - pharmacy
+    post:
+      operationId: pharmacy_pharmacy_inventory_create
+      description: API endpoint for managing inventory.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Inventory'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Inventory'
+      tags:
+      - pharmacy
+    parameters: []
+  /pharmacy/pharmacy/inventory/expiring_soon/:
+    get:
+      operationId: pharmacy_pharmacy_inventory_expiring_soon
+      description: Get inventory items expiring within 30 days.
+      parameters:
+      - name: medication
+        in: query
+        description: medication
+        required: false
+        type: string
+      - name: batch_number
+        in: query
+        description: batch_number
+        required: false
+        type: string
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Inventory'
+      tags:
+      - pharmacy
+    parameters: []
+  /pharmacy/pharmacy/inventory/low_stock/:
+    get:
+      operationId: pharmacy_pharmacy_inventory_low_stock
+      description: Get inventory items with low stock (less than 10 units).
+      parameters:
+      - name: medication
+        in: query
+        description: medication
+        required: false
+        type: string
+      - name: batch_number
+        in: query
+        description: batch_number
+        required: false
+        type: string
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Inventory'
+      tags:
+      - pharmacy
+    parameters: []
+  /pharmacy/pharmacy/inventory/{id}/:
+    get:
+      operationId: pharmacy_pharmacy_inventory_read
+      description: API endpoint for managing inventory.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Inventory'
+      tags:
+      - pharmacy
+    put:
+      operationId: pharmacy_pharmacy_inventory_update
+      description: API endpoint for managing inventory.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Inventory'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Inventory'
+      tags:
+      - pharmacy
+    patch:
+      operationId: pharmacy_pharmacy_inventory_partial_update
+      description: API endpoint for managing inventory.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Inventory'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Inventory'
+      tags:
+      - pharmacy
+    delete:
+      operationId: pharmacy_pharmacy_inventory_delete
+      description: API endpoint for managing inventory.
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - pharmacy
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this inventory.
+      required: true
+      type: integer
+  /pharmacy/pharmacy/medications/:
+    get:
+      operationId: pharmacy_pharmacy_medications_list
+      description: API endpoint for managing medications.
+      parameters:
+      - name: category
+        in: query
+        description: category
+        required: false
+        type: string
+        enum:
+        - ANTIBIOTIC
+        - ANALGESIC
+        - ANTIVIRAL
+        - ANTIHISTAMINE
+        - ANTIDEPRESSANT
+        - ANTIHYPERTENSIVE
+        - ANTIDIABETIC
+        - ANTIINFLAMMATORY
+        - VITAMIN
+        - SUPPLEMENT
+        - OTHER
+      - name: dosage_form
+        in: query
+        description: dosage_form
+        required: false
+        type: string
+        enum:
+        - TABLET
+        - CAPSULE
+        - LIQUID
+        - INJECTION
+        - CREAM
+        - OINTMENT
+        - DROPS
+        - INHALER
+        - PATCH
+        - OTHER
+      - name: requires_prescription
+        in: query
+        description: requires_prescription
+        required: false
+        type: string
+      - name: manufacturer
+        in: query
+        description: manufacturer
+        required: false
+        type: string
+      - name: search
+        in: query
+        description: A search term.
+        required: false
+        type: string
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Medication'
+      tags:
+      - pharmacy
+    post:
+      operationId: pharmacy_pharmacy_medications_create
+      description: API endpoint for managing medications.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Medication'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Medication'
+      tags:
+      - pharmacy
+    parameters: []
+  /pharmacy/pharmacy/medications/search/:
+    get:
+      operationId: pharmacy_pharmacy_medications_search
+      description: Search medications by name, description, or category.
+      parameters:
+      - name: category
+        in: query
+        description: category
+        required: false
+        type: string
+        enum:
+        - ANTIBIOTIC
+        - ANALGESIC
+        - ANTIVIRAL
+        - ANTIHISTAMINE
+        - ANTIDEPRESSANT
+        - ANTIHYPERTENSIVE
+        - ANTIDIABETIC
+        - ANTIINFLAMMATORY
+        - VITAMIN
+        - SUPPLEMENT
+        - OTHER
+      - name: dosage_form
+        in: query
+        description: dosage_form
+        required: false
+        type: string
+        enum:
+        - TABLET
+        - CAPSULE
+        - LIQUID
+        - INJECTION
+        - CREAM
+        - OINTMENT
+        - DROPS
+        - INHALER
+        - PATCH
+        - OTHER
+      - name: requires_prescription
+        in: query
+        description: requires_prescription
+        required: false
+        type: string
+      - name: manufacturer
+        in: query
+        description: manufacturer
+        required: false
+        type: string
+      - name: search
+        in: query
+        description: A search term.
+        required: false
+        type: string
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Medication'
+      tags:
+      - pharmacy
+    parameters: []
+  /pharmacy/pharmacy/medications/{id}/:
+    get:
+      operationId: pharmacy_pharmacy_medications_read
+      description: API endpoint for managing medications.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Medication'
+      tags:
+      - pharmacy
+    put:
+      operationId: pharmacy_pharmacy_medications_update
+      description: API endpoint for managing medications.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Medication'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Medication'
+      tags:
+      - pharmacy
+    patch:
+      operationId: pharmacy_pharmacy_medications_partial_update
+      description: API endpoint for managing medications.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Medication'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Medication'
+      tags:
+      - pharmacy
+    delete:
+      operationId: pharmacy_pharmacy_medications_delete
+      description: API endpoint for managing medications.
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - pharmacy
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this medication.
+      required: true
+      type: integer
+  /pharmacy/pharmacy/prescription-items/:
+    get:
+      operationId: pharmacy_pharmacy_prescription-items_list
+      description: API endpoint for managing prescription items.
+      parameters:
+      - name: prescription
+        in: query
+        description: prescription
+        required: false
+        type: string
+      - name: medication
+        in: query
+        description: medication
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/PrescriptionItem'
+      tags:
+      - pharmacy
+    post:
+      operationId: pharmacy_pharmacy_prescription-items_create
+      description: API endpoint for managing prescription items.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/PrescriptionItem'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/PrescriptionItem'
+      tags:
+      - pharmacy
+    parameters: []
+  /pharmacy/pharmacy/prescription-items/{id}/:
+    get:
+      operationId: pharmacy_pharmacy_prescription-items_read
+      description: API endpoint for managing prescription items.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/PrescriptionItem'
+      tags:
+      - pharmacy
+    put:
+      operationId: pharmacy_pharmacy_prescription-items_update
+      description: API endpoint for managing prescription items.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/PrescriptionItem'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/PrescriptionItem'
+      tags:
+      - pharmacy
+    patch:
+      operationId: pharmacy_pharmacy_prescription-items_partial_update
+      description: API endpoint for managing prescription items.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/PrescriptionItem'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/PrescriptionItem'
+      tags:
+      - pharmacy
+    delete:
+      operationId: pharmacy_pharmacy_prescription-items_delete
+      description: API endpoint for managing prescription items.
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - pharmacy
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this prescription item.
+      required: true
+      type: integer
+  /pharmacy/pharmacy/prescriptions/:
+    get:
+      operationId: pharmacy_pharmacy_prescriptions_list
+      description: API endpoint for managing prescriptions.
+      parameters:
+      - name: patient_id
+        in: query
+        description: patient_id
+        required: false
+        type: string
+      - name: doctor_id
+        in: query
+        description: doctor_id
+        required: false
+        type: string
+      - name: diagnosis_id
+        in: query
+        description: diagnosis_id
+        required: false
+        type: string
+      - name: encounter_id
+        in: query
+        description: encounter_id
+        required: false
+        type: string
+      - name: status
+        in: query
+        description: status
+        required: false
+        type: string
+        enum:
+        - PENDING
+        - PROCESSING
+        - DISPENSED
+        - CANCELLED
+        - EXPIRED
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Prescription'
+      tags:
+      - pharmacy
+    post:
+      operationId: pharmacy_pharmacy_prescriptions_create
+      description: API endpoint for managing prescriptions.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/PrescriptionCreate'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/PrescriptionCreate'
+      tags:
+      - pharmacy
+    parameters: []
+  /pharmacy/pharmacy/prescriptions/create_from_diagnosis/:
+    post:
+      operationId: pharmacy_pharmacy_prescriptions_create_from_diagnosis
+      description: Create a prescription from a diagnosis.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Prescription'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Prescription'
+      tags:
+      - pharmacy
+    parameters: []
+  /pharmacy/pharmacy/prescriptions/pending/:
+    get:
+      operationId: pharmacy_pharmacy_prescriptions_pending
+      description: Get pending prescriptions.
+      parameters:
+      - name: patient_id
+        in: query
+        description: patient_id
+        required: false
+        type: string
+      - name: doctor_id
+        in: query
+        description: doctor_id
+        required: false
+        type: string
+      - name: diagnosis_id
+        in: query
+        description: diagnosis_id
+        required: false
+        type: string
+      - name: encounter_id
+        in: query
+        description: encounter_id
+        required: false
+        type: string
+      - name: status
+        in: query
+        description: status
+        required: false
+        type: string
+        enum:
+        - PENDING
+        - PROCESSING
+        - DISPENSED
+        - CANCELLED
+        - EXPIRED
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Prescription'
+      tags:
+      - pharmacy
+    parameters: []
+  /pharmacy/pharmacy/prescriptions/{id}/:
+    get:
+      operationId: pharmacy_pharmacy_prescriptions_read
+      description: API endpoint for managing prescriptions.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Prescription'
+      tags:
+      - pharmacy
+    put:
+      operationId: pharmacy_pharmacy_prescriptions_update
+      description: API endpoint for managing prescriptions.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Prescription'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Prescription'
+      tags:
+      - pharmacy
+    patch:
+      operationId: pharmacy_pharmacy_prescriptions_partial_update
+      description: API endpoint for managing prescriptions.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Prescription'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Prescription'
+      tags:
+      - pharmacy
+    delete:
+      operationId: pharmacy_pharmacy_prescriptions_delete
+      description: API endpoint for managing prescriptions.
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - pharmacy
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this prescription.
+      required: true
+      type: integer
+  /pharmacy/pharmacy/prescriptions/{id}/cancel/:
+    post:
+      operationId: pharmacy_pharmacy_prescriptions_cancel
+      description: Cancel a prescription.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Prescription'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Prescription'
+      tags:
+      - pharmacy
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this prescription.
+      required: true
+      type: integer
+  /pharmacy/prescription-items/:
+    get:
+      operationId: pharmacy_prescription-items_list
+      description: API endpoint for managing prescription items.
+      parameters:
+      - name: prescription
+        in: query
+        description: prescription
+        required: false
+        type: string
+      - name: medication
+        in: query
+        description: medication
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/PrescriptionItem'
+      tags:
+      - pharmacy
+    post:
+      operationId: pharmacy_prescription-items_create
+      description: API endpoint for managing prescription items.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/PrescriptionItem'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/PrescriptionItem'
+      tags:
+      - pharmacy
+    parameters: []
+  /pharmacy/prescription-items/{id}/:
+    get:
+      operationId: pharmacy_prescription-items_read
+      description: API endpoint for managing prescription items.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/PrescriptionItem'
+      tags:
+      - pharmacy
+    put:
+      operationId: pharmacy_prescription-items_update
+      description: API endpoint for managing prescription items.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/PrescriptionItem'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/PrescriptionItem'
+      tags:
+      - pharmacy
+    patch:
+      operationId: pharmacy_prescription-items_partial_update
+      description: API endpoint for managing prescription items.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/PrescriptionItem'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/PrescriptionItem'
+      tags:
+      - pharmacy
+    delete:
+      operationId: pharmacy_prescription-items_delete
+      description: API endpoint for managing prescription items.
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - pharmacy
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this prescription item.
+      required: true
+      type: integer
+  /pharmacy/prescriptions/:
+    get:
+      operationId: pharmacy_prescriptions_list
+      description: API endpoint for managing prescriptions.
+      parameters:
+      - name: patient_id
+        in: query
+        description: patient_id
+        required: false
+        type: string
+      - name: doctor_id
+        in: query
+        description: doctor_id
+        required: false
+        type: string
+      - name: diagnosis_id
+        in: query
+        description: diagnosis_id
+        required: false
+        type: string
+      - name: encounter_id
+        in: query
+        description: encounter_id
+        required: false
+        type: string
+      - name: status
+        in: query
+        description: status
+        required: false
+        type: string
+        enum:
+        - PENDING
+        - PROCESSING
+        - DISPENSED
+        - CANCELLED
+        - EXPIRED
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Prescription'
+      tags:
+      - pharmacy
+    post:
+      operationId: pharmacy_prescriptions_create
+      description: API endpoint for managing prescriptions.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/PrescriptionCreate'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/PrescriptionCreate'
+      tags:
+      - pharmacy
+    parameters: []
+  /pharmacy/prescriptions/create_from_diagnosis/:
+    post:
+      operationId: pharmacy_prescriptions_create_from_diagnosis
+      description: Create a prescription from a diagnosis.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Prescription'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Prescription'
+      tags:
+      - pharmacy
+    parameters: []
+  /pharmacy/prescriptions/pending/:
+    get:
+      operationId: pharmacy_prescriptions_pending
+      description: Get pending prescriptions.
+      parameters:
+      - name: patient_id
+        in: query
+        description: patient_id
+        required: false
+        type: string
+      - name: doctor_id
+        in: query
+        description: doctor_id
+        required: false
+        type: string
+      - name: diagnosis_id
+        in: query
+        description: diagnosis_id
+        required: false
+        type: string
+      - name: encounter_id
+        in: query
+        description: encounter_id
+        required: false
+        type: string
+      - name: status
+        in: query
+        description: status
+        required: false
+        type: string
+        enum:
+        - PENDING
+        - PROCESSING
+        - DISPENSED
+        - CANCELLED
+        - EXPIRED
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Prescription'
+      tags:
+      - pharmacy
+    parameters: []
+  /pharmacy/prescriptions/{id}/:
+    get:
+      operationId: pharmacy_prescriptions_read
+      description: API endpoint for managing prescriptions.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Prescription'
+      tags:
+      - pharmacy
+    put:
+      operationId: pharmacy_prescriptions_update
+      description: API endpoint for managing prescriptions.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Prescription'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Prescription'
+      tags:
+      - pharmacy
+    patch:
+      operationId: pharmacy_prescriptions_partial_update
+      description: API endpoint for managing prescriptions.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Prescription'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Prescription'
+      tags:
+      - pharmacy
+    delete:
+      operationId: pharmacy_prescriptions_delete
+      description: API endpoint for managing prescriptions.
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - pharmacy
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this prescription.
+      required: true
+      type: integer
+  /pharmacy/prescriptions/{id}/cancel/:
+    post:
+      operationId: pharmacy_prescriptions_cancel
+      description: Cancel a prescription.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Prescription'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Prescription'
+      tags:
+      - pharmacy
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this prescription.
+      required: true
+      type: integer
+  /prescription-items/:
+    get:
+      operationId: prescription-items_list
+      description: API endpoint for managing prescription items.
+      parameters:
+      - name: prescription
+        in: query
+        description: prescription
+        required: false
+        type: string
+      - name: medication
+        in: query
+        description: medication
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/PrescriptionItem'
+      tags:
+      - prescription-items
+    post:
+      operationId: prescription-items_create
+      description: API endpoint for managing prescription items.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/PrescriptionItem'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/PrescriptionItem'
+      tags:
+      - prescription-items
+    parameters: []
+  /prescription-items/{id}/:
+    get:
+      operationId: prescription-items_read
+      description: API endpoint for managing prescription items.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/PrescriptionItem'
+      tags:
+      - prescription-items
+    put:
+      operationId: prescription-items_update
+      description: API endpoint for managing prescription items.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/PrescriptionItem'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/PrescriptionItem'
+      tags:
+      - prescription-items
+    patch:
+      operationId: prescription-items_partial_update
+      description: API endpoint for managing prescription items.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/PrescriptionItem'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/PrescriptionItem'
+      tags:
+      - prescription-items
+    delete:
+      operationId: prescription-items_delete
+      description: API endpoint for managing prescription items.
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - prescription-items
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this prescription item.
+      required: true
+      type: integer
+  /prescriptions/:
+    get:
+      operationId: prescriptions_list
+      description: API endpoint for managing prescriptions.
+      parameters:
+      - name: patient_id
+        in: query
+        description: patient_id
+        required: false
+        type: string
+      - name: doctor_id
+        in: query
+        description: doctor_id
+        required: false
+        type: string
+      - name: diagnosis_id
+        in: query
+        description: diagnosis_id
+        required: false
+        type: string
+      - name: encounter_id
+        in: query
+        description: encounter_id
+        required: false
+        type: string
+      - name: status
+        in: query
+        description: status
+        required: false
+        type: string
+        enum:
+        - PENDING
+        - PROCESSING
+        - DISPENSED
+        - CANCELLED
+        - EXPIRED
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Prescription'
+      tags:
+      - prescriptions
+    post:
+      operationId: prescriptions_create
+      description: API endpoint for managing prescriptions.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/PrescriptionCreate'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/PrescriptionCreate'
+      tags:
+      - prescriptions
+    parameters: []
+  /prescriptions/create_from_diagnosis/:
+    post:
+      operationId: prescriptions_create_from_diagnosis
+      description: Create a prescription from a diagnosis.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Prescription'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Prescription'
+      tags:
+      - prescriptions
+    parameters: []
+  /prescriptions/pending/:
+    get:
+      operationId: prescriptions_pending
+      description: Get pending prescriptions.
+      parameters:
+      - name: patient_id
+        in: query
+        description: patient_id
+        required: false
+        type: string
+      - name: doctor_id
+        in: query
+        description: doctor_id
+        required: false
+        type: string
+      - name: diagnosis_id
+        in: query
+        description: diagnosis_id
+        required: false
+        type: string
+      - name: encounter_id
+        in: query
+        description: encounter_id
+        required: false
+        type: string
+      - name: status
+        in: query
+        description: status
+        required: false
+        type: string
+        enum:
+        - PENDING
+        - PROCESSING
+        - DISPENSED
+        - CANCELLED
+        - EXPIRED
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Prescription'
+      tags:
+      - prescriptions
+    parameters: []
+  /prescriptions/{id}/:
+    get:
+      operationId: prescriptions_read
+      description: API endpoint for managing prescriptions.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Prescription'
+      tags:
+      - prescriptions
+    put:
+      operationId: prescriptions_update
+      description: API endpoint for managing prescriptions.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Prescription'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Prescription'
+      tags:
+      - prescriptions
+    patch:
+      operationId: prescriptions_partial_update
+      description: API endpoint for managing prescriptions.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Prescription'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Prescription'
+      tags:
+      - prescriptions
+    delete:
+      operationId: prescriptions_delete
+      description: API endpoint for managing prescriptions.
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - prescriptions
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this prescription.
+      required: true
+      type: integer
+  /prescriptions/{id}/cancel/:
+    post:
+      operationId: prescriptions_cancel
+      description: Cancel a prescription.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Prescription'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Prescription'
+      tags:
+      - prescriptions
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this prescription.
+      required: true
+      type: integer
+definitions:
+  Medication:
+    required:
+    - name
+    - dosage_form
+    - strength
+    - manufacturer
+    - category
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      name:
+        title: Name
+        type: string
+        maxLength: 255
+        minLength: 1
+      description:
+        title: Description
+        type: string
+        x-nullable: true
+      dosage_form:
+        title: Dosage form
+        type: string
+        enum:
+        - TABLET
+        - CAPSULE
+        - LIQUID
+        - INJECTION
+        - CREAM
+        - OINTMENT
+        - DROPS
+        - INHALER
+        - PATCH
+        - OTHER
+      dosage_form_display:
+        title: Dosage form display
+        type: string
+        readOnly: true
+        minLength: 1
+      strength:
+        title: Strength
+        type: string
+        maxLength: 100
+        minLength: 1
+      manufacturer:
+        title: Manufacturer
+        type: string
+        maxLength: 255
+        minLength: 1
+      category:
+        title: Category
+        type: string
+        enum:
+        - ANTIBIOTIC
+        - ANALGESIC
+        - ANTIVIRAL
+        - ANTIHISTAMINE
+        - ANTIDEPRESSANT
+        - ANTIHYPERTENSIVE
+        - ANTIDIABETIC
+        - ANTIINFLAMMATORY
+        - VITAMIN
+        - SUPPLEMENT
+        - OTHER
+      category_display:
+        title: Category display
+        type: string
+        readOnly: true
+        minLength: 1
+      requires_prescription:
+        title: Requires prescription
+        type: boolean
+      side_effects:
+        title: Side effects
+        type: string
+        x-nullable: true
+      contraindications:
+        title: Contraindications
+        type: string
+        x-nullable: true
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true
+  PrescriptionItem:
+    required:
+    - medication
+    - dosage
+    - frequency
+    - duration
+    - instructions
+    - quantity
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      prescription:
+        title: Prescription
+        type: integer
+      medication:
+        title: Medication
+        type: integer
+      medication_details:
+        $ref: '#/definitions/Medication'
+      dosage:
+        title: Dosage
+        type: string
+        maxLength: 100
+        minLength: 1
+      frequency:
+        title: Frequency
+        type: string
+        maxLength: 100
+        minLength: 1
+      duration:
+        title: Duration
+        type: string
+        maxLength: 100
+        minLength: 1
+      instructions:
+        title: Instructions
+        type: string
+        minLength: 1
+      quantity:
+        title: Quantity
+        type: integer
+        maximum: 2147483647
+        minimum: 0
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true
+  Inventory:
+    required:
+    - medication
+    - batch_number
+    - expiry_date
+    - quantity
+    - unit_price
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      medication:
+        title: Medication
+        type: integer
+      medication_details:
+        $ref: '#/definitions/Medication'
+      batch_number:
+        title: Batch number
+        type: string
+        maxLength: 100
+        minLength: 1
+      expiry_date:
+        title: Expiry date
+        type: string
+        format: date
+      quantity:
+        title: Quantity
+        type: integer
+        maximum: 2147483647
+        minimum: 0
+      unit_price:
+        title: Unit price
+        type: string
+        format: decimal
+      location:
+        title: Location
+        type: string
+        maxLength: 100
+        x-nullable: true
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true
+  DispensingItem:
+    required:
+    - dispensing
+    - prescription_item
+    - inventory
+    - quantity_dispensed
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      dispensing:
+        title: Dispensing
+        type: integer
+      prescription_item:
+        title: Prescription item
+        type: integer
+      prescription_item_details:
+        $ref: '#/definitions/PrescriptionItem'
+      inventory:
+        title: Inventory
+        type: integer
+      inventory_details:
+        $ref: '#/definitions/Inventory'
+      quantity_dispensed:
+        title: Quantity dispensed
+        type: integer
+        maximum: 2147483647
+        minimum: 0
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true
+  Prescription:
+    required:
+    - patient_id
+    - doctor_id
+    - date_prescribed
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      patient_id:
+        title: Patient id
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+      doctor_id:
+        title: Doctor id
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+      diagnosis_id:
+        title: Diagnosis id
+        description: ID of the diagnosis in medical-record-service
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+        x-nullable: true
+      encounter_id:
+        title: Encounter id
+        description: ID of the encounter in medical-record-service
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+        x-nullable: true
+      date_prescribed:
+        title: Date prescribed
+        type: string
+        format: date
+      status:
+        title: Status
+        type: string
+        enum:
+        - PENDING
+        - PROCESSING
+        - DISPENSED
+        - CANCELLED
+        - EXPIRED
+      status_display:
+        title: Status display
+        type: string
+        readOnly: true
+        minLength: 1
+      notes:
+        title: Notes
+        type: string
+        x-nullable: true
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/PrescriptionItem'
+        readOnly: true
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true
+  Dispensing:
+    required:
+    - prescription
+    - pharmacist_id
+    - date_dispensed
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      prescription:
+        title: Prescription
+        type: integer
+      prescription_details:
+        $ref: '#/definitions/Prescription'
+      pharmacist_id:
+        title: Pharmacist id
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+      date_dispensed:
+        title: Date dispensed
+        type: string
+        format: date-time
+      status:
+        title: Status
+        type: string
+        enum:
+        - PENDING
+        - COMPLETED
+        - CANCELLED
+      status_display:
+        title: Status display
+        type: string
+        readOnly: true
+        minLength: 1
+      notes:
+        title: Notes
+        type: string
+        x-nullable: true
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/DispensingItem'
+        readOnly: true
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true
+  DispensingCreate:
+    required:
+    - prescription
+    - pharmacist_id
+    - date_dispensed
+    - items
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      prescription:
+        title: Prescription
+        type: integer
+      pharmacist_id:
+        title: Pharmacist id
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+      date_dispensed:
+        title: Date dispensed
+        type: string
+        format: date-time
+      status:
+        title: Status
+        type: string
+        enum:
+        - PENDING
+        - COMPLETED
+        - CANCELLED
+      notes:
+        title: Notes
+        type: string
+        x-nullable: true
+      items:
+        type: array
+        items:
+          type: object
+          additionalProperties:
+            type: string
+            x-nullable: true
+  PrescriptionCreate:
+    required:
+    - patient_id
+    - doctor_id
+    - date_prescribed
+    - items
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      patient_id:
+        title: Patient id
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+      doctor_id:
+        title: Doctor id
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+      diagnosis_id:
+        title: Diagnosis id
+        description: ID of the diagnosis in medical-record-service
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+        x-nullable: true
+      encounter_id:
+        title: Encounter id
+        description: ID of the encounter in medical-record-service
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+        x-nullable: true
+      date_prescribed:
+        title: Date prescribed
+        type: string
+        format: date
+      status:
+        title: Status
+        type: string
+        enum:
+        - PENDING
+        - PROCESSING
+        - DISPENSED
+        - CANCELLED
+        - EXPIRED
+      notes:
+        title: Notes
+        type: string
+        x-nullable: true
+      items:
+        type: array
+        items:
+          type: object
+          additionalProperties:
+            type: string
+            x-nullable: true

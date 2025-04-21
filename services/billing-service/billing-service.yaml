@@ -1,0 +1,1196 @@
+swagger: '2.0'
+info:
+  title: Billing Service API
+  description: API for managing billing, payments, and insurance claims
+  termsOfService: https://www.example.com/terms/
+  contact:
+    email: contact@example.com
+  license:
+    name: BSD License
+  version: v1
+host: localhost:8003
+schemes:
+- http
+basePath: /api
+consumes:
+- application/json
+produces:
+- application/json
+securityDefinitions:
+  Bearer:
+    type: apiKey
+    in: header
+    name: Authorization
+    description: 'JWT Authorization header using the Bearer scheme. Example: "Bearer
+      {token}"'
+security:
+- Bearer: []
+paths:
+  /create-from-appointment/:
+    post:
+      operationId: from_appointment
+      description: Create an invoice from an appointment.
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+      - from_appointment
+    parameters: []
+  /create-from-lab-test/:
+    post:
+      operationId: from_lab_test
+      description: Create an invoice from a lab test.
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+      - from_lab_test
+    parameters: []
+  /create-from-medical-record/:
+    post:
+      operationId: from_medical_record
+      description: Create an invoice from a medical record.
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+      - from_medical_record
+    parameters: []
+  /create-from-prescription/:
+    post:
+      operationId: from_prescription
+      description: Create an invoice from a prescription.
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+      - from_prescription
+    parameters: []
+  /insurance-claims/:
+    get:
+      operationId: insurance-claims_list
+      description: API endpoint for managing insurance claims.
+      parameters:
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/InsuranceClaim'
+      tags:
+      - insurance-claims
+    post:
+      operationId: insurance-claims_create
+      description: API endpoint for managing insurance claims.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/InsuranceClaim'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/InsuranceClaim'
+      tags:
+      - insurance-claims
+    parameters: []
+  /insurance-claims/{id}/:
+    get:
+      operationId: insurance-claims_read
+      description: API endpoint for managing insurance claims.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/InsuranceClaim'
+      tags:
+      - insurance-claims
+    put:
+      operationId: insurance-claims_update
+      description: API endpoint for managing insurance claims.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/InsuranceClaim'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/InsuranceClaim'
+      tags:
+      - insurance-claims
+    patch:
+      operationId: insurance-claims_partial_update
+      description: API endpoint for managing insurance claims.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/InsuranceClaim'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/InsuranceClaim'
+      tags:
+      - insurance-claims
+    delete:
+      operationId: insurance-claims_delete
+      description: API endpoint for managing insurance claims.
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - insurance-claims
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this insurance claim.
+      required: true
+      type: integer
+  /insurance-claims/{id}/process_insurance_payment/:
+    post:
+      operationId: insurance-claims_process_insurance_payment
+      description: Process payment from insurance provider.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/InsuranceClaim'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/InsuranceClaim'
+      tags:
+      - insurance-claims
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this insurance claim.
+      required: true
+      type: integer
+  /insurance-claims/{id}/update_status/:
+    post:
+      operationId: insurance-claims_update_status
+      description: API endpoint for managing insurance claims.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/InsuranceClaim'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/InsuranceClaim'
+      tags:
+      - insurance-claims
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this insurance claim.
+      required: true
+      type: integer
+  /invoice-creation/from_appointment/:
+    post:
+      operationId: invoice-creation_from_appointment
+      description: Create an invoice from an appointment.
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+      - invoice-creation
+    parameters: []
+  /invoice-creation/from_lab_test/:
+    post:
+      operationId: invoice-creation_from_lab_test
+      description: Create an invoice from a lab test.
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+      - invoice-creation
+    parameters: []
+  /invoice-creation/from_medical_record/:
+    post:
+      operationId: invoice-creation_from_medical_record
+      description: Create an invoice from a medical record.
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+      - invoice-creation
+    parameters: []
+  /invoice-creation/from_prescription/:
+    post:
+      operationId: invoice-creation_from_prescription
+      description: Create an invoice from a prescription.
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+      - invoice-creation
+    parameters: []
+  /invoice-items/:
+    get:
+      operationId: invoice-items_list
+      description: API endpoint for managing invoice items.
+      parameters:
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/InvoiceItem'
+      tags:
+      - invoice-items
+    post:
+      operationId: invoice-items_create
+      description: API endpoint for managing invoice items.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/InvoiceItem'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/InvoiceItem'
+      tags:
+      - invoice-items
+    parameters: []
+  /invoice-items/{id}/:
+    get:
+      operationId: invoice-items_read
+      description: API endpoint for managing invoice items.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/InvoiceItem'
+      tags:
+      - invoice-items
+    put:
+      operationId: invoice-items_update
+      description: API endpoint for managing invoice items.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/InvoiceItem'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/InvoiceItem'
+      tags:
+      - invoice-items
+    patch:
+      operationId: invoice-items_partial_update
+      description: API endpoint for managing invoice items.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/InvoiceItem'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/InvoiceItem'
+      tags:
+      - invoice-items
+    delete:
+      operationId: invoice-items_delete
+      description: API endpoint for managing invoice items.
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - invoice-items
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this invoice item.
+      required: true
+      type: integer
+  /invoices/:
+    get:
+      operationId: invoices_list
+      description: API endpoint for managing invoices.
+      parameters:
+      - name: search
+        in: query
+        description: A search term.
+        required: false
+        type: string
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Invoice'
+      tags:
+      - invoices
+    post:
+      operationId: invoices_create
+      description: API endpoint for managing invoices.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/InvoiceCreate'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/InvoiceCreate'
+      tags:
+      - invoices
+    parameters: []
+  /invoices/{id}/:
+    get:
+      operationId: invoices_read
+      description: API endpoint for managing invoices.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/InvoiceDetail'
+      tags:
+      - invoices
+    put:
+      operationId: invoices_update
+      description: API endpoint for managing invoices.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Invoice'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Invoice'
+      tags:
+      - invoices
+    patch:
+      operationId: invoices_partial_update
+      description: API endpoint for managing invoices.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Invoice'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Invoice'
+      tags:
+      - invoices
+    delete:
+      operationId: invoices_delete
+      description: API endpoint for managing invoices.
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - invoices
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this invoice.
+      required: true
+      type: integer
+  /invoices/{id}/add_item/:
+    post:
+      operationId: invoices_add_item
+      description: API endpoint for managing invoices.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Invoice'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Invoice'
+      tags:
+      - invoices
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this invoice.
+      required: true
+      type: integer
+  /invoices/{id}/add_payment/:
+    post:
+      operationId: invoices_add_payment
+      description: API endpoint for managing invoices.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Invoice'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Invoice'
+      tags:
+      - invoices
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this invoice.
+      required: true
+      type: integer
+  /invoices/{id}/apply_insurance/:
+    post:
+      operationId: invoices_apply_insurance
+      description: Apply insurance coverage to an invoice automatically.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Invoice'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Invoice'
+      tags:
+      - invoices
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this invoice.
+      required: true
+      type: integer
+  /invoices/{id}/process_payment/:
+    post:
+      operationId: invoices_process_payment
+      description: Process payment from a payment gateway.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Invoice'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Invoice'
+      tags:
+      - invoices
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this invoice.
+      required: true
+      type: integer
+  /invoices/{id}/submit_insurance_claim/:
+    post:
+      operationId: invoices_submit_insurance_claim
+      description: API endpoint for managing invoices.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Invoice'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Invoice'
+      tags:
+      - invoices
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this invoice.
+      required: true
+      type: integer
+  /payments/:
+    get:
+      operationId: payments_list
+      description: API endpoint for managing payments.
+      parameters:
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Payment'
+      tags:
+      - payments
+    post:
+      operationId: payments_create
+      description: API endpoint for managing payments.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Payment'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Payment'
+      tags:
+      - payments
+    parameters: []
+  /payments/{id}/:
+    get:
+      operationId: payments_read
+      description: API endpoint for managing payments.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Payment'
+      tags:
+      - payments
+    put:
+      operationId: payments_update
+      description: API endpoint for managing payments.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Payment'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Payment'
+      tags:
+      - payments
+    patch:
+      operationId: payments_partial_update
+      description: API endpoint for managing payments.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Payment'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Payment'
+      tags:
+      - payments
+    delete:
+      operationId: payments_delete
+      description: API endpoint for managing payments.
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - payments
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this payment.
+      required: true
+      type: integer
+definitions:
+  InsuranceClaim:
+    required:
+    - insurance_provider_id
+    - policy_number
+    - claim_number
+    - submission_date
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      insurance_provider_id:
+        title: Insurance provider id
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+      policy_number:
+        title: Policy number
+        type: string
+        maxLength: 100
+        minLength: 1
+      member_id:
+        title: Member id
+        type: string
+        maxLength: 100
+        x-nullable: true
+      claim_number:
+        title: Claim number
+        type: string
+        maxLength: 100
+        minLength: 1
+      claim_amount:
+        title: Claim amount
+        type: string
+        format: decimal
+        x-nullable: true
+      submission_date:
+        title: Submission date
+        type: string
+        format: date
+      status:
+        title: Status
+        type: string
+        enum:
+        - SUBMITTED
+        - IN_REVIEW
+        - APPROVED
+        - PARTIALLY_APPROVED
+        - REJECTED
+        - APPEALED
+      approved_amount:
+        title: Approved amount
+        type: string
+        format: decimal
+        x-nullable: true
+      rejection_reason:
+        title: Rejection reason
+        type: string
+        x-nullable: true
+      notes:
+        title: Notes
+        type: string
+        x-nullable: true
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true
+      invoice:
+        title: Invoice
+        type: integer
+        readOnly: true
+  InvoiceItem:
+    required:
+    - item_type
+    - description
+    - unit_price
+    - total_price
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      item_type:
+        title: Item type
+        type: string
+        enum:
+        - APPOINTMENT
+        - CONSULTATION
+        - FOLLOW_UP
+        - EMERGENCY
+        - PROCEDURE
+        - SURGERY
+        - IMAGING
+        - VACCINATION
+        - LAB_TEST
+        - BLOOD_TEST
+        - URINE_TEST
+        - PATHOLOGY
+        - MEDICATION
+        - PRESCRIPTION
+        - OTC_MEDICATION
+        - MEDICAL_SUPPLY
+        - ROOM_CHARGE
+        - ICU_CHARGE
+        - WARD_CHARGE
+        - ADMINISTRATIVE
+        - INSURANCE
+        - OTHER
+      description:
+        title: Description
+        type: string
+        maxLength: 255
+        minLength: 1
+      quantity:
+        title: Quantity
+        type: integer
+        maximum: 2147483647
+        minimum: 0
+      unit_price:
+        title: Unit price
+        type: string
+        format: decimal
+      total_price:
+        title: Total price
+        type: string
+        format: decimal
+      reference_id:
+        title: Reference id
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+        x-nullable: true
+      service_type:
+        title: Service type
+        type: string
+        maxLength: 50
+        x-nullable: true
+      appointment_id:
+        title: Appointment id
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+        x-nullable: true
+      medical_record_id:
+        title: Medical record id
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+        x-nullable: true
+      lab_test_id:
+        title: Lab test id
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+        x-nullable: true
+      prescription_id:
+        title: Prescription id
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+        x-nullable: true
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true
+      invoice:
+        title: Invoice
+        type: integer
+        readOnly: true
+  Payment:
+    required:
+    - payment_method
+    - amount
+    - payment_date
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      payment_method:
+        title: Payment method
+        type: string
+        enum:
+        - CASH
+        - CREDIT_CARD
+        - DEBIT_CARD
+        - BANK_TRANSFER
+        - INSURANCE
+        - MOBILE_PAYMENT
+        - OTHER
+      amount:
+        title: Amount
+        type: string
+        format: decimal
+      transaction_id:
+        title: Transaction id
+        type: string
+        maxLength: 100
+        x-nullable: true
+      payment_date:
+        title: Payment date
+        type: string
+        format: date-time
+      status:
+        title: Status
+        type: string
+        enum:
+        - PENDING
+        - COMPLETED
+        - FAILED
+        - REFUNDED
+      payment_gateway:
+        title: Payment gateway
+        description: Payment gateway used for processing
+        type: string
+        maxLength: 50
+        x-nullable: true
+      payment_reference:
+        title: Payment reference
+        description: Reference code from payment gateway
+        type: string
+        maxLength: 100
+        x-nullable: true
+      notes:
+        title: Notes
+        type: string
+        x-nullable: true
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true
+      invoice:
+        title: Invoice
+        type: integer
+        readOnly: true
+  Invoice:
+    required:
+    - patient_id
+    - invoice_number
+    - issue_date
+    - due_date
+    - total_amount
+    - final_amount
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/InvoiceItem'
+        readOnly: true
+      payments:
+        type: array
+        items:
+          $ref: '#/definitions/Payment'
+        readOnly: true
+      insurance_claims:
+        type: array
+        items:
+          $ref: '#/definitions/InsuranceClaim'
+        readOnly: true
+      patient_id:
+        title: Patient id
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+      invoice_number:
+        title: Invoice number
+        type: string
+        maxLength: 50
+        minLength: 1
+      status:
+        title: Status
+        type: string
+        enum:
+        - DRAFT
+        - PENDING
+        - PAID
+        - PARTIALLY_PAID
+        - OVERDUE
+        - CANCELLED
+        - REFUNDED
+      issue_date:
+        title: Issue date
+        type: string
+        format: date
+      due_date:
+        title: Due date
+        type: string
+        format: date
+      total_amount:
+        title: Total amount
+        type: string
+        format: decimal
+      discount:
+        title: Discount
+        type: string
+        format: decimal
+      tax:
+        title: Tax
+        type: string
+        format: decimal
+      final_amount:
+        title: Final amount
+        type: string
+        format: decimal
+      notes:
+        title: Notes
+        type: string
+        x-nullable: true
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true
+  InvoiceCreate:
+    required:
+    - patient_id
+    - issue_date
+    - due_date
+    - items
+    type: object
+    properties:
+      patient_id:
+        title: Patient id
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+      issue_date:
+        title: Issue date
+        type: string
+        format: date
+      due_date:
+        title: Due date
+        type: string
+        format: date
+      notes:
+        title: Notes
+        type: string
+        x-nullable: true
+      items:
+        type: array
+        items:
+          type: object
+          additionalProperties:
+            type: string
+            x-nullable: true
+  InvoiceDetail:
+    required:
+    - patient_id
+    - invoice_number
+    - issue_date
+    - due_date
+    - total_amount
+    - final_amount
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/InvoiceItem'
+        readOnly: true
+      payments:
+        type: array
+        items:
+          $ref: '#/definitions/Payment'
+        readOnly: true
+      insurance_claims:
+        type: array
+        items:
+          $ref: '#/definitions/InsuranceClaim'
+        readOnly: true
+      patient_id:
+        title: Patient id
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+      invoice_number:
+        title: Invoice number
+        type: string
+        maxLength: 50
+        minLength: 1
+      status:
+        title: Status
+        type: string
+        enum:
+        - DRAFT
+        - PENDING
+        - PAID
+        - PARTIALLY_PAID
+        - OVERDUE
+        - CANCELLED
+        - REFUNDED
+      issue_date:
+        title: Issue date
+        type: string
+        format: date
+      due_date:
+        title: Due date
+        type: string
+        format: date
+      total_amount:
+        title: Total amount
+        type: string
+        format: decimal
+      discount:
+        title: Discount
+        type: string
+        format: decimal
+      tax:
+        title: Tax
+        type: string
+        format: decimal
+      final_amount:
+        title: Final amount
+        type: string
+        format: decimal
+      notes:
+        title: Notes
+        type: string
+        x-nullable: true
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true

@@ -1,0 +1,1271 @@
+swagger: '2.0'
+info:
+  title: Notification Service API
+  description: API for the Notification Service
+  termsOfService: https://www.google.com/policies/terms/
+  contact:
+    email: contact@healthcare.com
+  license:
+    name: BSD License
+  version: v1
+host: localhost:8006
+schemes:
+- http
+basePath: /api
+consumes:
+- application/json
+produces:
+- application/json
+securityDefinitions:
+  Bearer:
+    type: apiKey
+    in: header
+    name: Authorization
+    description: 'JWT Authorization header using the Bearer scheme. Example: "Bearer
+      {token}"'
+security:
+- Bearer: []
+paths:
+  /events:
+    post:
+      operationId: process
+      summary: Process events from other services and create appropriate notifications.
+      description: |-
+        This endpoint receives events from other services and creates appropriate notifications
+        based on the event type and service. It supports the following services:
+
+        - APPOINTMENT: Events related to appointments (CREATED, UPDATED, CANCELLED, REMINDER, COMPLETED)
+        - MEDICAL_RECORD: Events related to medical records (CREATED, UPDATED, DIAGNOSIS_ADDED, TREATMENT_ADDED, MEDICATION_ADDED)
+        - BILLING: Events related to billing (INVOICE_CREATED, PAYMENT_RECEIVED, PAYMENT_DUE, PAYMENT_OVERDUE, INSURANCE_CLAIM_SUBMITTED, INSURANCE_CLAIM_APPROVED, INSURANCE_CLAIM_REJECTED)
+        - PHARMACY: Events related to pharmacy (PRESCRIPTION_CREATED, PRESCRIPTION_FILLED, PRESCRIPTION_READY, PRESCRIPTION_PICKED_UP, MEDICATION_REFILL_DUE, MEDICATION_EXPIRING)
+        - LABORATORY: Events related to laboratory (TEST_ORDERED, SAMPLE_COLLECTED, RESULTS_READY, RESULTS_DELIVERED, ABNORMAL_RESULTS)
+
+        Example request for APPOINTMENT service:
+        ```json
+        {
+            "service": "APPOINTMENT",
+            "event_type": "CREATED",
+            "appointment_id": 1,
+            "patient_id": 4,
+            "doctor_id": 2,
+            "appointment_date": "2025-04-25T10:00:00Z",
+            "status": "SCHEDULED"
+        }
+        ```
+
+        Example request for BILLING service:
+        ```json
+        {
+            "service": "BILLING",
+            "event_type": "INVOICE_CREATED",
+            "invoice_id": 1,
+            "patient_id": 4,
+            "amount": 500000,
+            "due_date": "2025-05-01"
+        }
+        ```
+
+        The endpoint will create appropriate notifications for the event and return a list of
+        notification IDs that were created.
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+      - process
+    parameters: []
+  /events/process/:
+    post:
+      operationId: events_process
+      summary: Process events from other services and create appropriate notifications.
+      description: |-
+        This endpoint receives events from other services and creates appropriate notifications
+        based on the event type and service. It supports the following services:
+
+        - APPOINTMENT: Events related to appointments (CREATED, UPDATED, CANCELLED, REMINDER, COMPLETED)
+        - MEDICAL_RECORD: Events related to medical records (CREATED, UPDATED, DIAGNOSIS_ADDED, TREATMENT_ADDED, MEDICATION_ADDED)
+        - BILLING: Events related to billing (INVOICE_CREATED, PAYMENT_RECEIVED, PAYMENT_DUE, PAYMENT_OVERDUE, INSURANCE_CLAIM_SUBMITTED, INSURANCE_CLAIM_APPROVED, INSURANCE_CLAIM_REJECTED)
+        - PHARMACY: Events related to pharmacy (PRESCRIPTION_CREATED, PRESCRIPTION_FILLED, PRESCRIPTION_READY, PRESCRIPTION_PICKED_UP, MEDICATION_REFILL_DUE, MEDICATION_EXPIRING)
+        - LABORATORY: Events related to laboratory (TEST_ORDERED, SAMPLE_COLLECTED, RESULTS_READY, RESULTS_DELIVERED, ABNORMAL_RESULTS)
+
+        Example request for APPOINTMENT service:
+        ```json
+        {
+            "service": "APPOINTMENT",
+            "event_type": "CREATED",
+            "appointment_id": 1,
+            "patient_id": 4,
+            "doctor_id": 2,
+            "appointment_date": "2025-04-25T10:00:00Z",
+            "status": "SCHEDULED"
+        }
+        ```
+
+        Example request for BILLING service:
+        ```json
+        {
+            "service": "BILLING",
+            "event_type": "INVOICE_CREATED",
+            "invoice_id": 1,
+            "patient_id": 4,
+            "amount": 500000,
+            "due_date": "2025-05-01"
+        }
+        ```
+
+        The endpoint will create appropriate notifications for the event and return a list of
+        notification IDs that were created.
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+      - events
+    parameters: []
+  /in-app/:
+    get:
+      operationId: in-app_list
+      summary: API endpoint for managing in-app notifications.
+      description: |-
+        This ViewSet provides endpoints for managing in-app notifications.
+
+        List endpoint supports the following query parameters:
+        - recipient_id: Filter by recipient ID
+        - status: Filter by status (UNREAD, READ, ARCHIVED)
+        - notification_type: Filter by notification type (APPOINTMENT, MEDICAL_RECORD, BILLING, PHARMACY, LABORATORY)
+        - service: Filter by service (APPOINTMENT, MEDICAL_RECORD, BILLING, PHARMACY, LABORATORY)
+        - reference_id: Filter by reference ID
+        - reference_type: Filter by reference type
+        - is_urgent: Filter by urgent status (true, false)
+        - search: Search in content and title
+        - ordering: Order by field (created_at, status, -created_at, -status)
+      parameters:
+      - name: search
+        in: query
+        description: A search term.
+        required: false
+        type: string
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/InAppNotification'
+      tags:
+      - in-app
+    post:
+      operationId: in-app_create
+      summary: API endpoint for managing in-app notifications.
+      description: |-
+        This ViewSet provides endpoints for managing in-app notifications.
+
+        List endpoint supports the following query parameters:
+        - recipient_id: Filter by recipient ID
+        - status: Filter by status (UNREAD, READ, ARCHIVED)
+        - notification_type: Filter by notification type (APPOINTMENT, MEDICAL_RECORD, BILLING, PHARMACY, LABORATORY)
+        - service: Filter by service (APPOINTMENT, MEDICAL_RECORD, BILLING, PHARMACY, LABORATORY)
+        - reference_id: Filter by reference ID
+        - reference_type: Filter by reference type
+        - is_urgent: Filter by urgent status (true, false)
+        - search: Search in content and title
+        - ordering: Order by field (created_at, status, -created_at, -status)
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/InAppNotification'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/InAppNotification'
+      tags:
+      - in-app
+    parameters: []
+  /in-app/count_unread/:
+    get:
+      operationId: in-app_count_unread
+      description: Get the count of unread notifications for a recipient.
+      parameters:
+      - name: search
+        in: query
+        description: A search term.
+        required: false
+        type: string
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/InAppNotification'
+      tags:
+      - in-app
+    parameters: []
+  /in-app/mark_all_as_read/:
+    post:
+      operationId: in-app_mark_all_as_read
+      description: Mark all notifications for a recipient as read.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/InAppNotification'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/InAppNotification'
+      tags:
+      - in-app
+    parameters: []
+  /in-app/{id}/:
+    get:
+      operationId: in-app_read
+      summary: API endpoint for managing in-app notifications.
+      description: |-
+        This ViewSet provides endpoints for managing in-app notifications.
+
+        List endpoint supports the following query parameters:
+        - recipient_id: Filter by recipient ID
+        - status: Filter by status (UNREAD, READ, ARCHIVED)
+        - notification_type: Filter by notification type (APPOINTMENT, MEDICAL_RECORD, BILLING, PHARMACY, LABORATORY)
+        - service: Filter by service (APPOINTMENT, MEDICAL_RECORD, BILLING, PHARMACY, LABORATORY)
+        - reference_id: Filter by reference ID
+        - reference_type: Filter by reference type
+        - is_urgent: Filter by urgent status (true, false)
+        - search: Search in content and title
+        - ordering: Order by field (created_at, status, -created_at, -status)
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/InAppNotification'
+      tags:
+      - in-app
+    put:
+      operationId: in-app_update
+      summary: API endpoint for managing in-app notifications.
+      description: |-
+        This ViewSet provides endpoints for managing in-app notifications.
+
+        List endpoint supports the following query parameters:
+        - recipient_id: Filter by recipient ID
+        - status: Filter by status (UNREAD, READ, ARCHIVED)
+        - notification_type: Filter by notification type (APPOINTMENT, MEDICAL_RECORD, BILLING, PHARMACY, LABORATORY)
+        - service: Filter by service (APPOINTMENT, MEDICAL_RECORD, BILLING, PHARMACY, LABORATORY)
+        - reference_id: Filter by reference ID
+        - reference_type: Filter by reference type
+        - is_urgent: Filter by urgent status (true, false)
+        - search: Search in content and title
+        - ordering: Order by field (created_at, status, -created_at, -status)
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/InAppNotification'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/InAppNotification'
+      tags:
+      - in-app
+    patch:
+      operationId: in-app_partial_update
+      summary: API endpoint for managing in-app notifications.
+      description: |-
+        This ViewSet provides endpoints for managing in-app notifications.
+
+        List endpoint supports the following query parameters:
+        - recipient_id: Filter by recipient ID
+        - status: Filter by status (UNREAD, READ, ARCHIVED)
+        - notification_type: Filter by notification type (APPOINTMENT, MEDICAL_RECORD, BILLING, PHARMACY, LABORATORY)
+        - service: Filter by service (APPOINTMENT, MEDICAL_RECORD, BILLING, PHARMACY, LABORATORY)
+        - reference_id: Filter by reference ID
+        - reference_type: Filter by reference type
+        - is_urgent: Filter by urgent status (true, false)
+        - search: Search in content and title
+        - ordering: Order by field (created_at, status, -created_at, -status)
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/InAppNotification'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/InAppNotification'
+      tags:
+      - in-app
+    delete:
+      operationId: in-app_delete
+      summary: API endpoint for managing in-app notifications.
+      description: |-
+        This ViewSet provides endpoints for managing in-app notifications.
+
+        List endpoint supports the following query parameters:
+        - recipient_id: Filter by recipient ID
+        - status: Filter by status (UNREAD, READ, ARCHIVED)
+        - notification_type: Filter by notification type (APPOINTMENT, MEDICAL_RECORD, BILLING, PHARMACY, LABORATORY)
+        - service: Filter by service (APPOINTMENT, MEDICAL_RECORD, BILLING, PHARMACY, LABORATORY)
+        - reference_id: Filter by reference ID
+        - reference_type: Filter by reference type
+        - is_urgent: Filter by urgent status (true, false)
+        - search: Search in content and title
+        - ordering: Order by field (created_at, status, -created_at, -status)
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - in-app
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this in app notification.
+      required: true
+      type: integer
+  /in-app/{id}/archive/:
+    post:
+      operationId: in-app_archive
+      description: Archive a notification.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/InAppNotification'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/InAppNotification'
+      tags:
+      - in-app
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this in app notification.
+      required: true
+      type: integer
+  /in-app/{id}/mark_as_read/:
+    post:
+      operationId: in-app_mark_as_read
+      description: Mark a notification as read.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/InAppNotification'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/InAppNotification'
+      tags:
+      - in-app
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this in app notification.
+      required: true
+      type: integer
+  /notifications/:
+    get:
+      operationId: notifications_list
+      description: API endpoint for managing notifications.
+      parameters:
+      - name: search
+        in: query
+        description: A search term.
+        required: false
+        type: string
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Notification'
+      tags:
+      - notifications
+    post:
+      operationId: notifications_create
+      description: API endpoint for managing notifications.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Notification'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Notification'
+      tags:
+      - notifications
+    parameters: []
+  /notifications/send_email/:
+    post:
+      operationId: notifications_send_email
+      description: Send an email notification.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Notification'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Notification'
+      tags:
+      - notifications
+    parameters: []
+  /notifications/send_from_template/:
+    post:
+      operationId: notifications_send_from_template
+      description: Send a notification using a template.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Notification'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Notification'
+      tags:
+      - notifications
+    parameters: []
+  /notifications/send_sms/:
+    post:
+      operationId: notifications_send_sms
+      description: Send an SMS notification.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Notification'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Notification'
+      tags:
+      - notifications
+    parameters: []
+  /notifications/{id}/:
+    get:
+      operationId: notifications_read
+      description: API endpoint for managing notifications.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Notification'
+      tags:
+      - notifications
+    put:
+      operationId: notifications_update
+      description: API endpoint for managing notifications.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Notification'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Notification'
+      tags:
+      - notifications
+    patch:
+      operationId: notifications_partial_update
+      description: API endpoint for managing notifications.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Notification'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Notification'
+      tags:
+      - notifications
+    delete:
+      operationId: notifications_delete
+      description: API endpoint for managing notifications.
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - notifications
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this notification.
+      required: true
+      type: integer
+  /schedules/:
+    get:
+      operationId: schedules_list
+      description: API endpoint for managing notification schedules.
+      parameters:
+      - name: search
+        in: query
+        description: A search term.
+        required: false
+        type: string
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/NotificationSchedule'
+      tags:
+      - schedules
+    post:
+      operationId: schedules_create
+      description: API endpoint for managing notification schedules.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/NotificationSchedule'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/NotificationSchedule'
+      tags:
+      - schedules
+    parameters: []
+  /schedules/schedule/:
+    post:
+      operationId: schedules_schedule
+      description: Schedule a notification.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/NotificationSchedule'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/NotificationSchedule'
+      tags:
+      - schedules
+    parameters: []
+  /schedules/{id}/:
+    get:
+      operationId: schedules_read
+      description: API endpoint for managing notification schedules.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/NotificationSchedule'
+      tags:
+      - schedules
+    put:
+      operationId: schedules_update
+      description: API endpoint for managing notification schedules.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/NotificationSchedule'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/NotificationSchedule'
+      tags:
+      - schedules
+    patch:
+      operationId: schedules_partial_update
+      description: API endpoint for managing notification schedules.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/NotificationSchedule'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/NotificationSchedule'
+      tags:
+      - schedules
+    delete:
+      operationId: schedules_delete
+      description: API endpoint for managing notification schedules.
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - schedules
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this notification schedule.
+      required: true
+      type: integer
+  /schedules/{id}/cancel/:
+    post:
+      operationId: schedules_cancel
+      description: Cancel a scheduled notification.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/NotificationSchedule'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/NotificationSchedule'
+      tags:
+      - schedules
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this notification schedule.
+      required: true
+      type: integer
+  /templates/:
+    get:
+      operationId: templates_list
+      description: API endpoint for managing notification templates.
+      parameters:
+      - name: search
+        in: query
+        description: A search term.
+        required: false
+        type: string
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/NotificationTemplate'
+      tags:
+      - templates
+    post:
+      operationId: templates_create
+      description: API endpoint for managing notification templates.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/NotificationTemplate'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/NotificationTemplate'
+      tags:
+      - templates
+    parameters: []
+  /templates/{id}/:
+    get:
+      operationId: templates_read
+      description: API endpoint for managing notification templates.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/NotificationTemplate'
+      tags:
+      - templates
+    put:
+      operationId: templates_update
+      description: API endpoint for managing notification templates.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/NotificationTemplate'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/NotificationTemplate'
+      tags:
+      - templates
+    patch:
+      operationId: templates_partial_update
+      description: API endpoint for managing notification templates.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/NotificationTemplate'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/NotificationTemplate'
+      tags:
+      - templates
+    delete:
+      operationId: templates_delete
+      description: API endpoint for managing notification templates.
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - templates
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this notification template.
+      required: true
+      type: integer
+definitions:
+  InAppNotification:
+    required:
+    - recipient_id
+    - recipient_type
+    - content
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      recipient_id:
+        title: Recipient id
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+      recipient_type:
+        title: Recipient type
+        type: string
+        enum:
+        - PATIENT
+        - DOCTOR
+        - NURSE
+        - ADMIN
+        - PHARMACIST
+        - INSURANCE_PROVIDER
+        - LAB_TECHNICIAN
+        - OTHER
+      notification_type:
+        title: Notification type
+        type: string
+        enum:
+        - APPOINTMENT
+        - BILLING
+        - MEDICAL_RECORD
+        - LAB_RESULT
+        - PRESCRIPTION
+        - SYSTEM
+        - OTHER
+      title:
+        title: Title
+        type: string
+        maxLength: 255
+      content:
+        title: Content
+        type: string
+        minLength: 1
+      status:
+        title: Status
+        type: string
+        enum:
+        - UNREAD
+        - READ
+        - ARCHIVED
+      reference_id:
+        title: Reference id
+        type: string
+        maxLength: 100
+        x-nullable: true
+      reference_type:
+        title: Reference type
+        type: string
+        maxLength: 20
+        x-nullable: true
+      is_urgent:
+        title: Is urgent
+        type: boolean
+      read_at:
+        title: Read at
+        type: string
+        format: date-time
+        x-nullable: true
+      service:
+        title: Service
+        type: string
+        maxLength: 50
+      event_type:
+        title: Event type
+        type: string
+        maxLength: 50
+      metadata:
+        title: Metadata
+        type: object
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true
+  Notification:
+    required:
+    - recipient_id
+    - recipient_type
+    - notification_type
+    - channel
+    - subject
+    - content
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      recipient_id:
+        title: Recipient id
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+      recipient_type:
+        title: Recipient type
+        type: string
+        enum:
+        - PATIENT
+        - DOCTOR
+        - NURSE
+        - ADMIN
+        - PHARMACIST
+        - INSURANCE_PROVIDER
+        - LAB_TECHNICIAN
+        - OTHER
+      recipient_email:
+        title: Recipient email
+        type: string
+        format: email
+        maxLength: 254
+        x-nullable: true
+      recipient_phone:
+        title: Recipient phone
+        type: string
+        maxLength: 20
+        x-nullable: true
+      notification_type:
+        title: Notification type
+        type: string
+        enum:
+        - APPOINTMENT
+        - BILLING
+        - MEDICAL_RECORD
+        - LAB_RESULT
+        - PRESCRIPTION
+        - SYSTEM
+        - OTHER
+      channel:
+        title: Channel
+        type: string
+        enum:
+        - EMAIL
+        - SMS
+        - PUSH
+        - IN_APP
+      subject:
+        title: Subject
+        type: string
+        maxLength: 255
+        minLength: 1
+      content:
+        title: Content
+        type: string
+        minLength: 1
+      status:
+        title: Status
+        type: string
+        enum:
+        - PENDING
+        - SENT
+        - DELIVERED
+        - FAILED
+        - CANCELLED
+        readOnly: true
+      sent_at:
+        title: Sent at
+        type: string
+        format: date-time
+        readOnly: true
+        x-nullable: true
+      delivered_at:
+        title: Delivered at
+        type: string
+        format: date-time
+        readOnly: true
+        x-nullable: true
+      error_message:
+        title: Error message
+        type: string
+        readOnly: true
+        minLength: 1
+        x-nullable: true
+      reference_id:
+        title: Reference id
+        type: string
+        maxLength: 100
+        x-nullable: true
+      reference_type:
+        title: Reference type
+        type: string
+        maxLength: 20
+        x-nullable: true
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true
+  NotificationSchedule:
+    required:
+    - recipient_id
+    - recipient_type
+    - notification_type
+    - channel
+    - subject
+    - content
+    - scheduled_at
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      recipient_id:
+        title: Recipient id
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+      recipient_type:
+        title: Recipient type
+        type: string
+        enum:
+        - PATIENT
+        - DOCTOR
+        - NURSE
+        - ADMIN
+        - PHARMACIST
+        - INSURANCE_PROVIDER
+        - LAB_TECHNICIAN
+        - OTHER
+      recipient_email:
+        title: Recipient email
+        type: string
+        format: email
+        maxLength: 254
+        x-nullable: true
+      recipient_phone:
+        title: Recipient phone
+        type: string
+        maxLength: 20
+        x-nullable: true
+      notification_type:
+        title: Notification type
+        type: string
+        enum:
+        - APPOINTMENT
+        - BILLING
+        - MEDICAL_RECORD
+        - LAB_RESULT
+        - PRESCRIPTION
+        - SYSTEM
+        - OTHER
+      channel:
+        title: Channel
+        type: string
+        enum:
+        - EMAIL
+        - SMS
+        - PUSH
+        - IN_APP
+      subject:
+        title: Subject
+        type: string
+        maxLength: 255
+        minLength: 1
+      content:
+        title: Content
+        type: string
+        minLength: 1
+      scheduled_at:
+        title: Scheduled at
+        type: string
+        format: date-time
+      status:
+        title: Status
+        type: string
+        enum:
+        - SCHEDULED
+        - PROCESSING
+        - COMPLETED
+        - FAILED
+        - CANCELLED
+        readOnly: true
+      reference_id:
+        title: Reference id
+        type: string
+        maxLength: 100
+        x-nullable: true
+      reference_type:
+        title: Reference type
+        type: string
+        maxLength: 20
+        x-nullable: true
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true
+      template:
+        title: Template
+        type: integer
+        x-nullable: true
+  NotificationTemplate:
+    required:
+    - name
+    - notification_type
+    - channel
+    - subject_template
+    - content_template
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      name:
+        title: Name
+        type: string
+        maxLength: 100
+        minLength: 1
+      notification_type:
+        title: Notification type
+        type: string
+        enum:
+        - APPOINTMENT
+        - BILLING
+        - MEDICAL_RECORD
+        - LAB_RESULT
+        - PRESCRIPTION
+        - SYSTEM
+        - OTHER
+      channel:
+        title: Channel
+        type: string
+        enum:
+        - EMAIL
+        - SMS
+        - PUSH
+        - IN_APP
+      subject_template:
+        title: Subject template
+        type: string
+        maxLength: 255
+        minLength: 1
+      content_template:
+        title: Content template
+        type: string
+        minLength: 1
+      is_active:
+        title: Is active
+        type: boolean
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true

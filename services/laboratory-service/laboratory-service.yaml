@@ -1,0 +1,2146 @@
+swagger: '2.0'
+info:
+  title: Laboratory Service API
+  description: API for managing laboratory tests and results
+  termsOfService: https://www.example.com/terms/
+  contact:
+    email: contact@example.com
+  license:
+    name: BSD License
+  version: v1
+host: localhost:8005
+schemes:
+- http
+basePath: /api
+consumes:
+- application/json
+produces:
+- application/json
+securityDefinitions:
+  Bearer:
+    type: apiKey
+    in: header
+    name: Authorization
+    description: 'JWT Authorization header using the Bearer scheme. Example: "Bearer
+      {token}"'
+security:
+- Bearer: []
+paths:
+  /lab-tests/:
+    get:
+      operationId: lab-tests_list
+      description: API endpoint for managing laboratory tests.
+      parameters:
+      - name: patient_id
+        in: query
+        description: patient_id
+        required: false
+        type: string
+      - name: doctor_id
+        in: query
+        description: doctor_id
+        required: false
+        type: string
+      - name: test_type
+        in: query
+        description: test_type
+        required: false
+        type: string
+      - name: status
+        in: query
+        description: status
+        required: false
+        type: string
+        enum:
+        - ORDERED
+        - SAMPLE_COLLECTED
+        - IN_PROGRESS
+        - COMPLETED
+        - CANCELLED
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/LabTest'
+      tags:
+      - lab-tests
+    post:
+      operationId: lab-tests_create
+      description: API endpoint for managing laboratory tests.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/LabTestCreate'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/LabTestCreate'
+      tags:
+      - lab-tests
+    parameters: []
+  /lab-tests/pending/:
+    get:
+      operationId: lab-tests_pending
+      description: Get pending lab tests.
+      parameters:
+      - name: patient_id
+        in: query
+        description: patient_id
+        required: false
+        type: string
+      - name: doctor_id
+        in: query
+        description: doctor_id
+        required: false
+        type: string
+      - name: test_type
+        in: query
+        description: test_type
+        required: false
+        type: string
+      - name: status
+        in: query
+        description: status
+        required: false
+        type: string
+        enum:
+        - ORDERED
+        - SAMPLE_COLLECTED
+        - IN_PROGRESS
+        - COMPLETED
+        - CANCELLED
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/LabTest'
+      tags:
+      - lab-tests
+    parameters: []
+  /lab-tests/{id}/:
+    get:
+      operationId: lab-tests_read
+      description: API endpoint for managing laboratory tests.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/LabTest'
+      tags:
+      - lab-tests
+    put:
+      operationId: lab-tests_update
+      description: API endpoint for managing laboratory tests.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/LabTest'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/LabTest'
+      tags:
+      - lab-tests
+    patch:
+      operationId: lab-tests_partial_update
+      description: API endpoint for managing laboratory tests.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/LabTest'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/LabTest'
+      tags:
+      - lab-tests
+    delete:
+      operationId: lab-tests_delete
+      description: API endpoint for managing laboratory tests.
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - lab-tests
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this lab test.
+      required: true
+      type: integer
+  /lab-tests/{id}/cancel/:
+    post:
+      operationId: lab-tests_cancel
+      description: Cancel a lab test.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/LabTest'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/LabTest'
+      tags:
+      - lab-tests
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this lab test.
+      required: true
+      type: integer
+  /laboratory/lab-tests/:
+    get:
+      operationId: laboratory_lab-tests_list
+      description: API endpoint for managing laboratory tests.
+      parameters:
+      - name: patient_id
+        in: query
+        description: patient_id
+        required: false
+        type: string
+      - name: doctor_id
+        in: query
+        description: doctor_id
+        required: false
+        type: string
+      - name: test_type
+        in: query
+        description: test_type
+        required: false
+        type: string
+      - name: status
+        in: query
+        description: status
+        required: false
+        type: string
+        enum:
+        - ORDERED
+        - SAMPLE_COLLECTED
+        - IN_PROGRESS
+        - COMPLETED
+        - CANCELLED
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/LabTest'
+      tags:
+      - laboratory
+    post:
+      operationId: laboratory_lab-tests_create
+      description: API endpoint for managing laboratory tests.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/LabTestCreate'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/LabTestCreate'
+      tags:
+      - laboratory
+    parameters: []
+  /laboratory/lab-tests/pending/:
+    get:
+      operationId: laboratory_lab-tests_pending
+      description: Get pending lab tests.
+      parameters:
+      - name: patient_id
+        in: query
+        description: patient_id
+        required: false
+        type: string
+      - name: doctor_id
+        in: query
+        description: doctor_id
+        required: false
+        type: string
+      - name: test_type
+        in: query
+        description: test_type
+        required: false
+        type: string
+      - name: status
+        in: query
+        description: status
+        required: false
+        type: string
+        enum:
+        - ORDERED
+        - SAMPLE_COLLECTED
+        - IN_PROGRESS
+        - COMPLETED
+        - CANCELLED
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/LabTest'
+      tags:
+      - laboratory
+    parameters: []
+  /laboratory/lab-tests/{id}/:
+    get:
+      operationId: laboratory_lab-tests_read
+      description: API endpoint for managing laboratory tests.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/LabTest'
+      tags:
+      - laboratory
+    put:
+      operationId: laboratory_lab-tests_update
+      description: API endpoint for managing laboratory tests.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/LabTest'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/LabTest'
+      tags:
+      - laboratory
+    patch:
+      operationId: laboratory_lab-tests_partial_update
+      description: API endpoint for managing laboratory tests.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/LabTest'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/LabTest'
+      tags:
+      - laboratory
+    delete:
+      operationId: laboratory_lab-tests_delete
+      description: API endpoint for managing laboratory tests.
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - laboratory
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this lab test.
+      required: true
+      type: integer
+  /laboratory/lab-tests/{id}/cancel/:
+    post:
+      operationId: laboratory_lab-tests_cancel
+      description: Cancel a lab test.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/LabTest'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/LabTest'
+      tags:
+      - laboratory
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this lab test.
+      required: true
+      type: integer
+  /laboratory/notifications/:
+    get:
+      operationId: laboratory_notifications_list
+      description: API endpoint for managing notifications.
+      parameters:
+      - name: recipient_id
+        in: query
+        description: recipient_id
+        required: false
+        type: string
+      - name: recipient_type
+        in: query
+        description: recipient_type
+        required: false
+        type: string
+      - name: notification_type
+        in: query
+        description: notification_type
+        required: false
+        type: string
+        enum:
+        - TEST_ORDERED
+        - SAMPLE_COLLECTED
+        - RESULT_READY
+        - TEST_CANCELLED
+      - name: is_read
+        in: query
+        description: is_read
+        required: false
+        type: string
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Notification'
+      tags:
+      - laboratory
+    post:
+      operationId: laboratory_notifications_create
+      description: API endpoint for managing notifications.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Notification'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Notification'
+      tags:
+      - laboratory
+    parameters: []
+  /laboratory/notifications/mark_all_as_read/:
+    post:
+      operationId: laboratory_notifications_mark_all_as_read
+      description: Mark all notifications as read for the current user.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Notification'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Notification'
+      tags:
+      - laboratory
+    parameters: []
+  /laboratory/notifications/unread/:
+    get:
+      operationId: laboratory_notifications_unread
+      description: Get unread notifications for the current user.
+      parameters:
+      - name: recipient_id
+        in: query
+        description: recipient_id
+        required: false
+        type: string
+      - name: recipient_type
+        in: query
+        description: recipient_type
+        required: false
+        type: string
+      - name: notification_type
+        in: query
+        description: notification_type
+        required: false
+        type: string
+        enum:
+        - TEST_ORDERED
+        - SAMPLE_COLLECTED
+        - RESULT_READY
+        - TEST_CANCELLED
+      - name: is_read
+        in: query
+        description: is_read
+        required: false
+        type: string
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Notification'
+      tags:
+      - laboratory
+    parameters: []
+  /laboratory/notifications/{id}/:
+    get:
+      operationId: laboratory_notifications_read
+      description: API endpoint for managing notifications.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Notification'
+      tags:
+      - laboratory
+    put:
+      operationId: laboratory_notifications_update
+      description: API endpoint for managing notifications.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Notification'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Notification'
+      tags:
+      - laboratory
+    patch:
+      operationId: laboratory_notifications_partial_update
+      description: API endpoint for managing notifications.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Notification'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Notification'
+      tags:
+      - laboratory
+    delete:
+      operationId: laboratory_notifications_delete
+      description: API endpoint for managing notifications.
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - laboratory
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this notification.
+      required: true
+      type: integer
+  /laboratory/notifications/{id}/mark_as_read/:
+    post:
+      operationId: laboratory_notifications_mark_as_read
+      description: Mark a notification as read.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Notification'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Notification'
+      tags:
+      - laboratory
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this notification.
+      required: true
+      type: integer
+  /laboratory/sample-collections/:
+    get:
+      operationId: laboratory_sample-collections_list
+      description: API endpoint for managing sample collections.
+      parameters:
+      - name: lab_test
+        in: query
+        description: lab_test
+        required: false
+        type: string
+      - name: collector_id
+        in: query
+        description: collector_id
+        required: false
+        type: string
+      - name: sample_type
+        in: query
+        description: sample_type
+        required: false
+        type: string
+        enum:
+        - BLOOD
+        - URINE
+        - STOOL
+        - SWAB
+        - TISSUE
+        - OTHER
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/SampleCollection'
+      tags:
+      - laboratory
+    post:
+      operationId: laboratory_sample-collections_create
+      description: API endpoint for managing sample collections.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/SampleCollectionCreate'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/SampleCollectionCreate'
+      tags:
+      - laboratory
+    parameters: []
+  /laboratory/sample-collections/{id}/:
+    get:
+      operationId: laboratory_sample-collections_read
+      description: API endpoint for managing sample collections.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/SampleCollection'
+      tags:
+      - laboratory
+    put:
+      operationId: laboratory_sample-collections_update
+      description: API endpoint for managing sample collections.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/SampleCollection'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/SampleCollection'
+      tags:
+      - laboratory
+    patch:
+      operationId: laboratory_sample-collections_partial_update
+      description: API endpoint for managing sample collections.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/SampleCollection'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/SampleCollection'
+      tags:
+      - laboratory
+    delete:
+      operationId: laboratory_sample-collections_delete
+      description: API endpoint for managing sample collections.
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - laboratory
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this sample collection.
+      required: true
+      type: integer
+  /laboratory/test-results/:
+    get:
+      operationId: laboratory_test-results_list
+      description: API endpoint for managing test results.
+      parameters:
+      - name: lab_test
+        in: query
+        description: lab_test
+        required: false
+        type: string
+      - name: technician_id
+        in: query
+        description: technician_id
+        required: false
+        type: string
+      - name: is_abnormal
+        in: query
+        description: is_abnormal
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/TestResult'
+      tags:
+      - laboratory
+    post:
+      operationId: laboratory_test-results_create
+      description: API endpoint for managing test results.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/TestResultCreate'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/TestResultCreate'
+      tags:
+      - laboratory
+    parameters: []
+  /laboratory/test-results/{id}/:
+    get:
+      operationId: laboratory_test-results_read
+      description: API endpoint for managing test results.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/TestResult'
+      tags:
+      - laboratory
+    put:
+      operationId: laboratory_test-results_update
+      description: API endpoint for managing test results.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/TestResult'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/TestResult'
+      tags:
+      - laboratory
+    patch:
+      operationId: laboratory_test-results_partial_update
+      description: API endpoint for managing test results.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/TestResult'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/TestResult'
+      tags:
+      - laboratory
+    delete:
+      operationId: laboratory_test-results_delete
+      description: API endpoint for managing test results.
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - laboratory
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this test result.
+      required: true
+      type: integer
+  /laboratory/test-types/:
+    get:
+      operationId: laboratory_test-types_list
+      description: API endpoint for managing test types.
+      parameters:
+      - name: name
+        in: query
+        description: name
+        required: false
+        type: string
+      - name: unit
+        in: query
+        description: unit
+        required: false
+        type: string
+      - name: search
+        in: query
+        description: A search term.
+        required: false
+        type: string
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/TestType'
+      tags:
+      - laboratory
+    post:
+      operationId: laboratory_test-types_create
+      description: API endpoint for managing test types.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/TestType'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/TestType'
+      tags:
+      - laboratory
+    parameters: []
+  /laboratory/test-types/{id}/:
+    get:
+      operationId: laboratory_test-types_read
+      description: API endpoint for managing test types.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/TestType'
+      tags:
+      - laboratory
+    put:
+      operationId: laboratory_test-types_update
+      description: API endpoint for managing test types.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/TestType'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/TestType'
+      tags:
+      - laboratory
+    patch:
+      operationId: laboratory_test-types_partial_update
+      description: API endpoint for managing test types.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/TestType'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/TestType'
+      tags:
+      - laboratory
+    delete:
+      operationId: laboratory_test-types_delete
+      description: API endpoint for managing test types.
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - laboratory
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this test type.
+      required: true
+      type: integer
+  /notifications/:
+    get:
+      operationId: notifications_list
+      description: API endpoint for managing notifications.
+      parameters:
+      - name: recipient_id
+        in: query
+        description: recipient_id
+        required: false
+        type: string
+      - name: recipient_type
+        in: query
+        description: recipient_type
+        required: false
+        type: string
+      - name: notification_type
+        in: query
+        description: notification_type
+        required: false
+        type: string
+        enum:
+        - TEST_ORDERED
+        - SAMPLE_COLLECTED
+        - RESULT_READY
+        - TEST_CANCELLED
+      - name: is_read
+        in: query
+        description: is_read
+        required: false
+        type: string
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Notification'
+      tags:
+      - notifications
+    post:
+      operationId: notifications_create
+      description: API endpoint for managing notifications.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Notification'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Notification'
+      tags:
+      - notifications
+    parameters: []
+  /notifications/mark_all_as_read/:
+    post:
+      operationId: notifications_mark_all_as_read
+      description: Mark all notifications as read for the current user.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Notification'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Notification'
+      tags:
+      - notifications
+    parameters: []
+  /notifications/unread/:
+    get:
+      operationId: notifications_unread
+      description: Get unread notifications for the current user.
+      parameters:
+      - name: recipient_id
+        in: query
+        description: recipient_id
+        required: false
+        type: string
+      - name: recipient_type
+        in: query
+        description: recipient_type
+        required: false
+        type: string
+      - name: notification_type
+        in: query
+        description: notification_type
+        required: false
+        type: string
+        enum:
+        - TEST_ORDERED
+        - SAMPLE_COLLECTED
+        - RESULT_READY
+        - TEST_CANCELLED
+      - name: is_read
+        in: query
+        description: is_read
+        required: false
+        type: string
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Notification'
+      tags:
+      - notifications
+    parameters: []
+  /notifications/{id}/:
+    get:
+      operationId: notifications_read
+      description: API endpoint for managing notifications.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Notification'
+      tags:
+      - notifications
+    put:
+      operationId: notifications_update
+      description: API endpoint for managing notifications.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Notification'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Notification'
+      tags:
+      - notifications
+    patch:
+      operationId: notifications_partial_update
+      description: API endpoint for managing notifications.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Notification'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Notification'
+      tags:
+      - notifications
+    delete:
+      operationId: notifications_delete
+      description: API endpoint for managing notifications.
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - notifications
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this notification.
+      required: true
+      type: integer
+  /notifications/{id}/mark_as_read/:
+    post:
+      operationId: notifications_mark_as_read
+      description: Mark a notification as read.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Notification'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Notification'
+      tags:
+      - notifications
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this notification.
+      required: true
+      type: integer
+  /sample-collections/:
+    get:
+      operationId: sample-collections_list
+      description: API endpoint for managing sample collections.
+      parameters:
+      - name: lab_test
+        in: query
+        description: lab_test
+        required: false
+        type: string
+      - name: collector_id
+        in: query
+        description: collector_id
+        required: false
+        type: string
+      - name: sample_type
+        in: query
+        description: sample_type
+        required: false
+        type: string
+        enum:
+        - BLOOD
+        - URINE
+        - STOOL
+        - SWAB
+        - TISSUE
+        - OTHER
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/SampleCollection'
+      tags:
+      - sample-collections
+    post:
+      operationId: sample-collections_create
+      description: API endpoint for managing sample collections.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/SampleCollectionCreate'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/SampleCollectionCreate'
+      tags:
+      - sample-collections
+    parameters: []
+  /sample-collections/{id}/:
+    get:
+      operationId: sample-collections_read
+      description: API endpoint for managing sample collections.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/SampleCollection'
+      tags:
+      - sample-collections
+    put:
+      operationId: sample-collections_update
+      description: API endpoint for managing sample collections.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/SampleCollection'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/SampleCollection'
+      tags:
+      - sample-collections
+    patch:
+      operationId: sample-collections_partial_update
+      description: API endpoint for managing sample collections.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/SampleCollection'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/SampleCollection'
+      tags:
+      - sample-collections
+    delete:
+      operationId: sample-collections_delete
+      description: API endpoint for managing sample collections.
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - sample-collections
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this sample collection.
+      required: true
+      type: integer
+  /test-results/:
+    get:
+      operationId: test-results_list
+      description: API endpoint for managing test results.
+      parameters:
+      - name: lab_test
+        in: query
+        description: lab_test
+        required: false
+        type: string
+      - name: technician_id
+        in: query
+        description: technician_id
+        required: false
+        type: string
+      - name: is_abnormal
+        in: query
+        description: is_abnormal
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/TestResult'
+      tags:
+      - test-results
+    post:
+      operationId: test-results_create
+      description: API endpoint for managing test results.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/TestResultCreate'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/TestResultCreate'
+      tags:
+      - test-results
+    parameters: []
+  /test-results/{id}/:
+    get:
+      operationId: test-results_read
+      description: API endpoint for managing test results.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/TestResult'
+      tags:
+      - test-results
+    put:
+      operationId: test-results_update
+      description: API endpoint for managing test results.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/TestResult'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/TestResult'
+      tags:
+      - test-results
+    patch:
+      operationId: test-results_partial_update
+      description: API endpoint for managing test results.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/TestResult'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/TestResult'
+      tags:
+      - test-results
+    delete:
+      operationId: test-results_delete
+      description: API endpoint for managing test results.
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - test-results
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this test result.
+      required: true
+      type: integer
+  /test-types/:
+    get:
+      operationId: test-types_list
+      description: API endpoint for managing test types.
+      parameters:
+      - name: name
+        in: query
+        description: name
+        required: false
+        type: string
+      - name: unit
+        in: query
+        description: unit
+        required: false
+        type: string
+      - name: search
+        in: query
+        description: A search term.
+        required: false
+        type: string
+      - name: ordering
+        in: query
+        description: Which field to use when ordering the results.
+        required: false
+        type: string
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/TestType'
+      tags:
+      - test-types
+    post:
+      operationId: test-types_create
+      description: API endpoint for managing test types.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/TestType'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/TestType'
+      tags:
+      - test-types
+    parameters: []
+  /test-types/{id}/:
+    get:
+      operationId: test-types_read
+      description: API endpoint for managing test types.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/TestType'
+      tags:
+      - test-types
+    put:
+      operationId: test-types_update
+      description: API endpoint for managing test types.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/TestType'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/TestType'
+      tags:
+      - test-types
+    patch:
+      operationId: test-types_partial_update
+      description: API endpoint for managing test types.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/TestType'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/TestType'
+      tags:
+      - test-types
+    delete:
+      operationId: test-types_delete
+      description: API endpoint for managing test types.
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - test-types
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this test type.
+      required: true
+      type: integer
+definitions:
+  TestType:
+    required:
+    - name
+    - description
+    - price
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      name:
+        title: Name
+        type: string
+        maxLength: 100
+        minLength: 1
+      description:
+        title: Description
+        type: string
+        minLength: 1
+      preparation_instructions:
+        title: Preparation instructions
+        type: string
+        x-nullable: true
+      normal_range:
+        title: Normal range
+        type: string
+        maxLength: 255
+        x-nullable: true
+      unit:
+        title: Unit
+        type: string
+        maxLength: 50
+        x-nullable: true
+      price:
+        title: Price
+        type: string
+        format: decimal
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true
+  SampleCollection:
+    required:
+    - collector_id
+    - sample_type
+    - sample_id
+    - lab_test
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      collector_id:
+        title: Collector id
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+      sample_type:
+        title: Sample type
+        type: string
+        enum:
+        - BLOOD
+        - URINE
+        - STOOL
+        - SWAB
+        - TISSUE
+        - OTHER
+      collection_date:
+        title: Collection date
+        type: string
+        format: date-time
+        readOnly: true
+      sample_id:
+        title: Sample id
+        type: string
+        maxLength: 50
+        minLength: 1
+      notes:
+        title: Notes
+        type: string
+        x-nullable: true
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true
+      lab_test:
+        title: Lab test
+        type: integer
+  TestResult:
+    required:
+    - technician_id
+    - result_value
+    - lab_test
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      technician_id:
+        title: Technician id
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+      result_value:
+        title: Result value
+        type: string
+        minLength: 1
+      is_abnormal:
+        title: Is abnormal
+        type: boolean
+      comments:
+        title: Comments
+        type: string
+        x-nullable: true
+      attachment:
+        title: Attachment
+        type: string
+        readOnly: true
+        x-nullable: true
+        format: uri
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true
+      lab_test:
+        title: Lab test
+        type: integer
+  LabTest:
+    required:
+    - patient_id
+    - doctor_id
+    - test_type
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      test_type_details:
+        $ref: '#/definitions/TestType'
+      sample_details:
+        $ref: '#/definitions/SampleCollection'
+      result_details:
+        $ref: '#/definitions/TestResult'
+      status_display:
+        title: Status display
+        type: string
+        readOnly: true
+        minLength: 1
+      patient_id:
+        title: Patient id
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+      doctor_id:
+        title: Doctor id
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+      status:
+        title: Status
+        type: string
+        enum:
+        - ORDERED
+        - SAMPLE_COLLECTED
+        - IN_PROGRESS
+        - COMPLETED
+        - CANCELLED
+      ordered_date:
+        title: Ordered date
+        type: string
+        format: date-time
+        readOnly: true
+      scheduled_date:
+        title: Scheduled date
+        type: string
+        format: date-time
+        x-nullable: true
+      sample_collection_date:
+        title: Sample collection date
+        type: string
+        format: date-time
+        x-nullable: true
+      result_date:
+        title: Result date
+        type: string
+        format: date-time
+        x-nullable: true
+      notes:
+        title: Notes
+        type: string
+        x-nullable: true
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true
+      test_type:
+        title: Test type
+        type: integer
+  LabTestCreate:
+    required:
+    - patient_id
+    - doctor_id
+    - test_type
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      patient_id:
+        title: Patient id
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+      doctor_id:
+        title: Doctor id
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+      test_type:
+        title: Test type
+        type: integer
+      scheduled_date:
+        title: Scheduled date
+        type: string
+        format: date-time
+        x-nullable: true
+      notes:
+        title: Notes
+        type: string
+        x-nullable: true
+  Notification:
+    required:
+    - recipient_id
+    - recipient_type
+    - notification_type
+    - message
+    - lab_test
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      recipient_id:
+        title: Recipient id
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+      recipient_type:
+        title: Recipient type
+        type: string
+        maxLength: 20
+        minLength: 1
+      notification_type:
+        title: Notification type
+        type: string
+        enum:
+        - TEST_ORDERED
+        - SAMPLE_COLLECTED
+        - RESULT_READY
+        - TEST_CANCELLED
+      message:
+        title: Message
+        type: string
+        minLength: 1
+      is_read:
+        title: Is read
+        type: boolean
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true
+      lab_test:
+        title: Lab test
+        type: integer
+  SampleCollectionCreate:
+    required:
+    - lab_test
+    - collector_id
+    - sample_type
+    - sample_id
+    type: object
+    properties:
+      lab_test:
+        title: Lab test
+        type: integer
+      collector_id:
+        title: Collector id
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+      sample_type:
+        title: Sample type
+        type: string
+        enum:
+        - BLOOD
+        - URINE
+        - STOOL
+        - SWAB
+        - TISSUE
+        - OTHER
+      sample_id:
+        title: Sample id
+        type: string
+        maxLength: 50
+        minLength: 1
+      notes:
+        title: Notes
+        type: string
+        x-nullable: true
+  TestResultCreate:
+    required:
+    - lab_test
+    - technician_id
+    - result_value
+    type: object
+    properties:
+      lab_test:
+        title: Lab test
+        type: integer
+      technician_id:
+        title: Technician id
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+      result_value:
+        title: Result value
+        type: string
+        minLength: 1
+      is_abnormal:
+        title: Is abnormal
+        type: boolean
+      comments:
+        title: Comments
+        type: string
+        x-nullable: true
+      attachment:
+        title: Attachment
+        type: string
+        readOnly: true
+        x-nullable: true
+        format: uri
