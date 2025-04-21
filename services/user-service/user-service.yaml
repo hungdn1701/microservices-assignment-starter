@@ -1,0 +1,2144 @@
+swagger: '2.0'
+info:
+  title: User Service API
+  description: API documentation for User Service (Authentication, Authorization &
+    User Management)
+  termsOfService: https://www.example.com/terms/
+  contact:
+    email: contact@example.com
+  license:
+    name: BSD License
+  version: v1
+host: localhost:8000
+schemes:
+- http
+basePath: /api
+consumes:
+- application/json
+produces:
+- application/json
+securityDefinitions:
+  Bearer:
+    type: apiKey
+    in: header
+    name: Authorization
+    description: 'JWT Authorization header using the Bearer scheme. Example: "Bearer
+      {token}"'
+security:
+- Bearer: []
+paths:
+  /addresses/:
+    get:
+      operationId: addresses_list
+      description: ViewSet để quản lý địa chỉ.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Address'
+      tags:
+      - addresses
+    post:
+      operationId: addresses_create
+      description: ViewSet để quản lý địa chỉ.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Address'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Address'
+      tags:
+      - addresses
+    parameters: []
+  /addresses/{id}/:
+    get:
+      operationId: addresses_read
+      description: ViewSet để quản lý địa chỉ.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Address'
+      tags:
+      - addresses
+    put:
+      operationId: addresses_update
+      description: ViewSet để quản lý địa chỉ.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Address'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Address'
+      tags:
+      - addresses
+    patch:
+      operationId: addresses_partial_update
+      description: ViewSet để quản lý địa chỉ.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Address'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Address'
+      tags:
+      - addresses
+    delete:
+      operationId: addresses_delete
+      description: ViewSet để quản lý địa chỉ.
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - addresses
+    parameters:
+    - name: id
+      in: path
+      required: true
+      type: string
+  /admin-profile/create_or_update/:
+    post:
+      operationId: admin-profile_create_or_update
+      description: Tạo hoặc cập nhật hồ sơ của người dùng hiện tại
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/AdminProfile'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/AdminProfile'
+      tags:
+      - admin-profile
+    parameters: []
+  /admin-profile/me/:
+    get:
+      operationId: admin-profile_me
+      description: Lấy hồ sơ của người dùng hiện tại
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/AdminProfile'
+      tags:
+      - admin-profile
+    parameters: []
+  /admin-profile/remove/:
+    delete:
+      operationId: admin-profile_remove
+      description: Xóa hồ sơ của người dùng hiện tại
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - admin-profile
+    parameters: []
+  /auth/login/:
+    post:
+      operationId: auth_login
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/UserLogin'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/UserLogin'
+      tags:
+      - auth
+    parameters: []
+  /auth/logout/:
+    post:
+      operationId: auth_logout
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/UserAuth'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/UserAuth'
+      tags:
+      - auth
+    parameters: []
+  /auth/register/:
+    post:
+      operationId: auth_register
+      description: ''
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/UserRegistration'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/UserRegistration'
+      tags:
+      - auth
+    parameters: []
+  /auth/token/refresh/:
+    post:
+      operationId: auth_token_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/TokenRefresh'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/TokenRefresh'
+      tags:
+      - auth
+    parameters: []
+  /contact-info/create_or_update/:
+    post:
+      operationId: contact-info_create_or_update
+      description: Tạo hoặc cập nhật thông tin liên hệ của người dùng hiện tại
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/ContactInfo'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/ContactInfo'
+      tags:
+      - contact-info
+    parameters: []
+  /contact-info/me/:
+    get:
+      operationId: contact-info_me
+      description: Lấy thông tin liên hệ của người dùng hiện tại
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ContactInfo'
+      tags:
+      - contact-info
+    parameters: []
+  /contact-info/remove/:
+    delete:
+      operationId: contact-info_remove
+      description: Xóa thông tin liên hệ của người dùng hiện tại
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - contact-info
+    parameters: []
+  /departments/:
+    get:
+      operationId: departments_list
+      description: Lấy danh sách khoa
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - departments
+    parameters: []
+  /doctor-profile/create_or_update/:
+    post:
+      operationId: doctor-profile_create_or_update
+      description: Tạo hoặc cập nhật hồ sơ của người dùng hiện tại
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/DoctorProfile'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/DoctorProfile'
+      tags:
+      - doctor-profile
+    parameters: []
+  /doctor-profile/me/:
+    get:
+      operationId: doctor-profile_me
+      description: Lấy hồ sơ của người dùng hiện tại
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/DoctorProfile'
+      tags:
+      - doctor-profile
+    parameters: []
+  /doctor-profile/remove/:
+    delete:
+      operationId: doctor-profile_remove
+      description: Xóa hồ sơ của người dùng hiện tại
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - doctor-profile
+    parameters: []
+  /doctors/:
+    get:
+      operationId: doctors_list
+      description: ViewSet để lấy danh sách bác sĩ.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/DoctorProfile'
+      tags:
+      - doctors
+    parameters: []
+  /doctors/{id}/:
+    get:
+      operationId: doctors_read
+      description: ViewSet để lấy danh sách bác sĩ.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/DoctorProfile'
+      tags:
+      - doctors
+    parameters:
+    - name: id
+      in: path
+      required: true
+      type: string
+  /documents/:
+    get:
+      operationId: documents_list
+      description: ViewSet để quản lý tài liệu người dùng.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/UserDocument'
+      tags:
+      - documents
+    post:
+      operationId: documents_create
+      description: ViewSet để quản lý tài liệu người dùng.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/UserDocument'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/UserDocument'
+      tags:
+      - documents
+    parameters: []
+  /documents/{id}/:
+    get:
+      operationId: documents_read
+      description: ViewSet để quản lý tài liệu người dùng.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/UserDocument'
+      tags:
+      - documents
+    put:
+      operationId: documents_update
+      description: ViewSet để quản lý tài liệu người dùng.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/UserDocument'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/UserDocument'
+      tags:
+      - documents
+    patch:
+      operationId: documents_partial_update
+      description: ViewSet để quản lý tài liệu người dùng.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/UserDocument'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/UserDocument'
+      tags:
+      - documents
+    delete:
+      operationId: documents_delete
+      description: ViewSet để quản lý tài liệu người dùng.
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - documents
+    parameters:
+    - name: id
+      in: path
+      required: true
+      type: string
+  /documents/{id}/verify/:
+    post:
+      operationId: documents_verify
+      description: Xác minh tài liệu (chỉ dành cho admin)
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/UserDocument'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/UserDocument'
+      tags:
+      - documents
+    parameters:
+    - name: id
+      in: path
+      required: true
+      type: string
+  /insurance-information/:
+    get:
+      operationId: insurance-information_list
+      description: ViewSet để quản lý thông tin bảo hiểm.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/InsuranceInformation'
+      tags:
+      - insurance-information
+    post:
+      operationId: insurance-information_create
+      description: ViewSet để quản lý thông tin bảo hiểm.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/InsuranceInformation'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/InsuranceInformation'
+      tags:
+      - insurance-information
+    parameters: []
+  /insurance-information/{id}/:
+    get:
+      operationId: insurance-information_read
+      description: ViewSet để quản lý thông tin bảo hiểm.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/InsuranceInformation'
+      tags:
+      - insurance-information
+    put:
+      operationId: insurance-information_update
+      description: ViewSet để quản lý thông tin bảo hiểm.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/InsuranceInformation'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/InsuranceInformation'
+      tags:
+      - insurance-information
+    patch:
+      operationId: insurance-information_partial_update
+      description: ViewSet để quản lý thông tin bảo hiểm.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/InsuranceInformation'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/InsuranceInformation'
+      tags:
+      - insurance-information
+    delete:
+      operationId: insurance-information_delete
+      description: ViewSet để quản lý thông tin bảo hiểm.
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - insurance-information
+    parameters:
+    - name: id
+      in: path
+      required: true
+      type: string
+  /insurance-provider-profile/create_or_update/:
+    post:
+      operationId: insurance-provider-profile_create_or_update
+      description: Tạo hoặc cập nhật hồ sơ của người dùng hiện tại
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/InsuranceProviderProfile'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/InsuranceProviderProfile'
+      tags:
+      - insurance-provider-profile
+    parameters: []
+  /insurance-provider-profile/me/:
+    get:
+      operationId: insurance-provider-profile_me
+      description: Lấy hồ sơ của người dùng hiện tại
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/InsuranceProviderProfile'
+      tags:
+      - insurance-provider-profile
+    parameters: []
+  /insurance-provider-profile/remove/:
+    delete:
+      operationId: insurance-provider-profile_remove
+      description: Xóa hồ sơ của người dùng hiện tại
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - insurance-provider-profile
+    parameters: []
+  /lab-technician-profile/create_or_update/:
+    post:
+      operationId: lab-technician-profile_create_or_update
+      description: Tạo hoặc cập nhật hồ sơ của người dùng hiện tại
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/LabTechnicianProfile'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/LabTechnicianProfile'
+      tags:
+      - lab-technician-profile
+    parameters: []
+  /lab-technician-profile/me/:
+    get:
+      operationId: lab-technician-profile_me
+      description: Lấy hồ sơ của người dùng hiện tại
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/LabTechnicianProfile'
+      tags:
+      - lab-technician-profile
+    parameters: []
+  /lab-technician-profile/remove/:
+    delete:
+      operationId: lab-technician-profile_remove
+      description: Xóa hồ sơ của người dùng hiện tại
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - lab-technician-profile
+    parameters: []
+  /nurse-profile/create_or_update/:
+    post:
+      operationId: nurse-profile_create_or_update
+      description: Tạo hoặc cập nhật hồ sơ của người dùng hiện tại
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/NurseProfile'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/NurseProfile'
+      tags:
+      - nurse-profile
+    parameters: []
+  /nurse-profile/me/:
+    get:
+      operationId: nurse-profile_me
+      description: Lấy hồ sơ của người dùng hiện tại
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/NurseProfile'
+      tags:
+      - nurse-profile
+    parameters: []
+  /nurse-profile/remove/:
+    delete:
+      operationId: nurse-profile_remove
+      description: Xóa hồ sơ của người dùng hiện tại
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - nurse-profile
+    parameters: []
+  /patient-profile/create_or_update/:
+    post:
+      operationId: patient-profile_create_or_update
+      description: Tạo hoặc cập nhật hồ sơ của người dùng hiện tại
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/PatientProfile'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/PatientProfile'
+      tags:
+      - patient-profile
+    parameters: []
+  /patient-profile/me/:
+    get:
+      operationId: patient-profile_me
+      description: Lấy hồ sơ của người dùng hiện tại
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/PatientProfile'
+      tags:
+      - patient-profile
+    parameters: []
+  /patient-profile/remove/:
+    delete:
+      operationId: patient-profile_remove
+      description: Xóa hồ sơ của người dùng hiện tại
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - patient-profile
+    parameters: []
+  /pharmacist-profile/create_or_update/:
+    post:
+      operationId: pharmacist-profile_create_or_update
+      description: Tạo hoặc cập nhật hồ sơ của người dùng hiện tại
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/PharmacistProfile'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/PharmacistProfile'
+      tags:
+      - pharmacist-profile
+    parameters: []
+  /pharmacist-profile/me/:
+    get:
+      operationId: pharmacist-profile_me
+      description: Lấy hồ sơ của người dùng hiện tại
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/PharmacistProfile'
+      tags:
+      - pharmacist-profile
+    parameters: []
+  /pharmacist-profile/remove/:
+    delete:
+      operationId: pharmacist-profile_remove
+      description: Xóa hồ sơ của người dùng hiện tại
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - pharmacist-profile
+    parameters: []
+  /specialties/:
+    get:
+      operationId: specialties_list
+      description: Lấy danh sách chuyên khoa
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - specialties
+    parameters: []
+  /users/:
+    get:
+      operationId: users_list
+      description: ViewSet để quản lý người dùng.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/UserDetail'
+      tags:
+      - users
+    post:
+      operationId: users_create
+      description: Tạo người dùng mới (chỉ dành cho admin)
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/UserDetail'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/UserDetail'
+      tags:
+      - users
+    parameters: []
+  /users/create_staff/:
+    post:
+      operationId: users_create_staff
+      description: |-
+        Tạo tài khoản cho nhân viên y tế.
+        Chỉ quản trị viên mới có thể truy cập endpoint này.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/UserDetail'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/UserDetail'
+      tags:
+      - users
+    parameters: []
+  /users/me/:
+    get:
+      operationId: users_me
+      description: Lấy thông tin người dùng hiện tại
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/UserDetail'
+      tags:
+      - users
+    parameters: []
+  /users/{id}/:
+    get:
+      operationId: users_read
+      description: ViewSet để quản lý người dùng.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/UserDetail'
+      tags:
+      - users
+    put:
+      operationId: users_update
+      description: Cập nhật thông tin người dùng
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/UserDetail'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/UserDetail'
+      tags:
+      - users
+    patch:
+      operationId: users_partial_update
+      description: ViewSet để quản lý người dùng.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/UserDetail'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/UserDetail'
+      tags:
+      - users
+    delete:
+      operationId: users_delete
+      description: Xóa người dùng (chỉ dành cho admin)
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - users
+    parameters:
+    - name: id
+      in: path
+      required: true
+      type: string
+definitions:
+  Address:
+    required:
+    - street
+    - city
+    - state
+    - postal_code
+    - country
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      street:
+        title: Street
+        type: string
+        maxLength: 255
+        minLength: 1
+      city:
+        title: City
+        type: string
+        maxLength: 100
+        minLength: 1
+      state:
+        title: State
+        type: string
+        maxLength: 100
+        minLength: 1
+      postal_code:
+        title: Postal code
+        type: string
+        maxLength: 20
+        minLength: 1
+      country:
+        title: Country
+        type: string
+        maxLength: 100
+        minLength: 1
+      is_primary:
+        title: Is primary
+        type: boolean
+      address_type:
+        title: Address type
+        type: string
+        enum:
+        - HOME
+        - WORK
+        - BILLING
+        - OTHER
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true
+      user:
+        title: User
+        type: integer
+  AdminProfile:
+    required:
+    - employee_id
+    - position
+    - user
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      admin_type:
+        title: Admin type
+        type: string
+        enum:
+        - SYSTEM
+        - HOSPITAL
+        - DEPARTMENT
+        - CLINIC
+        - BILLING
+        - HR
+        - OTHER
+      employee_id:
+        title: Employee id
+        type: string
+        maxLength: 50
+        minLength: 1
+      position:
+        title: Position
+        type: string
+        maxLength: 100
+        minLength: 1
+      access_level:
+        title: Access level
+        description: 1-5, with 5 being highest access
+        type: integer
+        enum:
+        - 1
+        - 2
+        - 3
+        - 4
+        - 5
+      department:
+        title: Department
+        type: string
+        maxLength: 100
+        x-nullable: true
+      responsibilities:
+        title: Responsibilities
+        type: string
+        maxLength: 500
+        x-nullable: true
+      profile_picture:
+        title: Profile picture
+        description: Path to profile picture in storage service
+        type: string
+        maxLength: 255
+        x-nullable: true
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true
+      user:
+        title: User
+        type: integer
+      supervisor:
+        title: Supervisor
+        type: integer
+        x-nullable: true
+  UserLogin:
+    required:
+    - email
+    - password
+    type: object
+    properties:
+      email:
+        title: Email
+        type: string
+        format: email
+        minLength: 1
+      password:
+        title: Password
+        type: string
+        minLength: 1
+  UserAuth:
+    required:
+    - email
+    - first_name
+    - last_name
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      email:
+        title: Email
+        type: string
+        format: email
+        maxLength: 254
+        minLength: 1
+      first_name:
+        title: First name
+        type: string
+        maxLength: 30
+        minLength: 1
+      last_name:
+        title: Last name
+        type: string
+        maxLength: 30
+        minLength: 1
+      role:
+        title: Role
+        type: string
+        enum:
+        - PATIENT
+        - DOCTOR
+        - NURSE
+        - ADMIN
+        - PHARMACIST
+        - INSURANCE
+        - LAB_TECH
+      date_joined:
+        title: Date joined
+        type: string
+        format: date-time
+        readOnly: true
+  UserRegistration:
+    required:
+    - email
+    - password
+    - password_confirm
+    - first_name
+    - last_name
+    type: object
+    properties:
+      email:
+        title: Email
+        type: string
+        format: email
+        maxLength: 254
+        minLength: 1
+      password:
+        title: Password
+        type: string
+        minLength: 1
+      password_confirm:
+        title: Password confirm
+        type: string
+        minLength: 1
+      first_name:
+        title: First name
+        type: string
+        maxLength: 30
+        minLength: 1
+      last_name:
+        title: Last name
+        type: string
+        maxLength: 30
+        minLength: 1
+      role:
+        title: Role
+        type: string
+        readOnly: true
+        default: PATIENT
+        minLength: 1
+  TokenRefresh:
+    required:
+    - refresh
+    type: object
+    properties:
+      refresh:
+        title: Refresh
+        type: string
+        minLength: 1
+      access:
+        title: Access
+        type: string
+        readOnly: true
+        minLength: 1
+  ContactInfo:
+    required:
+    - phone_number
+    - user
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      phone_number:
+        title: Phone number
+        type: string
+        maxLength: 20
+        minLength: 1
+      secondary_phone:
+        title: Secondary phone
+        type: string
+        maxLength: 20
+        x-nullable: true
+      work_phone:
+        title: Work phone
+        type: string
+        maxLength: 20
+        x-nullable: true
+      emergency_contact_name:
+        title: Emergency contact name
+        type: string
+        maxLength: 100
+        x-nullable: true
+      emergency_contact_relationship:
+        title: Emergency contact relationship
+        type: string
+        maxLength: 50
+        x-nullable: true
+      emergency_contact_phone:
+        title: Emergency contact phone
+        type: string
+        maxLength: 20
+        x-nullable: true
+      preferred_contact_method:
+        title: Preferred contact method
+        type: string
+        enum:
+        - EMAIL
+        - PHONE
+        - SMS
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true
+      user:
+        title: User
+        type: integer
+  DoctorProfile:
+    required:
+    - specialization
+    - license_number
+    - years_of_experience
+    - user
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      specialization:
+        title: Specialization
+        type: string
+        enum:
+        - NOI_TIM_MACH
+        - NOI_TIEU_HOA
+        - NOI_HO_HAP
+        - NOI_THAN
+        - NOI_TIET
+        - NOI_THAN_KINH
+        - NOI_DA_LIEU
+        - NOI_TONG_QUAT
+        - NGOAI_CHINH_HINH
+        - NGOAI_TIET_NIEU
+        - NGOAI_THAN_KINH
+        - NGOAI_LONG_NGUC
+        - NGOAI_TIEU_HOA
+        - NGOAI_TONG_QUAT
+        - SAN_KHOA
+        - PHU_KHOA
+        - VO_SINH
+        - NHI_TONG_QUAT
+        - NHI_TIM_MACH
+        - NHI_THAN_KINH
+        - NHI_SO_SINH
+        - MAT
+        - TAI_MUI_HONG
+        - RANG_HAM_MAT
+        - TAM_THAN
+        - UNG_BUOU
+        - DA_KHOA
+        - KHAC
+      license_number:
+        title: License number
+        type: string
+        maxLength: 50
+        minLength: 1
+      years_of_experience:
+        title: Years of experience
+        type: integer
+        maximum: 2147483647
+        minimum: 0
+      department:
+        title: Department
+        type: string
+        maxLength: 100
+        minLength: 1
+      consultation_fee:
+        title: Consultation fee
+        type: string
+        format: decimal
+        x-nullable: true
+      availability_status:
+        title: Availability status
+        type: string
+        enum:
+        - AVAILABLE
+        - UNAVAILABLE
+        - ON_LEAVE
+        - EMERGENCY_ONLY
+      max_patients_per_day:
+        title: Max patients per day
+        type: integer
+        maximum: 2147483647
+        minimum: 0
+      working_days:
+        title: Working days
+        description: Comma separated days, e.g., 'MON,TUE,WED,THU,FRI'
+        type: string
+        maxLength: 100
+        minLength: 1
+      working_hours:
+        title: Working hours
+        description: 'Format: ''09:00-17:00'''
+        type: string
+        maxLength: 100
+        minLength: 1
+      secondary_specialization:
+        title: Secondary specialization
+        type: string
+        enum:
+        - NOI_TIM_MACH
+        - NOI_TIEU_HOA
+        - NOI_HO_HAP
+        - NOI_THAN
+        - NOI_TIET
+        - NOI_THAN_KINH
+        - NOI_DA_LIEU
+        - NOI_TONG_QUAT
+        - NGOAI_CHINH_HINH
+        - NGOAI_TIET_NIEU
+        - NGOAI_THAN_KINH
+        - NGOAI_LONG_NGUC
+        - NGOAI_TIEU_HOA
+        - NGOAI_TONG_QUAT
+        - SAN_KHOA
+        - PHU_KHOA
+        - VO_SINH
+        - NHI_TONG_QUAT
+        - NHI_TIM_MACH
+        - NHI_THAN_KINH
+        - NHI_SO_SINH
+        - MAT
+        - TAI_MUI_HONG
+        - RANG_HAM_MAT
+        - TAM_THAN
+        - UNG_BUOU
+        - DA_KHOA
+        - KHAC
+        x-nullable: true
+      license_expiry_date:
+        title: License expiry date
+        type: string
+        format: date
+        x-nullable: true
+      education:
+        title: Education
+        type: string
+        maxLength: 255
+        x-nullable: true
+      board_certifications:
+        title: Board certifications
+        type: string
+        x-nullable: true
+      short_bio:
+        title: Short bio
+        type: string
+        maxLength: 500
+        x-nullable: true
+      languages_spoken:
+        title: Languages spoken
+        type: string
+        maxLength: 200
+        minLength: 1
+      profile_picture:
+        title: Profile picture
+        description: Path to profile picture in storage service
+        type: string
+        maxLength: 255
+        x-nullable: true
+      average_rating:
+        title: Average rating
+        type: string
+        format: decimal
+        readOnly: true
+      rating_count:
+        title: Rating count
+        type: integer
+        readOnly: true
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true
+      user:
+        title: User
+        type: integer
+  UserDocument:
+    required:
+    - document_type
+    - document_number
+    - issue_date
+    - issuing_authority
+    - document_file
+    - user
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      document_type:
+        title: Document type
+        type: string
+        enum:
+        - ID_CARD
+        - PASSPORT
+        - DRIVER_LICENSE
+        - MEDICAL_LICENSE
+        - INSURANCE_CARD
+        - CERTIFICATION
+        - OTHER
+      document_number:
+        title: Document number
+        type: string
+        maxLength: 100
+        minLength: 1
+      issue_date:
+        title: Issue date
+        type: string
+        format: date
+      expiry_date:
+        title: Expiry date
+        type: string
+        format: date
+        x-nullable: true
+      issuing_authority:
+        title: Issuing authority
+        type: string
+        maxLength: 200
+        minLength: 1
+      document_file:
+        title: Document file
+        description: Path to document file in storage service
+        type: string
+        maxLength: 255
+        minLength: 1
+      is_verified:
+        title: Is verified
+        type: boolean
+        readOnly: true
+      verification_date:
+        title: Verification date
+        type: string
+        format: date-time
+        readOnly: true
+        x-nullable: true
+      verification_notes:
+        title: Verification notes
+        type: string
+        readOnly: true
+        minLength: 1
+        x-nullable: true
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true
+      user:
+        title: User
+        type: integer
+  InsuranceInformation:
+    required:
+    - policy_number
+    - subscriber_name
+    - coverage_start_date
+    - provider
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      insurance_type:
+        title: Insurance type
+        type: string
+        enum:
+        - HEALTH
+        - DENTAL
+        - VISION
+        - LIFE
+        - DISABILITY
+        - OTHER
+      policy_number:
+        title: Policy number
+        type: string
+        maxLength: 100
+        minLength: 1
+      group_number:
+        title: Group number
+        type: string
+        maxLength: 100
+        x-nullable: true
+      member_id:
+        title: Member id
+        type: string
+        maxLength: 100
+        x-nullable: true
+      subscriber_name:
+        title: Subscriber name
+        type: string
+        maxLength: 200
+        minLength: 1
+      subscriber_relationship:
+        title: Subscriber relationship
+        type: string
+        maxLength: 50
+        minLength: 1
+      coverage_start_date:
+        title: Coverage start date
+        type: string
+        format: date
+      coverage_end_date:
+        title: Coverage end date
+        type: string
+        format: date
+        x-nullable: true
+      coverage_level:
+        title: Coverage level
+        type: string
+        enum:
+        - BASIC
+        - STANDARD
+        - PREMIUM
+        - COMPREHENSIVE
+        - CUSTOM
+      deductible:
+        title: Deductible
+        type: string
+        format: decimal
+        x-nullable: true
+      copay:
+        title: Copay
+        type: string
+        format: decimal
+        x-nullable: true
+      coinsurance_rate:
+        title: Coinsurance rate
+        description: Percentage as decimal (e.g., 0.20 for 20%)
+        type: string
+        format: decimal
+        x-nullable: true
+      max_out_of_pocket:
+        title: Max out of pocket
+        type: string
+        format: decimal
+        x-nullable: true
+      is_active:
+        title: Is active
+        type: boolean
+      notes:
+        title: Notes
+        type: string
+        x-nullable: true
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true
+      provider:
+        title: Provider
+        type: integer
+  InsuranceProviderProfile:
+    required:
+    - company_name
+    - provider_id
+    - contact_person
+    - contact_email
+    - contact_phone
+    - user
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      company_name:
+        title: Company name
+        type: string
+        maxLength: 200
+        minLength: 1
+      provider_id:
+        title: Provider id
+        type: string
+        maxLength: 100
+        minLength: 1
+      contact_person:
+        title: Contact person
+        type: string
+        maxLength: 200
+        minLength: 1
+      contact_email:
+        title: Contact email
+        type: string
+        format: email
+        maxLength: 254
+        minLength: 1
+      contact_phone:
+        title: Contact phone
+        type: string
+        maxLength: 20
+        minLength: 1
+      service_areas:
+        title: Service areas
+        description: Comma-separated list of service areas
+        type: string
+        maxLength: 500
+        minLength: 1
+      available_plans:
+        title: Available plans
+        description: Description of available insurance plans
+        type: string
+        maxLength: 500
+        minLength: 1
+      website:
+        title: Website
+        type: string
+        format: uri
+        maxLength: 200
+        x-nullable: true
+      established_year:
+        title: Established year
+        type: integer
+        maximum: 2147483647
+        minimum: 0
+        x-nullable: true
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true
+      user:
+        title: User
+        type: integer
+      address:
+        title: Address
+        type: integer
+        x-nullable: true
+  LabTechnicianProfile:
+    required:
+    - license_number
+    - laboratory_name
+    - user
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      license_number:
+        title: License number
+        type: string
+        maxLength: 50
+        minLength: 1
+      specialization:
+        title: Specialization
+        type: string
+        enum:
+        - HEMATOLOGY
+        - MICROBIOLOGY
+        - BIOCHEMISTRY
+        - IMMUNOLOGY
+        - PATHOLOGY
+        - TOXICOLOGY
+        - GENETICS
+        - GENERAL
+        - OTHER
+      laboratory_name:
+        title: Laboratory name
+        type: string
+        maxLength: 200
+        minLength: 1
+      years_of_experience:
+        title: Years of experience
+        type: integer
+        maximum: 2147483647
+        minimum: 0
+      license_expiry_date:
+        title: License expiry date
+        type: string
+        format: date
+        x-nullable: true
+      education:
+        title: Education
+        type: string
+        maxLength: 255
+        x-nullable: true
+      certifications:
+        title: Certifications
+        type: string
+        maxLength: 255
+        x-nullable: true
+      supervisor:
+        title: Supervisor
+        type: string
+        maxLength: 200
+        x-nullable: true
+      equipment_expertise:
+        title: Equipment expertise
+        description: List of laboratory equipment the technician is proficient with
+        type: string
+        maxLength: 500
+        x-nullable: true
+      profile_picture:
+        title: Profile picture
+        description: Path to profile picture in storage service
+        type: string
+        maxLength: 255
+        x-nullable: true
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true
+      user:
+        title: User
+        type: integer
+      laboratory_address:
+        title: Laboratory address
+        type: integer
+        x-nullable: true
+  NurseProfile:
+    required:
+    - license_number
+    - department
+    - user
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      license_number:
+        title: License number
+        type: string
+        maxLength: 50
+        minLength: 1
+      nurse_type:
+        title: Nurse type
+        type: string
+        enum:
+        - RN
+        - LPN
+        - NP
+        - CNA
+        - SPECIALIST
+        - OTHER
+      department:
+        title: Department
+        type: string
+        enum:
+        - KHOA_NOI
+        - KHOA_NGOAI
+        - KHOA_SAN
+        - KHOA_NHI
+        - KHOA_CAP_CUU
+        - KHOA_XET_NGHIEM
+        - KHOA_CHAN_DOAN_HINH_ANH
+        - KHOA_MAT
+        - KHOA_TMH
+        - KHOA_RHM
+        - KHOA_UNG_BUOU
+        - KHOA_HOI_SUC
+        - KHOA_KHAC
+      shift_preference:
+        title: Shift preference
+        type: string
+        enum:
+        - MORNING
+        - AFTERNOON
+        - NIGHT
+        - ROTATING
+      years_of_experience:
+        title: Years of experience
+        type: integer
+        maximum: 2147483647
+        minimum: 0
+      license_expiry_date:
+        title: License expiry date
+        type: string
+        format: date
+        x-nullable: true
+      specialization:
+        title: Specialization
+        type: string
+        maxLength: 100
+        x-nullable: true
+      education:
+        title: Education
+        type: string
+        maxLength: 255
+        x-nullable: true
+      certifications:
+        title: Certifications
+        type: string
+        maxLength: 255
+        x-nullable: true
+      languages_spoken:
+        title: Languages spoken
+        type: string
+        maxLength: 200
+        minLength: 1
+      profile_picture:
+        title: Profile picture
+        description: Path to profile picture in storage service
+        type: string
+        maxLength: 255
+        x-nullable: true
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true
+      user:
+        title: User
+        type: integer
+      supervisor:
+        title: Supervisor
+        type: integer
+        x-nullable: true
+  PatientProfile:
+    required:
+    - user
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      age:
+        title: Age
+        type: string
+        readOnly: true
+      bmi:
+        title: Bmi
+        type: string
+        readOnly: true
+      date_of_birth:
+        title: Date of birth
+        type: string
+        format: date
+        x-nullable: true
+      gender:
+        title: Gender
+        type: string
+        enum:
+        - M
+        - F
+        - O
+        x-nullable: true
+      blood_type:
+        title: Blood type
+        type: string
+        enum:
+        - A+
+        - A-
+        - B+
+        - B-
+        - AB+
+        - AB-
+        - O+
+        - O-
+        x-nullable: true
+      height:
+        title: Height
+        description: Height in cm
+        type: string
+        format: decimal
+        x-nullable: true
+      weight:
+        title: Weight
+        description: Weight in kg
+        type: string
+        format: decimal
+        x-nullable: true
+      allergies:
+        title: Allergies
+        type: string
+        x-nullable: true
+      medical_conditions:
+        title: Medical conditions
+        type: string
+        x-nullable: true
+      current_medications:
+        title: Current medications
+        description: List of current medications
+        type: string
+        x-nullable: true
+      family_medical_history:
+        title: Family medical history
+        type: string
+        x-nullable: true
+      primary_language:
+        title: Primary language
+        type: string
+        maxLength: 50
+        minLength: 1
+      requires_translator:
+        title: Requires translator
+        type: boolean
+      marital_status:
+        title: Marital status
+        type: string
+        enum:
+        - SINGLE
+        - MARRIED
+        - DIVORCED
+        - WIDOWED
+        - OTHER
+        x-nullable: true
+      occupation:
+        title: Occupation
+        type: string
+        maxLength: 100
+        x-nullable: true
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true
+      user:
+        title: User
+        type: integer
+      emergency_contact:
+        title: Emergency contact
+        type: integer
+        x-nullable: true
+      primary_care_physician:
+        title: Primary care physician
+        type: integer
+        x-nullable: true
+      preferred_pharmacy:
+        title: Preferred pharmacy
+        type: integer
+        x-nullable: true
+      insurance_information:
+        title: Insurance information
+        type: integer
+        x-nullable: true
+  PharmacistProfile:
+    required:
+    - license_number
+    - user
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      license_number:
+        title: License number
+        type: string
+        maxLength: 50
+        minLength: 1
+      specialization:
+        title: Specialization
+        type: string
+        enum:
+        - CLINICAL
+        - RETAIL
+        - HOSPITAL
+        - RESEARCH
+        - INDUSTRIAL
+        - CONSULTANT
+        - ONCOLOGY
+        - PEDIATRIC
+        - GERIATRIC
+        - OTHER
+      pharmacy_name:
+        title: Pharmacy name
+        type: string
+        maxLength: 200
+        minLength: 1
+      years_of_experience:
+        title: Years of experience
+        type: integer
+        maximum: 2147483647
+        minimum: 0
+      is_pharmacy_manager:
+        title: Is pharmacy manager
+        type: boolean
+      license_expiry_date:
+        title: License expiry date
+        type: string
+        format: date
+        x-nullable: true
+      education:
+        title: Education
+        type: string
+        maxLength: 255
+        x-nullable: true
+      certifications:
+        title: Certifications
+        type: string
+        maxLength: 255
+        x-nullable: true
+      languages_spoken:
+        title: Languages spoken
+        type: string
+        maxLength: 200
+        minLength: 1
+      profile_picture:
+        title: Profile picture
+        description: Path to profile picture in storage service
+        type: string
+        maxLength: 255
+        x-nullable: true
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true
+      user:
+        title: User
+        type: integer
+      pharmacy_address:
+        title: Pharmacy address
+        type: integer
+        x-nullable: true
+  UserDetail:
+    required:
+    - email
+    - first_name
+    - last_name
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      email:
+        title: Email
+        type: string
+        format: email
+        maxLength: 254
+        minLength: 1
+      first_name:
+        title: First name
+        type: string
+        maxLength: 30
+        minLength: 1
+      last_name:
+        title: Last name
+        type: string
+        maxLength: 30
+        minLength: 1
+      role:
+        title: Role
+        type: string
+        enum:
+        - PATIENT
+        - DOCTOR
+        - NURSE
+        - ADMIN
+        - PHARMACIST
+        - INSURANCE
+        - LAB_TECH
+      date_joined:
+        title: Date joined
+        type: string
+        format: date-time
+        readOnly: true
+      is_active:
+        title: Is active
+        type: boolean
+      addresses:
+        type: array
+        items:
+          $ref: '#/definitions/Address'
+        readOnly: true
+      contact_info:
+        $ref: '#/definitions/ContactInfo'
+      documents:
+        type: array
+        items:
+          $ref: '#/definitions/UserDocument'
+        readOnly: true
+      patient_profile:
+        $ref: '#/definitions/PatientProfile'
+      doctor_profile:
+        $ref: '#/definitions/DoctorProfile'
+      nurse_profile:
+        $ref: '#/definitions/NurseProfile'
+      pharmacist_profile:
+        $ref: '#/definitions/PharmacistProfile'
+      insurance_provider_profile:
+        $ref: '#/definitions/InsuranceProviderProfile'
+      lab_technician_profile:
+        $ref: '#/definitions/LabTechnicianProfile'
+      admin_profile:
+        $ref: '#/definitions/AdminProfile'

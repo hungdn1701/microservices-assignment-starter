@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300" fill="none">
+  <rect width="400" height="300" fill="#E6F0F9"/>
+  
+  <!-- Background design elements -->
+  <circle cx="350" cy="50" r="100" fill="#0EA5E9" fill-opacity="0.05"/>
+  <circle cx="50" cy="250" r="100" fill="#0EA5E9" fill-opacity="0.05"/>
+  
+  <!-- Lab flask and test tube group -->
+  <g transform="translate(80, 80)">
+    <!-- Test tube 1 -->
+    <rect x="20" y="0" width="30" height="140" rx="15" fill="white" stroke="#0EA5E9" stroke-width="3"/>
+    <rect x="20" y="70" width="30" height="70" rx="15" fill="#0EA5E9" fill-opacity="0.3"/>
+    
+    <!-- Test tube 2 -->
+    <rect x="70" y="20" width="30" height="120" rx="15" fill="white" stroke="#0EA5E9" stroke-width="3"/>
+    <rect x="70" y="90" width="30" height="50" rx="15" fill="#EB4899" fill-opacity="0.3"/>
+    
+    <!-- Flask -->
+    <path d="M160 140 L190 140 L190 90 C215 80 230 60 230 30 L120 30 C120 60 135 80 160 90 L160 140 Z" fill="white" stroke="#0EA5E9" stroke-width="3"/>
+    <path d="M130 140 L190 140 L190 110 C170 110 150 110 130 110 Z" fill="#0EA5E9" fill-opacity="0.3"/>
+    
+    <!-- Flask top -->
+    <rect x="160" y="10" width="30" height="20" rx="5" fill="white" stroke="#0EA5E9" stroke-width="3"/>
+    
+    <!-- Bubbles in flask -->
+    <circle cx="150" cy="80" r="5" fill="#0EA5E9" fill-opacity="0.5"/>
+    <circle cx="170" cy="100" r="8" fill="#0EA5E9" fill-opacity="0.5"/>
+    <circle cx="145" cy="120" r="6" fill="#0EA5E9" fill-opacity="0.5"/>
+    <circle cx="180" cy="75" r="4" fill="#0EA5E9" fill-opacity="0.5"/>
+  </g>
+  
+  <!-- DNA helix on the right -->
+  <g transform="translate(270, 100)">
+    <path d="M0 0 Q25 25, 0 50 Q-25 75, 0 100 Q25 125, 0 150" stroke="#0EA5E9" stroke-width="4" fill="none"/>
+    <path d="M50 0 Q25 25, 50 50 Q75 75, 50 100 Q25 125, 50 150" stroke="#0EA5E9" stroke-width="4" fill="none"/>
+    
+    <!-- Connection points -->
+    <line x1="0" y1="0" x2="50" y2="0" stroke="#0EA5E9" stroke-width="3"/>
+    <line x1="0" y1="50" x2="50" y2="50" stroke="#0EA5E9" stroke-width="3"/>
+    <line x1="0" y1="100" x2="50" y2="100" stroke="#0EA5E9" stroke-width="3"/>
+    <line x1="0" y1="150" x2="50" y2="150" stroke="#0EA5E9" stroke-width="3"/>
+  </g>
+</svg>

@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" fill="none">
+  <!-- Gradient background -->
+  <rect width="1920" height="1080" fill="url(#gradient-bg)"/>
+  
+  <!-- Medical pattern overlay -->
+  <g opacity="0.15">
+    <!-- Heart icons -->
+    <path d="M300 200 C300 180 320 160 340 160 C360 160 380 180 380 200 C380 240 340 270 300 300 C260 270 220 240 220 200 C220 180 240 160 260 160 C280 160 300 180 300 200Z" fill="white"/>
+    <path d="M800 500 C800 480 820 460 840 460 C860 460 880 480 880 500 C880 540 840 570 800 600 C760 570 720 540 720 500 C720 480 740 460 760 460 C780 460 800 480 800 500Z" fill="white"/>
+    <path d="M1500 300 C1500 280 1520 260 1540 260 C1560 260 1580 280 1580 300 C1580 340 1540 370 1500 400 C1460 370 1420 340 1420 300 C1420 280 1440 260 1460 260 C1480 260 1500 280 1500 300Z" fill="white"/>
+    <path d="M400 800 C400 780 420 760 440 760 C460 760 480 780 480 800 C480 840 440 870 400 900 C360 870 320 840 320 800 C320 780 340 760 360 760 C380 760 400 780 400 800Z" fill="white"/>
+    <path d="M1200 800 C1200 780 1220 760 1240 760 C1260 760 1280 780 1280 800 C1280 840 1240 870 1200 900 C1160 870 1120 840 1120 800 C1120 780 1140 760 1160 760 C1180 760 1200 780 1200 800Z" fill="white"/>
+    
+    <!-- Medical cross icons -->
+    <path d="M600 200 L650 200 L650 150 L700 150 L700 200 L750 200 L750 250 L700 250 L700 300 L650 300 L650 250 L600 250 Z" fill="white"/>
+    <path d="M1000 700 L1050 700 L1050 650 L1100 650 L1100 700 L1150 700 L1150 750 L1100 750 L1100 800 L1050 800 L1050 750 L1000 750 Z" fill="white"/>
+    <path d="M1700 600 L1750 600 L1750 550 L1800 550 L1800 600 L1850 600 L1850 650 L1800 650 L1800 700 L1750 700 L1750 650 L1700 650 Z" fill="white"/>
+    
+    <!-- DNA helix - stylized -->
+    <g opacity="0.2">
+      <path d="M1700 100 Q1750 150, 1700 200 Q1650 250, 1700 300 Q1750 350, 1700 400" stroke="white" stroke-width="4"/>
+      <path d="M1800 100 Q1750 150, 1800 200 Q1850 250, 1800 300 Q1750 350, 1800 400" stroke="white" stroke-width="4"/>
+      <circle cx="1700" cy="100" r="10" fill="white"/>
+      <circle cx="1800" cy="100" r="10" fill="white"/>
+      <circle cx="1700" cy="200" r="10" fill="white"/>
+      <circle cx="1800" cy="200" r="10" fill="white"/>
+      <circle cx="1700" cy="300" r="10" fill="white"/>
+      <circle cx="1800" cy="300" r="10" fill="white"/>
+      <circle cx="1700" cy="400" r="10" fill="white"/>
+      <circle cx="1800" cy="400" r="10" fill="white"/>
+    </g>
+    
+    <!-- Pulse line -->
+    <path d="M100 600 L200 600 L250 500 L350 700 L450 400 L550 600 L650 600" stroke="white" stroke-width="4" fill="none"/>
+    <path d="M900 400 L1000 400 L1050 300 L1150 500 L1250 200 L1350 400 L1450 400" stroke="white" stroke-width="4" fill="none"/>
+    
+    <!-- Stethoscope -->
+    <path d="M200 900 C250 850, 300 900, 300 950 C300 1000, 400 1000, 400 950 L400 900 C400 880, 380 860, 360 860 L310 860" stroke="white" stroke-width="6" fill="none"/>
+    <circle cx="260" cy="950" r="20" stroke="white" stroke-width="6" fill="none"/>
+  </g>
+  
+  <!-- Hexagon pattern for a modern tech look -->
+  <g opacity="0.1">
+    <path d="M100 100 L150 70 L200 100 L200 160 L150 190 L100 160 Z" stroke="white" stroke-width="2" fill="none"/>
+    <path d="M300 200 L350 170 L400 200 L400 260 L350 290 L300 260 Z" stroke="white" stroke-width="2" fill="none"/>
+    <path d="M500 100 L550 70 L600 100 L600 160 L550 190 L500 160 Z" stroke="white" stroke-width="2" fill="none"/>
+    <path d="M700 200 L750 170 L800 200 L800 260 L750 290 L700 260 Z" stroke="white" stroke-width="2" fill="none"/>
+    <path d="M900 100 L950 70 L1000 100 L1000 160 L950 190 L900 160 Z" stroke="white" stroke-width="2" fill="none"/>
+    <path d="M1100 200 L1150 170 L1200 200 L1200 260 L1150 290 L1100 260 Z" stroke="white" stroke-width="2" fill="none"/>
+    <path d="M1300 100 L1350 70 L1400 100 L1400 160 L1350 190 L1300 160 Z" stroke="white" stroke-width="2" fill="none"/>
+    <path d="M1500 200 L1550 170 L1600 200 L1600 260 L1550 290 L1500 260 Z" stroke="white" stroke-width="2" fill="none"/>
+    <path d="M1700 100 L1750 70 L1800 100 L1800 160 L1750 190 L1700 160 Z" stroke="white" stroke-width="2" fill="none"/>
+  </g>
+  
+  <!-- Definitions -->
+  <defs>
+    <linearGradient id="gradient-bg" x1="0" y1="0" x2="1920" y2="1080" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#16a34a"/>
+      <stop offset="50%" stop-color="#0ea5e9"/>
+      <stop offset="100%" stop-color="#2563eb"/>
+    </linearGradient>
+  </defs>
+</svg>

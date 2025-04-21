@@ -1,0 +1,1516 @@
+swagger: '2.0'
+info:
+  title: Medical Record Service API
+  description: API for managing medical records in the healthcare system
+  termsOfService: https://www.example.com/terms/
+  contact:
+    email: contact@example.com
+  license:
+    name: BSD License
+  version: v1
+host: localhost:8001
+schemes:
+- http
+basePath: /api
+consumes:
+- application/json
+produces:
+- application/json
+securityDefinitions:
+  Bearer:
+    type: apiKey
+    in: header
+    name: Authorization
+    description: 'JWT Authorization header using the Bearer scheme. Example: "Bearer
+      {token}"'
+security:
+- Bearer: []
+paths:
+  /allergies/:
+    get:
+      operationId: allergies_list
+      description: API endpoint để lấy danh sách và tạo mới dị ứng.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - allergies
+    post:
+      operationId: allergies_create
+      description: API endpoint để lấy danh sách và tạo mới dị ứng.
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+      - allergies
+    parameters: []
+  /allergies/{id}/:
+    get:
+      operationId: allergies_read
+      description: API endpoint để xem, cập nhật và xóa dị ứng.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - allergies
+    put:
+      operationId: allergies_update
+      description: API endpoint để xem, cập nhật và xóa dị ứng.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - allergies
+    delete:
+      operationId: allergies_delete
+      description: API endpoint để xem, cập nhật và xóa dị ứng.
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - allergies
+    parameters:
+    - name: id
+      in: path
+      required: true
+      type: string
+  /diagnoses/:
+    get:
+      operationId: diagnoses_list
+      description: Lấy danh sách chẩn đoán
+      parameters:
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      - name: page_size
+        in: query
+        description: Number of results to return per page.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/Diagnosis'
+      tags:
+      - diagnoses
+    post:
+      operationId: diagnoses_create
+      description: Tạo mới chẩn đoán
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Diagnosis'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Diagnosis'
+      tags:
+      - diagnoses
+    parameters: []
+  /diagnoses/{id}/:
+    get:
+      operationId: diagnoses_read
+      description: Lấy chi tiết chẩn đoán
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Diagnosis'
+      tags:
+      - diagnoses
+    put:
+      operationId: diagnoses_update
+      description: Cập nhật chẩn đoán
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Diagnosis'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Diagnosis'
+      tags:
+      - diagnoses
+    patch:
+      operationId: diagnoses_partial_update
+      description: Cập nhật một phần chẩn đoán
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Diagnosis'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Diagnosis'
+      tags:
+      - diagnoses
+    delete:
+      operationId: diagnoses_delete
+      description: Xóa chẩn đoán
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - diagnoses
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this Diagnosis.
+      required: true
+      type: integer
+  /diagnoses/{id}/add_prescription/:
+    post:
+      operationId: diagnoses_add_prescription
+      description: Thêm ID đơn thuốc vào danh sách đơn thuốc của chẩn đoán.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Diagnosis'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Diagnosis'
+      tags:
+      - diagnoses
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this Diagnosis.
+      required: true
+      type: integer
+  /diagnoses/{id}/create_prescription/:
+    post:
+      operationId: diagnoses_create_prescription
+      description: Tạo đơn thuốc mới từ chẩn đoán và gửi đến pharmacy-service.
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/Diagnosis'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Diagnosis'
+      tags:
+      - diagnoses
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this Diagnosis.
+      required: true
+      type: integer
+  /diagnoses/{id}/prescriptions/:
+    get:
+      operationId: diagnoses_prescriptions
+      description: Lấy danh sách đơn thuốc của chẩn đoán từ pharmacy-service.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Diagnosis'
+      tags:
+      - diagnoses
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this Diagnosis.
+      required: true
+      type: integer
+  /encounters/:
+    get:
+      operationId: encounters_list
+      description: API endpoint để lấy danh sách và tạo mới phiên khám của bệnh nhân.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - encounters
+    post:
+      operationId: encounters_create
+      description: API endpoint để lấy danh sách và tạo mới phiên khám của bệnh nhân.
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+      - encounters
+    parameters: []
+  /encounters/from-appointment/{appointment_id}/:
+    post:
+      operationId: encounters_from-appointment_create
+      description: API endpoint để tạo Encounter từ Appointment.
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+      - encounters
+    parameters:
+    - name: appointment_id
+      in: path
+      required: true
+      type: string
+  /encounters/{id}/:
+    get:
+      operationId: encounters_read
+      description: API endpoint để xem, cập nhật và xóa một phiên khám.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - encounters
+    put:
+      operationId: encounters_update
+      description: API endpoint để xem, cập nhật và xóa một phiên khám.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - encounters
+    delete:
+      operationId: encounters_delete
+      description: API endpoint để xem, cập nhật và xóa một phiên khám.
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - encounters
+    parameters:
+    - name: id
+      in: path
+      required: true
+      type: string
+  /immunizations/:
+    get:
+      operationId: immunizations_list
+      description: API endpoint để lấy danh sách và tạo mới tiêm chủng.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - immunizations
+    post:
+      operationId: immunizations_create
+      description: API endpoint để lấy danh sách và tạo mới tiêm chủng.
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+      - immunizations
+    parameters: []
+  /immunizations/{id}/:
+    get:
+      operationId: immunizations_read
+      description: API endpoint để xem, cập nhật và xóa tiêm chủng.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - immunizations
+    put:
+      operationId: immunizations_update
+      description: API endpoint để xem, cập nhật và xóa tiêm chủng.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - immunizations
+    delete:
+      operationId: immunizations_delete
+      description: API endpoint để xem, cập nhật và xóa tiêm chủng.
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - immunizations
+    parameters:
+    - name: id
+      in: path
+      required: true
+      type: string
+  /lab-results/:
+    get:
+      operationId: lab-results_list
+      description: API endpoint để lấy danh sách và tạo mới kết quả xét nghiệm.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - lab-results
+    post:
+      operationId: lab-results_create
+      description: API endpoint để lấy danh sách và tạo mới kết quả xét nghiệm.
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+      - lab-results
+    parameters: []
+  /lab-results/{id}/:
+    get:
+      operationId: lab-results_read
+      description: API endpoint để xem, cập nhật và xóa kết quả xét nghiệm.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - lab-results
+    put:
+      operationId: lab-results_update
+      description: API endpoint để xem, cập nhật và xóa kết quả xét nghiệm.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - lab-results
+    delete:
+      operationId: lab-results_delete
+      description: API endpoint để xem, cập nhật và xóa kết quả xét nghiệm.
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - lab-results
+    parameters:
+    - name: id
+      in: path
+      required: true
+      type: string
+  /lab-tests/:
+    get:
+      operationId: lab-tests_list
+      description: API endpoint để lấy danh sách và tạo mới xét nghiệm.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - lab-tests
+    post:
+      operationId: lab-tests_create
+      description: API endpoint để lấy danh sách và tạo mới xét nghiệm.
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+      - lab-tests
+    parameters: []
+  /lab-tests/{id}/:
+    get:
+      operationId: lab-tests_read
+      description: API endpoint để xem, cập nhật và xóa xét nghiệm.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - lab-tests
+    put:
+      operationId: lab-tests_update
+      description: API endpoint để xem, cập nhật và xóa xét nghiệm.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - lab-tests
+    delete:
+      operationId: lab-tests_delete
+      description: API endpoint để xem, cập nhật và xóa xét nghiệm.
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - lab-tests
+    parameters:
+    - name: id
+      in: path
+      required: true
+      type: string
+  /medical-histories/:
+    get:
+      operationId: medical-histories_list
+      description: API endpoint để lấy danh sách và tạo mới lịch sử bệnh án.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - medical-histories
+    post:
+      operationId: medical-histories_create
+      description: API endpoint để lấy danh sách và tạo mới lịch sử bệnh án.
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+      - medical-histories
+    parameters: []
+  /medical-histories/{id}/:
+    get:
+      operationId: medical-histories_read
+      description: API endpoint để xem, cập nhật và xóa lịch sử bệnh án.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - medical-histories
+    put:
+      operationId: medical-histories_update
+      description: API endpoint để xem, cập nhật và xóa lịch sử bệnh án.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - medical-histories
+    delete:
+      operationId: medical-histories_delete
+      description: API endpoint để xem, cập nhật và xóa lịch sử bệnh án.
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - medical-histories
+    parameters:
+    - name: id
+      in: path
+      required: true
+      type: string
+  /medical-records/:
+    get:
+      operationId: medical-records_list
+      description: Lấy danh sách hồ sơ y tế
+      parameters:
+      - name: page
+        in: query
+        description: A page number within the paginated result set.
+        required: false
+        type: integer
+      - name: page_size
+        in: query
+        description: Number of results to return per page.
+        required: false
+        type: integer
+      responses:
+        '200':
+          description: ''
+          schema:
+            required:
+            - count
+            - results
+            type: object
+            properties:
+              count:
+                type: integer
+              next:
+                type: string
+                format: uri
+                x-nullable: true
+              previous:
+                type: string
+                format: uri
+                x-nullable: true
+              results:
+                type: array
+                items:
+                  $ref: '#/definitions/MedicalRecordSummary'
+      tags:
+      - medical-records
+    post:
+      operationId: medical-records_create
+      description: Tạo mới hồ sơ y tế
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/MedicalRecord'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/MedicalRecord'
+      tags:
+      - medical-records
+    parameters: []
+  /medical-records/{id}/:
+    get:
+      operationId: medical-records_read
+      description: Lấy chi tiết hồ sơ y tế
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/MedicalRecord'
+      tags:
+      - medical-records
+    put:
+      operationId: medical-records_update
+      description: Cập nhật hồ sơ y tế
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/MedicalRecord'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/MedicalRecord'
+      tags:
+      - medical-records
+    patch:
+      operationId: medical-records_partial_update
+      description: Cập nhật một phần hồ sơ y tế
+      parameters:
+      - name: data
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/MedicalRecord'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/MedicalRecord'
+      tags:
+      - medical-records
+    delete:
+      operationId: medical-records_delete
+      description: Xóa hồ sơ y tế
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - medical-records
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this Medical Record.
+      required: true
+      type: integer
+  /medical-records/{id}/summary/:
+    get:
+      operationId: medical-records_summary
+      description: Lấy tóm tắt hồ sơ y tế.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/MedicalRecord'
+      tags:
+      - medical-records
+    parameters:
+    - name: id
+      in: path
+      description: A unique integer value identifying this Medical Record.
+      required: true
+      type: integer
+  /medications/:
+    get:
+      operationId: medications_list
+      description: API endpoint để lấy danh sách và tạo mới thuốc.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - medications
+    post:
+      operationId: medications_create
+      description: API endpoint để lấy danh sách và tạo mới thuốc.
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+      - medications
+    parameters: []
+  /medications/{id}/:
+    get:
+      operationId: medications_read
+      description: API endpoint để xem, cập nhật và xóa thuốc.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - medications
+    put:
+      operationId: medications_update
+      description: API endpoint để xem, cập nhật và xóa thuốc.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - medications
+    delete:
+      operationId: medications_delete
+      description: API endpoint để xem, cập nhật và xóa thuốc.
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - medications
+    parameters:
+    - name: id
+      in: path
+      required: true
+      type: string
+  /treatments/:
+    get:
+      operationId: treatments_list
+      description: API endpoint để lấy danh sách và tạo mới điều trị.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - treatments
+    post:
+      operationId: treatments_create
+      description: API endpoint để lấy danh sách và tạo mới điều trị.
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+      - treatments
+    parameters: []
+  /treatments/{id}/:
+    get:
+      operationId: treatments_read
+      description: API endpoint để xem, cập nhật và xóa điều trị.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - treatments
+    put:
+      operationId: treatments_update
+      description: API endpoint để xem, cập nhật và xóa điều trị.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - treatments
+    delete:
+      operationId: treatments_delete
+      description: API endpoint để xem, cập nhật và xóa điều trị.
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - treatments
+    parameters:
+    - name: id
+      in: path
+      required: true
+      type: string
+  /vital-signs/:
+    get:
+      operationId: vital-signs_list
+      description: API endpoint để lấy danh sách và tạo mới dấu hiệu sinh tồn.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - vital-signs
+    post:
+      operationId: vital-signs_create
+      description: API endpoint để lấy danh sách và tạo mới dấu hiệu sinh tồn.
+      parameters: []
+      responses:
+        '201':
+          description: ''
+      tags:
+      - vital-signs
+    parameters: []
+  /vital-signs/{id}/:
+    get:
+      operationId: vital-signs_read
+      description: API endpoint để xem, cập nhật và xóa dấu hiệu sinh tồn.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - vital-signs
+    put:
+      operationId: vital-signs_update
+      description: API endpoint để xem, cập nhật và xóa dấu hiệu sinh tồn.
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+      - vital-signs
+    delete:
+      operationId: vital-signs_delete
+      description: API endpoint để xem, cập nhật và xóa dấu hiệu sinh tồn.
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+      - vital-signs
+    parameters:
+    - name: id
+      in: path
+      required: true
+      type: string
+definitions:
+  Treatment:
+    required:
+    - treatment_type
+    - treatment_description
+    - start_date
+    - diagnosis
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      treatment_type:
+        title: Treatment type
+        type: string
+        enum:
+        - MEDICATION
+        - SURGERY
+        - THERAPY
+        - PROCEDURE
+        - OTHER
+      treatment_description:
+        title: Treatment description
+        type: string
+        minLength: 1
+      start_date:
+        title: Start date
+        type: string
+        format: date
+      end_date:
+        title: End date
+        type: string
+        format: date
+        x-nullable: true
+      notes:
+        title: Notes
+        type: string
+        x-nullable: true
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true
+      diagnosis:
+        title: Diagnosis
+        type: integer
+  Diagnosis:
+    required:
+    - diagnosis_code
+    - diagnosis_description
+    - diagnosis_date
+    - encounter
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      treatments:
+        type: array
+        items:
+          $ref: '#/definitions/Treatment'
+        readOnly: true
+      doctor_id:
+        title: Doctor id
+        type: integer
+      diagnosis_code:
+        title: Diagnosis code
+        description: Mã chẩn đoán (ICD-10)
+        type: string
+        maxLength: 20
+        minLength: 1
+      diagnosis_description:
+        title: Diagnosis description
+        type: string
+        minLength: 1
+      diagnosis_date:
+        title: Diagnosis date
+        type: string
+        format: date
+      notes:
+        title: Notes
+        type: string
+        x-nullable: true
+      prescription_ids:
+        title: Prescription ids
+        description: Danh sách ID của các đơn thuốc liên quan từ pharmacy-service
+        type: object
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true
+      encounter:
+        title: Encounter
+        type: integer
+  MedicalRecordSummary:
+    required:
+    - patient_id
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      patient_id:
+        title: Patient id
+        description: ID của bệnh nhân trong user-service
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true
+      diagnosis_count:
+        title: Diagnosis count
+        type: string
+        readOnly: true
+      allergy_count:
+        title: Allergy count
+        type: string
+        readOnly: true
+      medication_count:
+        title: Medication count
+        type: string
+        readOnly: true
+  Immunization:
+    required:
+    - vaccine_name
+    - administration_date
+    - dose
+    - encounter
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      vaccine_name:
+        title: Vaccine name
+        type: string
+        maxLength: 100
+        minLength: 1
+      administration_date:
+        title: Administration date
+        type: string
+        format: date
+      dose:
+        title: Dose
+        description: Liều lượng hoặc số thứ tự của mũi tiêm
+        type: string
+        maxLength: 20
+        minLength: 1
+      administered_by:
+        title: Administered by
+        description: ID của nhân viên y tế trong user-service
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+        x-nullable: true
+      notes:
+        title: Notes
+        type: string
+        x-nullable: true
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true
+      encounter:
+        title: Encounter
+        type: integer
+  Medication:
+    required:
+    - medication_name
+    - dosage
+    - frequency
+    - route
+    - start_date
+    - prescribed_by
+    - reason
+    - encounter
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      medication_name:
+        title: Medication name
+        type: string
+        maxLength: 100
+        minLength: 1
+      dosage:
+        title: Dosage
+        type: string
+        maxLength: 50
+        minLength: 1
+      frequency:
+        title: Frequency
+        type: string
+        enum:
+        - ONCE
+        - TWICE
+        - THREE
+        - FOUR
+        - AS_NEEDED
+        - OTHER
+      route:
+        title: Route
+        description: Đường dùng thuốc (uống, tiêm, v.v.)
+        type: string
+        maxLength: 50
+        minLength: 1
+      start_date:
+        title: Start date
+        type: string
+        format: date
+      end_date:
+        title: End date
+        type: string
+        format: date
+        x-nullable: true
+      prescribed_by:
+        title: Prescribed by
+        description: ID của bác sĩ trong user-service
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+      reason:
+        title: Reason
+        description: Lý do sử dụng thuốc
+        type: string
+        minLength: 1
+      notes:
+        title: Notes
+        type: string
+        x-nullable: true
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true
+      encounter:
+        title: Encounter
+        type: integer
+  VitalSign:
+    required:
+    - vital_type
+    - value
+    - unit
+    - recorded_at
+    - encounter
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      vital_type:
+        title: Vital type
+        type: string
+        enum:
+        - TEMPERATURE
+        - BLOOD_PRESSURE
+        - HEART_RATE
+        - RESPIRATORY_RATE
+        - OXYGEN_SATURATION
+        - HEIGHT
+        - WEIGHT
+        - BMI
+        - OTHER
+      value:
+        title: Value
+        type: string
+        maxLength: 50
+        minLength: 1
+      unit:
+        title: Unit
+        type: string
+        maxLength: 20
+        minLength: 1
+      recorded_by:
+        title: Recorded by
+        description: ID của nhân viên y tế trong user-service
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+        x-nullable: true
+      recorded_at:
+        title: Recorded at
+        type: string
+        format: date-time
+      notes:
+        title: Notes
+        type: string
+        x-nullable: true
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true
+      encounter:
+        title: Encounter
+        type: integer
+  LabResult:
+    required:
+    - result_value
+    - lab_test
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      performed_by:
+        title: Performed by
+        type: integer
+      performed_at:
+        title: Performed at
+        type: string
+        format: date-time
+      result_value:
+        title: Result value
+        type: string
+        maxLength: 100
+        minLength: 1
+      unit:
+        title: Unit
+        type: string
+        maxLength: 20
+        x-nullable: true
+      reference_range:
+        title: Reference range
+        type: string
+        maxLength: 100
+        x-nullable: true
+      is_abnormal:
+        title: Is abnormal
+        type: boolean
+      notes:
+        title: Notes
+        type: string
+        x-nullable: true
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true
+      lab_test:
+        title: Lab test
+        type: integer
+  LabTest:
+    required:
+    - test_name
+    - encounter
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      results:
+        type: array
+        items:
+          $ref: '#/definitions/LabResult'
+        readOnly: true
+      ordered_by:
+        title: Ordered by
+        type: integer
+      ordered_at:
+        title: Ordered at
+        type: string
+        format: date-time
+      test_name:
+        title: Test name
+        type: string
+        maxLength: 100
+        minLength: 1
+      test_code:
+        title: Test code
+        type: string
+        maxLength: 50
+        x-nullable: true
+      status:
+        title: Status
+        type: string
+        enum:
+        - ORDERED
+        - SAMPLE_COLLECTED
+        - IN_PROGRESS
+        - COMPLETED
+        - CANCELLED
+      collection_date:
+        title: Collection date
+        type: string
+        format: date-time
+        x-nullable: true
+      notes:
+        title: Notes
+        type: string
+        x-nullable: true
+      lab_service_id:
+        title: Lab service id
+        description: ID của xét nghiệm trong laboratory-service
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+        x-nullable: true
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true
+      encounter:
+        title: Encounter
+        type: integer
+  Encounter:
+    required:
+    - medical_record
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      diagnoses:
+        type: array
+        items:
+          $ref: '#/definitions/Diagnosis'
+        readOnly: true
+      immunizations:
+        type: array
+        items:
+          $ref: '#/definitions/Immunization'
+        readOnly: true
+      medications:
+        type: array
+        items:
+          $ref: '#/definitions/Medication'
+        readOnly: true
+      vital_signs:
+        type: array
+        items:
+          $ref: '#/definitions/VitalSign'
+        readOnly: true
+      lab_tests:
+        type: array
+        items:
+          $ref: '#/definitions/LabTest'
+        readOnly: true
+      encounter_date:
+        title: Encounter date
+        type: string
+        format: date-time
+      doctor_id:
+        title: Doctor id
+        description: ID của bác sĩ phụ trách phiên khám
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+        x-nullable: true
+      appointment_id:
+        title: Appointment id
+        description: ID của cuộc hẹn trong appointment-service
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+        x-nullable: true
+      chief_complaint:
+        title: Chief complaint
+        description: Lý do khám chính
+        type: string
+        x-nullable: true
+      encounter_type:
+        title: Encounter type
+        type: string
+        enum:
+        - OUTPATIENT
+        - INPATIENT
+        - EMERGENCY
+        - FOLLOWUP
+        - TELECONSULTATION
+      notes:
+        title: Notes
+        type: string
+        x-nullable: true
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true
+      medical_record:
+        title: Medical record
+        type: integer
+  Allergy:
+    required:
+    - allergy_type
+    - allergy_name
+    - severity
+    - reaction
+    - medical_record
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      allergy_type:
+        title: Allergy type
+        description: Loại dị ứng (thuốc, thực phẩm, môi trường, v.v.)
+        type: string
+        maxLength: 50
+        minLength: 1
+      allergy_name:
+        title: Allergy name
+        type: string
+        maxLength: 100
+        minLength: 1
+      severity:
+        title: Severity
+        type: string
+        enum:
+        - MILD
+        - MODERATE
+        - SEVERE
+        - LIFE_THREATENING
+      reaction:
+        title: Reaction
+        description: Mô tả phản ứng dị ứng
+        type: string
+        minLength: 1
+      notes:
+        title: Notes
+        type: string
+        x-nullable: true
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true
+      medical_record:
+        title: Medical record
+        type: integer
+  MedicalHistory:
+    required:
+    - condition_name
+    - diagnosis_date
+    - medical_record
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      condition_name:
+        title: Condition name
+        type: string
+        maxLength: 100
+        minLength: 1
+      diagnosis_date:
+        title: Diagnosis date
+        type: string
+        format: date
+      resolution_date:
+        title: Resolution date
+        type: string
+        format: date
+        x-nullable: true
+      is_chronic:
+        title: Is chronic
+        type: boolean
+      notes:
+        title: Notes
+        type: string
+        x-nullable: true
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true
+      medical_record:
+        title: Medical record
+        type: integer
+  MedicalRecord:
+    required:
+    - patient_id
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      encounters:
+        type: array
+        items:
+          $ref: '#/definitions/Encounter'
+        readOnly: true
+      allergies:
+        type: array
+        items:
+          $ref: '#/definitions/Allergy'
+        readOnly: true
+      medical_histories:
+        type: array
+        items:
+          $ref: '#/definitions/MedicalHistory'
+        readOnly: true
+      patient_id:
+        title: Patient id
+        description: ID của bệnh nhân trong user-service
+        type: integer
+        maximum: 2147483647
+        minimum: -2147483648
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      updated_at:
+        title: Updated at
+        type: string
+        format: date-time
+        readOnly: true

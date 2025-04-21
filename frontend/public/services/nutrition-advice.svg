@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300" fill="none">
+  <rect width="400" height="300" fill="#F0FDF4"/>
+  
+  <!-- Background design elements -->
+  <circle cx="350" cy="250" r="100" fill="#22C55E" fill-opacity="0.05"/>
+  <circle cx="50" cy="50" r="100" fill="#22C55E" fill-opacity="0.05"/>
+  
+  <!-- Plate with healthy food -->
+  <circle cx="200" cy="150" r="100" fill="white" stroke="#22C55E" stroke-width="4"/>
+  <circle cx="200" cy="150" r="80" fill="#22C55E" fill-opacity="0.1" stroke="#22C55E" stroke-width="1" stroke-dasharray="4 4"/>
+  
+  <!-- Food elements -->
+  <!-- Vegetables -->
+  <path d="M180 120 C160 110, 170 90, 190 90 C210 90, 220 110, 200 120 Z" fill="#22C55E" stroke="#15803D" stroke-width="1"/>
+  <path d="M230 140 C210 130, 220 110, 240 110 C260 110, 270 130, 250 140 Z" fill="#22C55E" stroke="#15803D" stroke-width="1"/>
+  <circle cx="160" cy="140" r="15" fill="#CA8A04" stroke="#A16207" stroke-width="1"/>
+  
+  <!-- Fruit -->
+  <circle cx="210" cy="170" r="20" fill="#EF4444" stroke="#B91C1C" stroke-width="1"/>
+  <circle cx="170" cy="190" r="15" fill="#F97316" stroke="#C2410C" stroke-width="1"/>
+  <circle cx="140" cy="170" r="18" fill="#22C55E" stroke="#15803D" stroke-width="1"/>
+  
+  <!-- Fish/Protein -->
+  <path d="M240 190 L260 180 C280 170, 280 190, 260 200 L240 190 Z" fill="#F9FAFB" stroke="#374151" stroke-width="1"/>
+  
+  <!-- Grain -->
+  <ellipse cx="210" cy="120" rx="20" ry="10" fill="#EAB308" stroke="#A16207" stroke-width="1"/>
+  
+  <!-- Fork -->
+  <line x1="300" y1="140" x2="280" y2="230" stroke="#64748B" stroke-width="3"/>
+  <path d="M305 100 L305 140 L295 140 L295 100" stroke="#64748B" stroke-width="2" fill="none"/>
+  
+  <!-- Measurement tape around plate -->
+  <path d="M140 70 A70 70 0 0 1 260 70" stroke="#F59E0B" stroke-width="6" stroke-linecap="round" fill="none" stroke-dasharray="4 8"/>
+  
+  <!-- Nutrition icons -->
+  <!-- Protein -->
+  <circle cx="100" cy="100" r="15" fill="#22C55E" fill-opacity="0.2"/>
+  <text x="100" y="105" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle" fill="#15803D">P</text>
+  
+  <!-- Carbs -->
+  <circle cx="100" cy="150" r="15" fill="#F59E0B" fill-opacity="0.2"/>
+  <text x="100" y="155" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle" fill="#B45309">C</text>
+  
+  <!-- Fat -->
+  <circle cx="100" cy="200" r="15" fill="#06B6D4" fill-opacity="0.2"/>
+  <text x="100" y="205" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle" fill="#0E7490">F</text>
+  
+  <!-- Vitamins -->
+  <circle cx="300" cy="100" r="15" fill="#EC4899" fill-opacity="0.2"/>
+  <text x="300" y="105" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle" fill="#BE185D">V</text>
+  
+  <!-- Minerals -->
+  <circle cx="300" cy="150" r="15" fill="#8B5CF6" fill-opacity="0.2"/>
+  <text x="300" y="155" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle" fill="#6D28D9">M</text>
+  
+  <!-- Water -->
+  <circle cx="300" cy="200" r="15" fill="#3B82F6" fill-opacity="0.2"/>
+  <text x="300" y="205" font-family="Arial" font-size="14" font-weight="bold" text-anchor="middle" fill="#1D4ED8">W</text>
+</svg>

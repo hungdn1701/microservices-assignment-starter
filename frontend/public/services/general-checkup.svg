@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300" fill="none">
+  <rect width="400" height="300" fill="#E6F7ED"/>
+  
+  <!-- Background design elements -->
+  <circle cx="50" cy="50" r="100" fill="#16A34A" fill-opacity="0.05"/>
+  <circle cx="350" cy="250" r="100" fill="#16A34A" fill-opacity="0.05"/>
+  
+  <!-- Stethoscope -->
+  <path d="M150 140 C120 140, 100 150, 100 200 C100 240, 140 240, 140 200 L140 170 C140 165, 145 160, 150 160 L180 160" 
+        stroke="#16A34A" stroke-width="8" fill="none" stroke-linecap="round"/>
+  <circle cx="180" cy="140" r="30" stroke="#16A34A" stroke-width="8" fill="white"/>
+  <circle cx="180" cy="140" r="15" fill="#16A34A" fill-opacity="0.3"/>
+  
+  <!-- Medical chart/clipboard -->
+  <rect x="220" y="80" width="100" height="140" rx="5" fill="white" stroke="#16A34A" stroke-width="3"/>
+  <rect x="220" y="80" width="100" height="30" rx="5" fill="#16A34A" fill-opacity="0.2" stroke="#16A34A" stroke-width="3"/>
+  
+  <!-- Chart lines -->
+  <line x1="235" y1="130" x2="305" y2="130" stroke="#16A34A" stroke-width="2"/>
+  <line x1="235" y1="150" x2="305" y2="150" stroke="#16A34A" stroke-width="2"/>
+  <line x1="235" y1="170" x2="305" y2="170" stroke="#16A34A" stroke-width="2"/>
+  <line x1="235" y1="190" x2="305" y2="190" stroke="#16A34A" stroke-width="2"/>
+  
+  <!-- Heart rate line on chart -->
+  <path d="M235 130 L245 130 L255 110 L265 150 L275 120 L285 130 L305 130" 
+        stroke="#FF4757" stroke-width="2" fill="none"/>
+        
+  <!-- Medical check/checkmark symbol -->
+  <circle cx="200" cy="230" r="30" fill="#16A34A" fill-opacity="0.2"/>
+  <path d="M185 230 L195 240 L215 220" stroke="#16A34A" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>
