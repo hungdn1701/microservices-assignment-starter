@@ -6148,3 +6148,508 @@ Trong phần này, chúng ta sẽ thiết kế chi tiết các API của hệ th
 ### 2.3.5 Laboratory Service API
 
 #### Test Type API
+
+##### List Test Types
+
+- **URL**: `/api/test-types`
+- **Method**: `GET`
+- **Description**: Lấy danh sách các loại xét nghiệm
+- **Parameters**:
+  - `category` (query, optional): Lọc theo danh mục
+  - `is_active` (query, optional): Lọc theo trạng thái hoạt động
+- **Response**:
+  ```json
+  [
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440150",
+      "name": "Complete Blood Count (CBC)",
+      "description": "Measures several components and features of blood",
+      "category": "HEMATOLOGY",
+      "price": 50.00,
+      "preparation_instructions": "No special preparation required",
+      "result_turnaround_time": 24,
+      "is_active": true,
+      "created_at": "2023-01-01T12:00:00Z",
+      "updated_at": "2023-01-01T12:00:00Z",
+      "parameters_count": 10
+    }
+  ]
+  ```
+
+##### Create Test Type
+
+- **URL**: `/api/test-types`
+- **Method**: `POST`
+- **Description**: Tạo loại xét nghiệm mới
+- **Request Body**:
+  ```json
+  {
+    "name": "Lipid Panel",
+    "description": "Measures cholesterol and triglycerides",
+    "category": "CHEMISTRY",
+    "price": 75.00,
+    "preparation_instructions": "Fast for 12 hours before the test",
+    "result_turnaround_time": 24,
+    "is_active": true,
+    "parameters": [
+      {
+        "name": "Total Cholesterol",
+        "unit": "mg/dL",
+        "reference_range": "125-200",
+        "is_numeric": true
+      },
+      {
+        "name": "HDL Cholesterol",
+        "unit": "mg/dL",
+        "reference_range": "40-60",
+        "is_numeric": true
+      },
+      {
+        "name": "LDL Cholesterol",
+        "unit": "mg/dL",
+        "reference_range": "<100",
+        "is_numeric": true
+      },
+      {
+        "name": "Triglycerides",
+        "unit": "mg/dL",
+        "reference_range": "<150",
+        "is_numeric": true
+      }
+    ]
+  }
+  ```
+- **Response**:
+  ```json
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440151",
+    "name": "Lipid Panel",
+    "description": "Measures cholesterol and triglycerides",
+    "category": "CHEMISTRY",
+    "price": 75.00,
+    "preparation_instructions": "Fast for 12 hours before the test",
+    "result_turnaround_time": 24,
+    "is_active": true,
+    "created_at": "2023-06-16T14:30:00Z",
+    "updated_at": "2023-06-16T14:30:00Z",
+    "parameters_count": 4,
+    "parameters": [
+      {
+        "id": "550e8400-e29b-41d4-a716-446655440160",
+        "name": "Total Cholesterol",
+        "unit": "mg/dL",
+        "reference_range": "125-200",
+        "is_numeric": true
+      },
+      {
+        "id": "550e8400-e29b-41d4-a716-446655440161",
+        "name": "HDL Cholesterol",
+        "unit": "mg/dL",
+        "reference_range": "40-60",
+        "is_numeric": true
+      },
+      {
+        "id": "550e8400-e29b-41d4-a716-446655440162",
+        "name": "LDL Cholesterol",
+        "unit": "mg/dL",
+        "reference_range": "<100",
+        "is_numeric": true
+      },
+      {
+        "id": "550e8400-e29b-41d4-a716-446655440163",
+        "name": "Triglycerides",
+        "unit": "mg/dL",
+        "reference_range": "<150",
+        "is_numeric": true
+      }
+    ]
+  }
+  ```
+
+##### Get Test Type
+
+- **URL**: `/api/test-types/{id}`
+- **Method**: `GET`
+- **Description**: Lấy thông tin loại xét nghiệm
+- **Parameters**:
+  - `id` (path): ID của loại xét nghiệm
+- **Response**:
+  ```json
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440150",
+    "name": "Complete Blood Count (CBC)",
+    "description": "Measures several components and features of blood",
+    "category": "HEMATOLOGY",
+    "price": 50.00,
+    "preparation_instructions": "No special preparation required",
+    "result_turnaround_time": 24,
+    "is_active": true,
+    "created_at": "2023-01-01T12:00:00Z",
+    "updated_at": "2023-01-01T12:00:00Z",
+    "parameters": [
+      {
+        "id": "550e8400-e29b-41d4-a716-446655440164",
+        "name": "White Blood Cell Count",
+        "unit": "K/uL",
+        "reference_range": "4.5-11.0",
+        "is_numeric": true
+      },
+      {
+        "id": "550e8400-e29b-41d4-a716-446655440165",
+        "name": "Red Blood Cell Count",
+        "unit": "M/uL",
+        "reference_range": "4.5-5.9",
+        "is_numeric": true
+      }
+    ]
+  }
+  ```
+
+##### Update Test Type
+
+- **URL**: `/api/test-types/{id}`
+- **Method**: `PUT`
+- **Description**: Cập nhật thông tin loại xét nghiệm
+- **Parameters**:
+  - `id` (path): ID của loại xét nghiệm
+- **Request Body**:
+  ```json
+  {
+    "price": 55.00,
+    "result_turnaround_time": 12,
+    "is_active": true
+  }
+  ```
+- **Response**:
+  ```json
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440150",
+    "name": "Complete Blood Count (CBC)",
+    "description": "Measures several components and features of blood",
+    "category": "HEMATOLOGY",
+    "price": 55.00,
+    "preparation_instructions": "No special preparation required",
+    "result_turnaround_time": 12,
+    "is_active": true,
+    "created_at": "2023-01-01T12:00:00Z",
+    "updated_at": "2023-06-16T15:45:00Z",
+    "parameters_count": 10
+  }
+  ```
+
+#### Lab Test API
+
+##### List Lab Tests
+
+- **URL**: `/api/lab-tests`
+- **Method**: `GET`
+- **Description**: Lấy danh sách các xét nghiệm
+- **Parameters**:
+  - `patient_id` (query, optional): Lọc theo ID bệnh nhân
+  - `doctor_id` (query, optional): Lọc theo ID bác sĩ
+  - `status` (query, optional): Lọc theo trạng thái
+  - `priority` (query, optional): Lọc theo độ ưu tiên
+- **Response**:
+  ```json
+  [
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440170",
+      "patient_id": "550e8400-e29b-41d4-a716-446655440000",
+      "doctor_id": "550e8400-e29b-41d4-a716-446655440001",
+      "test_type": "550e8400-e29b-41d4-a716-446655440150",
+      "test_type_details": {
+        "name": "Complete Blood Count (CBC)",
+        "category": "HEMATOLOGY"
+      },
+      "ordered_date": "2023-06-01T11:00:00Z",
+      "status": "COMPLETED",
+      "priority": "ROUTINE",
+      "notes": "Routine annual check-up",
+      "created_at": "2023-06-01T11:00:00Z",
+      "updated_at": "2023-06-02T10:00:00Z",
+      "result": {
+        "id": "550e8400-e29b-41d4-a716-446655440180",
+        "result_date": "2023-06-02T09:30:00Z",
+        "performed_by": "550e8400-e29b-41d4-a716-446655440005",
+        "verified_by": "550e8400-e29b-41d4-a716-446655440006",
+        "interpretation": "Normal results",
+        "is_abnormal": false
+      }
+    }
+  ]
+  ```
+
+##### Create Lab Test
+
+- **URL**: `/api/lab-tests`
+- **Method**: `POST`
+- **Description**: Tạo xét nghiệm mới
+- **Request Body**:
+  ```json
+  {
+    "patient_id": "550e8400-e29b-41d4-a716-446655440000",
+    "doctor_id": "550e8400-e29b-41d4-a716-446655440001",
+    "test_type_id": "550e8400-e29b-41d4-a716-446655440151",
+    "priority": "ROUTINE",
+    "notes": "Check cholesterol levels"
+  }
+  ```
+- **Response**:
+  ```json
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440171",
+    "patient_id": "550e8400-e29b-41d4-a716-446655440000",
+    "doctor_id": "550e8400-e29b-41d4-a716-446655440001",
+    "test_type": "550e8400-e29b-41d4-a716-446655440151",
+    "test_type_details": {
+      "name": "Lipid Panel",
+      "category": "CHEMISTRY"
+    },
+    "ordered_date": "2023-06-16T14:30:00Z",
+    "status": "ORDERED",
+    "priority": "ROUTINE",
+    "notes": "Check cholesterol levels",
+    "created_at": "2023-06-16T14:30:00Z",
+    "updated_at": "2023-06-16T14:30:00Z",
+    "result": null
+  }
+  ```
+
+##### Get Lab Test
+
+- **URL**: `/api/lab-tests/{id}`
+- **Method**: `GET`
+- **Description**: Lấy thông tin xét nghiệm
+- **Parameters**:
+  - `id` (path): ID của xét nghiệm
+- **Response**:
+  ```json
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440170",
+    "patient_id": "550e8400-e29b-41d4-a716-446655440000",
+    "doctor_id": "550e8400-e29b-41d4-a716-446655440001",
+    "test_type": "550e8400-e29b-41d4-a716-446655440150",
+    "test_type_details": {
+      "name": "Complete Blood Count (CBC)",
+      "category": "HEMATOLOGY",
+      "preparation_instructions": "No special preparation required"
+    },
+    "ordered_date": "2023-06-01T11:00:00Z",
+    "status": "COMPLETED",
+    "priority": "ROUTINE",
+    "notes": "Routine annual check-up",
+    "created_at": "2023-06-01T11:00:00Z",
+    "updated_at": "2023-06-02T10:00:00Z",
+    "result": {
+      "id": "550e8400-e29b-41d4-a716-446655440180",
+      "result_date": "2023-06-02T09:30:00Z",
+      "performed_by": "550e8400-e29b-41d4-a716-446655440005",
+      "verified_by": "550e8400-e29b-41d4-a716-446655440006",
+      "interpretation": "Normal results",
+      "is_abnormal": false,
+      "parameter_results": [
+        {
+          "parameter": {
+            "id": "550e8400-e29b-41d4-a716-446655440164",
+            "name": "White Blood Cell Count",
+            "unit": "K/uL",
+            "reference_range": "4.5-11.0"
+          },
+          "value": "7.2",
+          "is_abnormal": false
+        },
+        {
+          "parameter": {
+            "id": "550e8400-e29b-41d4-a716-446655440165",
+            "name": "Red Blood Cell Count",
+            "unit": "M/uL",
+            "reference_range": "4.5-5.9"
+          },
+          "value": "5.1",
+          "is_abnormal": false
+        }
+      ]
+    }
+  }
+  ```
+
+##### Update Lab Test
+
+- **URL**: `/api/lab-tests/{id}`
+- **Method**: `PUT`
+- **Description**: Cập nhật thông tin xét nghiệm
+- **Parameters**:
+  - `id` (path): ID của xét nghiệm
+- **Request Body**:
+  ```json
+  {
+    "status": "SAMPLE_COLLECTED",
+    "notes": "Sample collected at 2:30 PM"
+  }
+  ```
+- **Response**:
+  ```json
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440171",
+    "patient_id": "550e8400-e29b-41d4-a716-446655440000",
+    "doctor_id": "550e8400-e29b-41d4-a716-446655440001",
+    "test_type": "550e8400-e29b-41d4-a716-446655440151",
+    "test_type_details": {
+      "name": "Lipid Panel",
+      "category": "CHEMISTRY"
+    },
+    "ordered_date": "2023-06-16T14:30:00Z",
+    "status": "SAMPLE_COLLECTED",
+    "priority": "ROUTINE",
+    "notes": "Sample collected at 2:30 PM",
+    "created_at": "2023-06-16T14:30:00Z",
+    "updated_at": "2023-06-16T15:45:00Z",
+    "result": null
+  }
+  ```
+
+##### Collect Sample
+
+- **URL**: `/api/lab-tests/{id}/collect-sample`
+- **Method**: `POST`
+- **Description**: Ghi nhận việc thu thập mẫu
+- **Parameters**:
+  - `id` (path): ID của xét nghiệm
+- **Request Body**:
+  ```json
+  {
+    "collected_by": "550e8400-e29b-41d4-a716-446655440005",
+    "collection_time": "2023-06-16T14:45:00Z",
+    "notes": "Sample collected without issues"
+  }
+  ```
+- **Response**:
+  ```json
+  {
+    "status": "sample collected",
+    "collection": {
+      "collected_by": "550e8400-e29b-41d4-a716-446655440005",
+      "collection_time": "2023-06-16T14:45:00Z",
+      "notes": "Sample collected without issues"
+    }
+  }
+  ```
+
+##### Record Results
+
+- **URL**: `/api/lab-tests/{id}/results`
+- **Method**: `POST`
+- **Description**: Ghi nhận kết quả xét nghiệm
+- **Parameters**:
+  - `id` (path): ID của xét nghiệm
+- **Request Body**:
+  ```json
+  {
+    "performed_by": "550e8400-e29b-41d4-a716-446655440005",
+    "interpretation": "Elevated cholesterol levels",
+    "notes": "Patient should follow up with doctor",
+    "parameter_results": [
+      {
+        "parameter_id": "550e8400-e29b-41d4-a716-446655440160",
+        "value": "220"
+      },
+      {
+        "parameter_id": "550e8400-e29b-41d4-a716-446655440161",
+        "value": "45"
+      },
+      {
+        "parameter_id": "550e8400-e29b-41d4-a716-446655440162",
+        "value": "150"
+      },
+      {
+        "parameter_id": "550e8400-e29b-41d4-a716-446655440163",
+        "value": "180"
+      }
+    ]
+  }
+  ```
+- **Response**:
+  ```json
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440181",
+    "lab_test": "550e8400-e29b-41d4-a716-446655440171",
+    "result_date": "2023-06-16T16:00:00Z",
+    "performed_by": "550e8400-e29b-41d4-a716-446655440005",
+    "verified_by": null,
+    "interpretation": "Elevated cholesterol levels",
+    "is_abnormal": true,
+    "notes": "Patient should follow up with doctor",
+    "parameter_results": [
+      {
+        "parameter": {
+          "id": "550e8400-e29b-41d4-a716-446655440160",
+          "name": "Total Cholesterol",
+          "unit": "mg/dL",
+          "reference_range": "125-200"
+        },
+        "value": "220",
+        "is_abnormal": true
+      },
+      {
+        "parameter": {
+          "id": "550e8400-e29b-41d4-a716-446655440161",
+          "name": "HDL Cholesterol",
+          "unit": "mg/dL",
+          "reference_range": "40-60"
+        },
+        "value": "45",
+        "is_abnormal": false
+      },
+      {
+        "parameter": {
+          "id": "550e8400-e29b-41d4-a716-446655440162",
+          "name": "LDL Cholesterol",
+          "unit": "mg/dL",
+          "reference_range": "<100"
+        },
+        "value": "150",
+        "is_abnormal": true
+      },
+      {
+        "parameter": {
+          "id": "550e8400-e29b-41d4-a716-446655440163",
+          "name": "Triglycerides",
+          "unit": "mg/dL",
+          "reference_range": "<150"
+        },
+        "value": "180",
+        "is_abnormal": true
+      }
+    ]
+  }
+  ```
+
+##### Verify Results
+
+- **URL**: `/api/lab-tests/{id}/results/verify`
+- **Method**: `POST`
+- **Description**: Xác minh kết quả xét nghiệm
+- **Parameters**:
+  - `id` (path): ID của xét nghiệm
+- **Request Body**:
+  ```json
+  {
+    "verified_by": "550e8400-e29b-41d4-a716-446655440006",
+    "notes": "Results verified and confirmed"
+  }
+  ```
+- **Response**:
+  ```json
+  {
+    "status": "results verified",
+    "verification": {
+      "verified_by": "550e8400-e29b-41d4-a716-446655440006",
+      "verified_at": "2023-06-16T16:30:00Z",
+      "notes": "Results verified and confirmed"
+    }
+  }
+  ```
+
+### 2.3.6 Billing Service API
+
+#### Invoice API
