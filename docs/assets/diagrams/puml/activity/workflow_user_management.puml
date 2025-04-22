@@ -1,0 +1,47 @@
+@startuml
+title Quy trình quản trị viên quản lý vai trò người dùng
+
+|Quản trị viên|
+start
+
+if (Loại thao tác?) then (Tạo mới)
+  :Nhập thông tin người dùng mới;
+  :Chọn vai trò cho người dùng;
+  :Thiết lập quyền truy cập;
+  
+  |Hệ thống|
+  :Kiểm tra tính hợp lệ của thông tin;
+  
+  if (Thông tin hợp lệ?) then (Có)
+    :Tạo tài khoản mới;
+    :Gửi email thông báo cho người dùng;
+  else (Không)
+    :Hiển thị lỗi;
+    :Yêu cầu nhập lại thông tin;
+  endif
+  
+else if (Loại thao tác?) then (Cập nhật)
+  :Tìm kiếm người dùng;
+  :Chọn người dùng cần cập nhật;
+  :Cập nhật thông tin hoặc quyền;
+  
+  |Hệ thống|
+  :Lưu thông tin cập nhật;
+  :Ghi nhật ký thay đổi;
+  
+else (Vô hiệu hóa)
+  :Tìm kiếm người dùng;
+  :Chọn người dùng cần vô hiệu hóa;
+  :Nhập lý do vô hiệu hóa;
+  
+  |Hệ thống|
+  :Vô hiệu hóa tài khoản;
+  :Ghi nhật ký thay đổi;
+  :Gửi thông báo cho người dùng;
+endif
+
+|Quản trị viên|
+:Xác nhận thao tác đã hoàn tất;
+stop
+
+@enduml

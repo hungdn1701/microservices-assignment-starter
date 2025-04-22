@@ -1,0 +1,388 @@
+@startuml
+title Class Diagram - Billing Service
+
+package "Models" {
+  class Invoice {
+    - id: UUID
+    - patient_id: UUID
+    - invoice_number: String
+    - invoice_date: Date
+    - due_date: Date
+    - total_amount: Decimal
+    - paid_amount: Decimal
+    - status: InvoiceStatus
+    - created_at: DateTime
+    - updated_at: DateTime
+    - encounter_id: UUID
+    - notes: String
+    - discount_amount: Decimal
+    - discount_reason: String
+    - tax_amount: Decimal
+    - tax_rate: Decimal
+    + get_items(): List<InvoiceItem>
+    + get_payments(): List<Payment>
+    + get_insurance_claim(): InsuranceClaim
+    + calculate_total(): Decimal
+    + calculate_balance(): Decimal
+    + is_overdue(): Boolean
+    + is_paid(): Boolean
+    + add_payment(amount: Decimal, method: PaymentMethod): Payment
+    + cancel(): void
+  }
+
+  class InvoiceItem {
+    - id: UUID
+    - invoice_id: UUID
+    - item_type: ItemType
+    - description: String
+    - quantity: Integer
+    - unit_price: Decimal
+    - total_price: Decimal
+    - created_at: DateTime
+    - updated_at: DateTime
+    - service_id: UUID
+    - service_date: Date
+    - tax_rate: Decimal
+    - tax_amount: Decimal
+    - discount_amount: Decimal
+    - discount_reason: String
+    + get_invoice(): Invoice
+    + calculate_total(): Decimal
+  }
+
+  class Payment {
+    - id: UUID
+    - invoice_id: UUID
+    - payment_number: String
+    - payment_date: Date
+    - amount: Decimal
+    - payment_method: PaymentMethod
+    - status: PaymentStatus
+    - created_at: DateTime
+    - updated_at: DateTime
+    - transaction_id: String
+    - payment_gateway: String
+    - receipt_number: String
+    - notes: String
+    - refund_reason: String
+    + get_invoice(): Invoice
+    + refund(reason: String): void
+  }
+
+  class InsuranceClaim {
+    - id: UUID
+    - invoice_id: UUID
+    - patient_id: UUID
+    - insurance_provider_id: UUID
+    - claim_number: String
+    - submission_date: Date
+    - status: ClaimStatus
+    - created_at: DateTime
+    - updated_at: DateTime
+    - policy_number: String
+    - member_id: String
+    - group_number: String
+    - claim_amount: Decimal
+    - approved_amount: Decimal
+    - rejection_reason: String
+    - notes: String
+    + get_invoice(): Invoice
+    + get_insurance_provider(): InsuranceProvider
+    + submit(): void
+    + approve(amount: Decimal): void
+    + reject(reason: String): void
+    + is_approved(): Boolean
+    + is_rejected(): Boolean
+  }
+
+  class InsuranceProvider {
+    - id: UUID
+    - name: String
+    - code: String
+    - contact_person: String
+    - phone: String
+    - email: String
+    - address: String
+    - is_active: Boolean
+    - created_at: DateTime
+    - updated_at: DateTime
+    - website: String
+    - notes: String
+    + get_claims(): List<InsuranceClaim>
+    + get_coverages(): List<InsuranceCoverage>
+  }
+
+  class PriceList {
+    - id: UUID
+    - name: String
+    - effective_from: Date
+    - effective_to: Date
+    - is_active: Boolean
+    - created_at: DateTime
+    - updated_at: DateTime
+    - description: String
+    - notes: String
+    + get_items(): List<PriceListItem>
+    + is_current(): Boolean
+  }
+
+  class PriceListItem {
+    - id: UUID
+    - price_list_id: UUID
+    - service_code: String
+    - service_name: String
+    - service_type: ItemType
+    - price: Decimal
+    - is_active: Boolean
+    - created_at: DateTime
+    - updated_at: DateTime
+    - description: String
+    - notes: String
+    + get_price_list(): PriceList
+  }
+
+  class InsuranceCoverage {
+    - id: UUID
+    - insurance_provider_id: UUID
+    - service_code: String
+    - service_name: String
+    - coverage_percentage: Decimal
+    - max_coverage_amount: Decimal
+    - requires_preauthorization: Boolean
+    - is_active: Boolean
+    - created_at: DateTime
+    - updated_at: DateTime
+    - notes: String
+    + get_insurance_provider(): InsuranceProvider
+    + calculate_coverage(amount: Decimal): Decimal
+  }
+
+  enum InvoiceStatus {
+    DRAFT
+    ISSUED
+    PARTIALLY_PAID
+    PAID
+    OVERDUE
+    CANCELLED
+  }
+
+  enum ItemType {
+    CONSULTATION
+    PROCEDURE
+    MEDICATION
+    LAB_TEST
+    ROOM_CHARGE
+    OTHER
+  }
+
+  enum PaymentMethod {
+    CASH
+    CREDIT_CARD
+    DEBIT_CARD
+    BANK_TRANSFER
+    INSURANCE
+    OTHER
+  }
+
+  enum PaymentStatus {
+    PENDING
+    COMPLETED
+    FAILED
+    REFUNDED
+  }
+
+  enum ClaimStatus {
+    DRAFT
+    SUBMITTED
+    IN_REVIEW
+    APPROVED
+    PARTIALLY_APPROVED
+    REJECTED
+    PAID
+  }
+}
+
+package "Serializers" {
+  class InvoiceSerializer {
+    + fields: id, patient_id, invoice_number, invoice_date, due_date, total_amount, paid_amount, status, encounter_id, notes, discount_amount, discount_reason, tax_amount, tax_rate
+    + create(validated_data): Invoice
+    + update(instance, validated_data): Invoice
+  }
+
+  class InvoiceItemSerializer {
+    + fields: id, invoice_id, item_type, description, quantity, unit_price, total_price, service_id, service_date, tax_rate, tax_amount, discount_amount, discount_reason
+    + create(validated_data): InvoiceItem
+    + update(instance, validated_data): InvoiceItem
+  }
+
+  class PaymentSerializer {
+    + fields: id, invoice_id, payment_number, payment_date, amount, payment_method, status, transaction_id, payment_gateway, receipt_number, notes, refund_reason
+    + create(validated_data): Payment
+    + update(instance, validated_data): Payment
+  }
+
+  class InsuranceClaimSerializer {
+    + fields: id, invoice_id, patient_id, insurance_provider_id, claim_number, submission_date, status, policy_number, member_id, group_number, claim_amount, approved_amount, rejection_reason, notes
+    + create(validated_data): InsuranceClaim
+    + update(instance, validated_data): InsuranceClaim
+  }
+}
+
+package "Views" {
+  class InvoiceViewSet {
+    + list(): Response
+    + retrieve(pk): Response
+    + create(request): Response
+    + update(request, pk): Response
+    + partial_update(request, pk): Response
+    + destroy(pk): Response
+    + get_items(request, pk): Response
+    + get_payments(request, pk): Response
+    + get_insurance_claim(request, pk): Response
+    + add_payment(request, pk): Response
+    + cancel(request, pk): Response
+  }
+
+  class InvoiceItemViewSet {
+    + list(): Response
+    + retrieve(pk): Response
+    + create(request): Response
+    + update(request, pk): Response
+    + partial_update(request, pk): Response
+    + destroy(pk): Response
+  }
+
+  class PaymentViewSet {
+    + list(): Response
+    + retrieve(pk): Response
+    + create(request): Response
+    + update(request, pk): Response
+    + partial_update(request, pk): Response
+    + destroy(pk): Response
+    + refund(request, pk): Response
+  }
+
+  class InsuranceClaimViewSet {
+    + list(): Response
+    + retrieve(pk): Response
+    + create(request): Response
+    + update(request, pk): Response
+    + partial_update(request, pk): Response
+    + destroy(pk): Response
+    + submit(request, pk): Response
+    + approve(request, pk): Response
+    + reject(request, pk): Response
+  }
+
+  class PriceListViewSet {
+    + list(): Response
+    + retrieve(pk): Response
+    + create(request): Response
+    + update(request, pk): Response
+    + partial_update(request, pk): Response
+    + destroy(pk): Response
+    + get_items(request, pk): Response
+  }
+}
+
+package "Services" {
+  class InvoiceService {
+    + create_invoice(patient_id: UUID, encounter_id: UUID, items: List<Dict>): Invoice
+    + add_invoice_item(invoice_id: UUID, item_type: ItemType, description: String, quantity: Integer, unit_price: Decimal): InvoiceItem
+    + add_payment(invoice_id: UUID, amount: Decimal, payment_method: PaymentMethod): Payment
+    + cancel_invoice(invoice_id: UUID): Invoice
+    + get_patient_invoices(patient_id: UUID): List<Invoice>
+    + get_overdue_invoices(): List<Invoice>
+    + calculate_invoice_total(invoice_id: UUID): Decimal
+  }
+
+  class InsuranceService {
+    + create_insurance_claim(invoice_id: UUID, insurance_provider_id: UUID): InsuranceClaim
+    + submit_claim(claim_id: UUID): InsuranceClaim
+    + approve_claim(claim_id: UUID, approved_amount: Decimal): InsuranceClaim
+    + reject_claim(claim_id: UUID, reason: String): InsuranceClaim
+    + get_provider_claims(provider_id: UUID): List<InsuranceClaim>
+    + get_patient_claims(patient_id: UUID): List<InsuranceClaim>
+    + calculate_coverage(insurance_provider_id: UUID, service_code: String, amount: Decimal): Decimal
+  }
+
+  class PricingService {
+    + get_current_price_list(): PriceList
+    + get_service_price(service_code: String, service_type: ItemType): Decimal
+    + create_price_list(name: String, effective_from: Date, effective_to: Date): PriceList
+    + add_price_list_item(price_list_id: UUID, service_code: String, service_name: String, service_type: ItemType, price: Decimal): PriceListItem
+    + update_service_price(price_list_id: UUID, service_code: String, new_price: Decimal): PriceListItem
+  }
+
+  class NotificationService {
+    + notify_invoice_created(invoice: Invoice): void
+    + notify_payment_received(payment: Payment): void
+    + notify_invoice_overdue(invoice: Invoice): void
+    + notify_claim_status_change(claim: InsuranceClaim): void
+  }
+}
+
+package "Permissions" {
+  class IsBillingStaff {
+    + has_permission(request, view): Boolean
+  }
+
+  class IsAdmin {
+    + has_permission(request, view): Boolean
+  }
+
+  class IsPatient {
+    + has_permission(request, view): Boolean
+  }
+
+  class IsInvoiceOwner {
+    + has_object_permission(request, view, obj): Boolean
+  }
+
+  class IsInsuranceProvider {
+    + has_permission(request, view): Boolean
+  }
+}
+
+' Relationships
+Invoice "1" -- "*" InvoiceItem
+Invoice "1" -- "*" Payment
+Invoice "1" -- "0..1" InsuranceClaim
+InsuranceProvider "1" -- "*" InsuranceClaim
+InsuranceProvider "1" -- "*" InsuranceCoverage
+PriceList "1" -- "*" PriceListItem
+
+InvoiceSerializer ..> Invoice
+InvoiceItemSerializer ..> InvoiceItem
+PaymentSerializer ..> Payment
+InsuranceClaimSerializer ..> InsuranceClaim
+
+InvoiceViewSet ..> InvoiceSerializer
+InvoiceItemViewSet ..> InvoiceItemSerializer
+PaymentViewSet ..> PaymentSerializer
+InsuranceClaimViewSet ..> InsuranceClaimSerializer
+PriceListViewSet ..> PriceList
+
+InvoiceService ..> Invoice
+InvoiceService ..> InvoiceItem
+InvoiceService ..> Payment
+InsuranceService ..> InsuranceClaim
+InsuranceService ..> InsuranceProvider
+InsuranceService ..> InsuranceCoverage
+PricingService ..> PriceList
+PricingService ..> PriceListItem
+NotificationService ..> Invoice
+NotificationService ..> Payment
+NotificationService ..> InsuranceClaim
+
+InvoiceViewSet ..> IsBillingStaff
+InvoiceViewSet ..> IsPatient
+InvoiceViewSet ..> IsInvoiceOwner
+InvoiceItemViewSet ..> IsBillingStaff
+PaymentViewSet ..> IsBillingStaff
+InsuranceClaimViewSet ..> IsBillingStaff
+InsuranceClaimViewSet ..> IsInsuranceProvider
+PriceListViewSet ..> IsBillingStaff
+PriceListViewSet ..> IsAdmin
+
+@enduml

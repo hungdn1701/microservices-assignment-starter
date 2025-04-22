@@ -1,0 +1,25 @@
+@startuml
+title Quy trình đặt lịch hẹn khám
+
+|Bệnh nhân|
+start
+:Đăng nhập vào hệ thống;
+:Chọn chuyên khoa và bác sĩ;
+
+|Hệ thống|
+:Hiển thị các khung giờ rảnh của bác sĩ;
+
+|Bệnh nhân|
+:Chọn ngày và giờ phù hợp;
+:Nhập lý do khám;
+
+|Hệ thống|
+:Xác nhận lịch hẹn;
+:Gửi thông báo xác nhận;
+:Cập nhật lịch làm việc của bác sĩ;
+
+|Bệnh nhân|
+:Nhận thông báo xác nhận;
+stop
+
+@enduml

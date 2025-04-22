@@ -1,0 +1,100 @@
+@startuml
+title Entity Relationship Diagram - User Service
+
+' Entities
+entity "User" as user {
+  *id: UUID <<PK>>
+  --
+  *email: VARCHAR(255)
+  *first_name: VARCHAR(100)
+  *last_name: VARCHAR(100)
+  *password: VARCHAR(255)
+  *role: ENUM
+  *is_active: BOOLEAN
+  *date_joined: TIMESTAMP
+}
+
+entity "PatientProfile" as patient {
+  *id: UUID <<PK>>
+  --
+  *user_id: UUID <<FK>>
+  *date_of_birth: DATE
+  *gender: ENUM
+  *blood_type: ENUM
+  height: FLOAT
+  weight: FLOAT
+  allergies: TEXT
+  emergency_contact_name: VARCHAR(200)
+  emergency_contact_phone: VARCHAR(20)
+}
+
+entity "DoctorProfile" as doctor {
+  *id: UUID <<PK>>
+  --
+  *user_id: UUID <<FK>>
+  *specialty: VARCHAR(100)
+  *license_number: VARCHAR(50)
+  *years_of_experience: INTEGER
+  education: TEXT
+  bio: TEXT
+}
+
+entity "NurseProfile" as nurse {
+  *id: UUID <<PK>>
+  --
+  *user_id: UUID <<FK>>
+  *license_number: VARCHAR(50)
+  *department: VARCHAR(100)
+  *years_of_experience: INTEGER
+}
+
+entity "PharmacistProfile" as pharmacist {
+  *id: UUID <<PK>>
+  --
+  *user_id: UUID <<FK>>
+  *license_number: VARCHAR(50)
+  *years_of_experience: INTEGER
+}
+
+entity "LabTechProfile" as labtech {
+  *id: UUID <<PK>>
+  --
+  *user_id: UUID <<FK>>
+  *license_number: VARCHAR(50)
+  *specialization: VARCHAR(100)
+  *years_of_experience: INTEGER
+}
+
+entity "Address" as address {
+  *id: UUID <<PK>>
+  --
+  *user_id: UUID <<FK>>
+  *street: VARCHAR(255)
+  *city: VARCHAR(100)
+  *state: VARCHAR(100)
+  *postal_code: VARCHAR(20)
+  *country: VARCHAR(100)
+  *is_primary: BOOLEAN
+}
+
+entity "UserActivity" as activity {
+  *id: UUID <<PK>>
+  --
+  *user_id: UUID <<FK>>
+  *activity_type: ENUM
+  *timestamp: TIMESTAMP
+  *ip_address: VARCHAR(45)
+  user_agent: VARCHAR(255)
+  details: JSONB
+}
+
+' Relationships
+user ||--o| patient
+user ||--o| doctor
+user ||--o| nurse
+user ||--o| pharmacist
+user ||--o| labtech
+user ||--o{ address
+user ||--o{ activity
+
+@enduml

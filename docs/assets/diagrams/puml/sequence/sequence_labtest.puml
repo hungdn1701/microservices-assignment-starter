@@ -1,0 +1,126 @@
+@startuml
+title Luồng yêu cầu xét nghiệm
+
+actor "Bác sĩ" as Doctor
+actor "Bệnh nhân" as Patient
+actor "Kỹ thuật viên xét nghiệm" as LabTech
+participant "Frontend" as FE
+participant "API Gateway" as API
+participant "User Service" as US
+participant "Medical Record Service" as MR
+participant "Laboratory Service" as LAB
+participant "Notification Service" as NS
+database "PostgreSQL" as DB
+queue "Redis" as RD
+
+Doctor -> FE: Đăng nhập
+FE -> API: POST /api/auth/login
+API -> US: Xác thực người dùng
+US -> DB: Kiểm tra thông tin đăng nhập
+DB --> US: Trả về thông tin người dùng
+US --> API: Trả về JWT token
+API --> FE: Trả về JWT token
+FE --> Doctor: Hiển thị trang chủ
+
+Doctor -> FE: Chọn bệnh nhân
+FE -> API: GET /api/patients/{id}
+API -> US: Lấy thông tin bệnh nhân
+US -> DB: Truy vấn thông tin bệnh nhân
+DB --> US: Trả về thông tin bệnh nhân
+US --> API: Trả về thông tin bệnh nhân
+API --> FE: Trả về thông tin bệnh nhân
+FE --> Doctor: Hiển thị thông tin bệnh nhân
+
+Doctor -> FE: Chọn "Yêu cầu xét nghiệm"
+FE -> API: GET /api/laboratory/test-types
+API -> LAB: Lấy danh sách loại xét nghiệm
+LAB -> DB: Truy vấn danh sách loại xét nghiệm
+DB --> LAB: Trả về danh sách loại xét nghiệm
+LAB --> API: Trả về danh sách loại xét nghiệm
+API --> FE: Trả về danh sách loại xét nghiệm
+FE --> Doctor: Hiển thị danh sách loại xét nghiệm
+
+Doctor -> FE: Chọn loại xét nghiệm
+Doctor -> FE: Nhập chỉ định xét nghiệm
+Doctor -> FE: Xác nhận yêu cầu xét nghiệm
+FE -> API: POST /api/laboratory/lab-tests
+API -> LAB: Tạo yêu cầu xét nghiệm mới
+LAB -> DB: Lưu yêu cầu xét nghiệm
+DB --> LAB: Xác nhận lưu thành công
+LAB -> MR: Cập nhật hồ sơ y tế
+MR -> DB: Lưu thông tin vào hồ sơ
+DB --> MR: Xác nhận lưu thành công
+MR --> LAB: Xác nhận cập nhật thành công
+LAB -> RD: Đẩy sự kiện "lab_test_ordered"
+LAB --> API: Trả về thông tin yêu cầu xét nghiệm
+API --> FE: Trả về thông tin yêu cầu xét nghiệm
+FE --> Doctor: Hiển thị xác nhận yêu cầu thành công
+
+RD --> NS: Nhận sự kiện "lab_test_ordered"
+NS -> DB: Lưu thông báo
+NS -> Patient: Gửi email thông báo
+NS -> LabTech: Gửi thông báo có yêu cầu xét nghiệm mới
+NS -> FE: Gửi thông báo real-time qua WebSocket
+
+LabTech -> FE: Đăng nhập
+LabTech -> FE: Xem danh sách yêu cầu xét nghiệm
+FE -> API: GET /api/laboratory/lab-tests?status=pending
+API -> LAB: Lấy danh sách yêu cầu xét nghiệm
+LAB -> DB: Truy vấn danh sách yêu cầu
+DB --> LAB: Trả về danh sách yêu cầu
+LAB --> API: Trả về danh sách yêu cầu
+API --> FE: Trả về danh sách yêu cầu
+FE --> LabTech: Hiển thị danh sách yêu cầu
+
+LabTech -> FE: Chọn yêu cầu xét nghiệm
+LabTech -> FE: Cập nhật trạng thái "Đang lấy mẫu"
+FE -> API: PUT /api/laboratory/lab-tests/{id}
+API -> LAB: Cập nhật trạng thái yêu cầu
+LAB -> DB: Cập nhật trạng thái
+DB --> LAB: Xác nhận cập nhật thành công
+LAB -> RD: Đẩy sự kiện "sample_collection_started"
+LAB --> API: Trả về thông tin yêu cầu đã cập nhật
+API --> FE: Trả về thông tin yêu cầu đã cập nhật
+FE --> LabTech: Hiển thị xác nhận cập nhật thành công
+
+Patient -> FE: Đến phòng xét nghiệm
+LabTech -> FE: Xác nhận đã lấy mẫu
+FE -> API: POST /api/laboratory/sample-collections
+API -> LAB: Tạo bản ghi lấy mẫu
+LAB -> DB: Lưu thông tin lấy mẫu
+DB --> LAB: Xác nhận lưu thành công
+LAB -> RD: Đẩy sự kiện "sample_collected"
+LAB --> API: Trả về thông tin lấy mẫu
+API --> FE: Trả về thông tin lấy mẫu
+FE --> LabTech: Hiển thị xác nhận lấy mẫu thành công
+
+LabTech -> FE: Nhập kết quả xét nghiệm
+FE -> API: POST /api/laboratory/test-results
+API -> LAB: Tạo kết quả xét nghiệm
+LAB -> DB: Lưu kết quả xét nghiệm
+DB --> LAB: Xác nhận lưu thành công
+LAB -> MR: Cập nhật hồ sơ y tế
+MR -> DB: Lưu kết quả vào hồ sơ
+DB --> MR: Xác nhận lưu thành công
+MR --> LAB: Xác nhận cập nhật thành công
+LAB -> RD: Đẩy sự kiện "test_result_available"
+LAB --> API: Trả về thông tin kết quả xét nghiệm
+API --> FE: Trả về thông tin kết quả xét nghiệm
+FE --> LabTech: Hiển thị xác nhận nhập kết quả thành công
+
+RD --> NS: Nhận sự kiện "test_result_available"
+NS -> DB: Lưu thông báo
+NS -> Patient: Gửi email thông báo
+NS -> Doctor: Gửi thông báo kết quả xét nghiệm đã có
+NS -> FE: Gửi thông báo real-time qua WebSocket
+
+Doctor -> FE: Xem kết quả xét nghiệm
+FE -> API: GET /api/laboratory/test-results/{id}
+API -> LAB: Lấy thông tin kết quả xét nghiệm
+LAB -> DB: Truy vấn thông tin kết quả
+DB --> LAB: Trả về thông tin kết quả
+LAB --> API: Trả về thông tin kết quả
+API --> FE: Trả về thông tin kết quả
+FE --> Doctor: Hiển thị thông tin kết quả xét nghiệm
+
+@enduml

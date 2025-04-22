@@ -1,0 +1,66 @@
+@startuml
+skinparam componentStyle rectangle
+
+actor "Client\n(Web/Mobile)" as Client
+
+rectangle "Frontend Service\n(React/TypeScript)" as FE
+rectangle "API Gateway\n(Node.js/Express)" as API
+rectangle "User Service\n(Django/DRF, JWT)" as US
+rectangle "Medical Record Service\n(Django/DRF)" as MR
+rectangle "Appointment Service\n(Django/DRF)" as APPT
+rectangle "Pharmacy Service\n(Django/DRF)" as PHA
+rectangle "Laboratory Service\n(Django/DRF, Channels)" as LAB
+rectangle "Billing Service\n(Django/DRF)" as BILL
+rectangle "Notification Service\n(Django/DRF, Channels, Celery)" as NS
+rectangle "AI ChatBot Service\n(Django/DRF, Channels, OpenAI)" as CS
+
+database "PostgreSQL\n(per-service DB)" as PG
+queue "Redis Stream\n(Notification Events)" as RD
+
+Client --> FE : "HTTPS/REST/WebSocket"
+FE --> API   : "HTTPS/REST"
+
+API --> US   : "REST"
+API --> MR   : "REST"
+API --> APPT : "REST"
+API --> PHA  : "REST"
+API --> LAB  : "REST/WebSocket"
+API --> BILL : "REST"
+API --> NS   : "REST (Notifications API)"
+API --> CS   : "REST (ChatBot API)"
+
+US --> PG   : "JDBC/PSQL"
+MR --> PG   : "JDBC/PSQL"
+APPT --> PG : "JDBC/PSQL"
+PHA --> PG  : "JDBC/PSQL"
+LAB --> PG  : "JDBC/PSQL"
+BILL --> PG : "JDBC/PSQL"
+CS --> PG   : "JDBC/PSQL"
+
+' All services publish events to Redis stream
+US --> RD   : "publish_event"
+MR --> RD   : "publish_event"
+APPT --> RD : "publish_event"
+PHA --> RD  : "publish_event"
+LAB --> RD  : "publish_event"
+BILL --> RD : "publish_event"
+CS --> RD   : "publish_event"
+
+' Notification Service consumes events
+RD --> NS   : "consume_event (Celery & consumer)"
+
+' Notification Service sends notifications
+rectangle "Email Gateway" as SMTP
+rectangle "SMS Gateway" as SMPP
+NS --> SMTP : "send_email_notification"
+NS --> SMPP : "send_sms_notification"
+
+' Real-time push via WebSocket
+NS --> FE   : "WebSocket (Notifications)"
+CS --> FE   : "WebSocket (Chat)"
+
+' External API integration
+rectangle "OpenAI API" as OPENAI
+CS --> OPENAI : "REST API calls"
+
+@enduml

@@ -1,0 +1,391 @@
+@startuml
+title Class Diagram - Laboratory Service
+
+package "Models" {
+  class TestType {
+    - id: UUID
+    - name: String
+    - code: String
+    - category: String
+    - description: String
+    - sample_type: SampleType
+    - is_active: Boolean
+    - created_at: DateTime
+    - updated_at: DateTime
+    - preparation_instructions: String
+    - normal_range: String
+    - price: Decimal
+    - turnaround_time: Integer
+    + get_parameters(): List<TestParameter>
+    + get_lab_tests(): List<LabTest>
+  }
+
+  class LabTest {
+    - id: UUID
+    - patient_id: UUID
+    - doctor_id: UUID
+    - test_type_id: UUID
+    - ordered_date: DateTime
+    - status: LabTestStatus
+    - priority: TestPriority
+    - created_at: DateTime
+    - updated_at: DateTime
+    - encounter_id: UUID
+    - notes: String
+    - clinical_information: String
+    - due_date: Date
+    + get_sample(): SampleCollection
+    + get_result(): TestResult
+    + get_test_type(): TestType
+    + cancel(): void
+    + update_status(status: LabTestStatus): void
+    + is_completed(): Boolean
+    + is_overdue(): Boolean
+  }
+
+  class SampleCollection {
+    - id: UUID
+    - lab_test_id: UUID
+    - collected_by: UUID
+    - collected_at: DateTime
+    - sample_id: String
+    - status: SampleStatus
+    - created_at: DateTime
+    - updated_at: DateTime
+    - rejection_reason: String
+    - notes: String
+    - collection_method: String
+    - collection_site: String
+    + get_lab_test(): LabTest
+    + reject(reason: String): void
+    + process(): void
+  }
+
+  class TestResult {
+    - id: UUID
+    - lab_test_id: UUID
+    - performed_by: UUID
+    - verified_by: UUID
+    - result_date: DateTime
+    - status: ResultStatus
+    - created_at: DateTime
+    - updated_at: DateTime
+    - result_value: String
+    - unit: String
+    - reference_range: String
+    - interpretation: String
+    - is_abnormal: Boolean
+    - notes: String
+    - report_file_path: String
+    + get_lab_test(): LabTest
+    + get_parameter_results(): List<ParameterResult>
+    + verify(): void
+    + amend(): void
+    + cancel(): void
+    + generate_report(): String
+  }
+
+  class TestParameter {
+    - id: UUID
+    - test_type_id: UUID
+    - name: String
+    - code: String
+    - unit: String
+    - reference_range: String
+    - order: Integer
+    - is_active: Boolean
+    - description: String
+    + get_test_type(): TestType
+  }
+
+  class ParameterResult {
+    - id: UUID
+    - test_result_id: UUID
+    - parameter_id: UUID
+    - value: String
+    - is_abnormal: Boolean
+    - created_at: DateTime
+    - notes: String
+    + get_test_result(): TestResult
+    + get_parameter(): TestParameter
+  }
+
+  class LabEquipment {
+    - id: UUID
+    - name: String
+    - model: String
+    - serial_number: String
+    - status: EquipmentStatus
+    - last_maintenance_date: Date
+    - next_maintenance_date: Date
+    - created_at: DateTime
+    - updated_at: DateTime
+    - notes: String
+    + is_operational(): Boolean
+    + needs_maintenance(): Boolean
+    + schedule_maintenance(): void
+  }
+
+  class TestEquipmentUsage {
+    - id: UUID
+    - test_result_id: UUID
+    - equipment_id: UUID
+    - used_by: UUID
+    - used_at: DateTime
+    - created_at: DateTime
+    - notes: String
+    + get_test_result(): TestResult
+    + get_equipment(): LabEquipment
+  }
+
+  class Notification {
+    - id: UUID
+    - lab_test_id: UUID
+    - notification_type: NotificationType
+    - recipient_id: UUID
+    - recipient_type: RecipientType
+    - status: NotificationStatus
+    - created_at: DateTime
+    - sent_at: DateTime
+    - message: String
+    - error_message: String
+    + get_lab_test(): LabTest
+    + send(): void
+    + mark_as_sent(): void
+    + mark_as_failed(error: String): void
+  }
+
+  enum SampleType {
+    BLOOD
+    URINE
+    STOOL
+    TISSUE
+    SWAB
+    OTHER
+  }
+
+  enum LabTestStatus {
+    ORDERED
+    SAMPLE_COLLECTED
+    IN_PROGRESS
+    COMPLETED
+    CANCELLED
+  }
+
+  enum TestPriority {
+    ROUTINE
+    URGENT
+    STAT
+  }
+
+  enum SampleStatus {
+    COLLECTED
+    REJECTED
+    PROCESSED
+  }
+
+  enum ResultStatus {
+    PRELIMINARY
+    FINAL
+    AMENDED
+    CANCELLED
+  }
+
+  enum EquipmentStatus {
+    OPERATIONAL
+    MAINTENANCE
+    OUT_OF_ORDER
+  }
+
+  enum NotificationType {
+    RESULT_READY
+    SAMPLE_REJECTED
+    TEST_CANCELLED
+    REMINDER
+  }
+
+  enum RecipientType {
+    PATIENT
+    DOCTOR
+    LAB_TECH
+  }
+
+  enum NotificationStatus {
+    PENDING
+    SENT
+    FAILED
+  }
+}
+
+package "Serializers" {
+  class TestTypeSerializer {
+    + fields: id, name, code, category, description, sample_type, is_active, preparation_instructions, normal_range, price, turnaround_time
+    + create(validated_data): TestType
+    + update(instance, validated_data): TestType
+  }
+
+  class LabTestSerializer {
+    + fields: id, patient_id, doctor_id, test_type_id, ordered_date, status, priority, encounter_id, notes, clinical_information, due_date
+    + create(validated_data): LabTest
+    + update(instance, validated_data): LabTest
+  }
+
+  class SampleCollectionSerializer {
+    + fields: id, lab_test_id, collected_by, collected_at, sample_id, status, rejection_reason, notes, collection_method, collection_site
+    + create(validated_data): SampleCollection
+    + update(instance, validated_data): SampleCollection
+  }
+
+  class TestResultSerializer {
+    + fields: id, lab_test_id, performed_by, verified_by, result_date, status, result_value, unit, reference_range, interpretation, is_abnormal, notes, report_file_path
+    + create(validated_data): TestResult
+    + update(instance, validated_data): TestResult
+  }
+}
+
+package "Views" {
+  class TestTypeViewSet {
+    + list(): Response
+    + retrieve(pk): Response
+    + create(request): Response
+    + update(request, pk): Response
+    + partial_update(request, pk): Response
+    + destroy(pk): Response
+    + get_parameters(request, pk): Response
+  }
+
+  class LabTestViewSet {
+    + list(): Response
+    + retrieve(pk): Response
+    + create(request): Response
+    + update(request, pk): Response
+    + partial_update(request, pk): Response
+    + destroy(pk): Response
+    + cancel(request, pk): Response
+    + update_status(request, pk): Response
+    + get_sample(request, pk): Response
+    + get_result(request, pk): Response
+  }
+
+  class SampleCollectionViewSet {
+    + list(): Response
+    + retrieve(pk): Response
+    + create(request): Response
+    + update(request, pk): Response
+    + partial_update(request, pk): Response
+    + destroy(pk): Response
+    + reject(request, pk): Response
+    + process(request, pk): Response
+  }
+
+  class TestResultViewSet {
+    + list(): Response
+    + retrieve(pk): Response
+    + create(request): Response
+    + update(request, pk): Response
+    + partial_update(request, pk): Response
+    + destroy(pk): Response
+    + verify(request, pk): Response
+    + amend(request, pk): Response
+    + cancel(request, pk): Response
+    + generate_report(request, pk): Response
+    + get_parameter_results(request, pk): Response
+  }
+}
+
+package "Services" {
+  class LabTestService {
+    + create_lab_test(patient_id: UUID, doctor_id: UUID, test_type_id: UUID, priority: TestPriority): LabTest
+    + cancel_lab_test(lab_test_id: UUID): LabTest
+    + update_lab_test_status(lab_test_id: UUID, status: LabTestStatus): LabTest
+    + get_patient_lab_tests(patient_id: UUID): List<LabTest>
+    + get_doctor_lab_tests(doctor_id: UUID): List<LabTest>
+    + get_overdue_lab_tests(): List<LabTest>
+  }
+
+  class SampleService {
+    + collect_sample(lab_test_id: UUID, collected_by: UUID, sample_id: String): SampleCollection
+    + reject_sample(sample_id: UUID, reason: String): SampleCollection
+    + process_sample(sample_id: UUID): SampleCollection
+    + get_samples_by_status(status: SampleStatus): List<SampleCollection>
+  }
+
+  class ResultService {
+    + create_test_result(lab_test_id: UUID, performed_by: UUID, parameter_results: List<Dict>): TestResult
+    + verify_test_result(result_id: UUID, verified_by: UUID): TestResult
+    + amend_test_result(result_id: UUID, performed_by: UUID, parameter_results: List<Dict>): TestResult
+    + generate_report(result_id: UUID): String
+    + get_abnormal_results(): List<TestResult>
+  }
+
+  class NotificationService {
+    + notify_result_ready(lab_test_id: UUID): void
+    + notify_sample_rejected(sample_id: UUID): void
+    + notify_test_cancelled(lab_test_id: UUID): void
+    + send_reminder(lab_test_id: UUID): void
+  }
+}
+
+package "Permissions" {
+  class IsLabTech {
+    + has_permission(request, view): Boolean
+  }
+
+  class IsDoctor {
+    + has_permission(request, view): Boolean
+  }
+
+  class IsPatient {
+    + has_permission(request, view): Boolean
+  }
+
+  class IsLabTestOwner {
+    + has_object_permission(request, view, obj): Boolean
+  }
+
+  class IsSampleCollector {
+    + has_object_permission(request, view, obj): Boolean
+  }
+
+  class IsResultPerformer {
+    + has_object_permission(request, view, obj): Boolean
+  }
+}
+
+' Relationships
+TestType "1" -- "*" TestParameter
+TestType "1" -- "*" LabTest
+LabTest "1" -- "0..1" SampleCollection
+LabTest "1" -- "0..1" TestResult
+TestResult "1" -- "*" ParameterResult
+TestParameter "1" -- "*" ParameterResult
+TestResult "1" -- "*" TestEquipmentUsage
+LabEquipment "1" -- "*" TestEquipmentUsage
+LabTest "1" -- "*" Notification
+
+TestTypeSerializer ..> TestType
+LabTestSerializer ..> LabTest
+SampleCollectionSerializer ..> SampleCollection
+TestResultSerializer ..> TestResult
+
+TestTypeViewSet ..> TestTypeSerializer
+LabTestViewSet ..> LabTestSerializer
+SampleCollectionViewSet ..> SampleCollectionSerializer
+TestResultViewSet ..> TestResultSerializer
+
+LabTestService ..> LabTest
+SampleService ..> SampleCollection
+ResultService ..> TestResult
+ResultService ..> ParameterResult
+NotificationService ..> Notification
+
+TestTypeViewSet ..> IsLabTech
+LabTestViewSet ..> IsDoctor
+LabTestViewSet ..> IsLabTech
+LabTestViewSet ..> IsLabTestOwner
+SampleCollectionViewSet ..> IsLabTech
+SampleCollectionViewSet ..> IsSampleCollector
+TestResultViewSet ..> IsLabTech
+TestResultViewSet ..> IsResultPerformer
+
+@enduml

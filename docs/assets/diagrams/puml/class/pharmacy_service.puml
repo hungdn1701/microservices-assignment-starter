@@ -1,0 +1,340 @@
+@startuml
+title Class Diagram - Pharmacy Service
+
+package "Models" {
+  class Medication {
+    - id: UUID
+    - name: String
+    - generic_name: String
+    - medication_type: MedicationType
+    - unit: String
+    - strength: String
+    - manufacturer: String
+    - is_prescription_required: Boolean
+    - is_active: Boolean
+    - description: String
+    - side_effects: String
+    - contraindications: String
+    - storage_instructions: String
+    - created_at: DateTime
+    - updated_at: DateTime
+    + get_inventory(): List<Inventory>
+    + get_interactions(): List<MedicationInteraction>
+    + get_allergies(): List<MedicationAllergy>
+  }
+
+  class Prescription {
+    - id: UUID
+    - patient_id: UUID
+    - doctor_id: UUID
+    - prescription_date: Date
+    - status: PrescriptionStatus
+    - created_at: DateTime
+    - updated_at: DateTime
+    - encounter_id: UUID
+    - notes: String
+    - expiry_date: Date
+    - is_refillable: Boolean
+    - refill_count: Integer
+    - refills_remaining: Integer
+    + get_items(): List<PrescriptionItem>
+    + get_dispensing(): Dispensing
+    + verify(): void
+    + dispense(): void
+    + cancel(): void
+    + refill(): void
+    + is_expired(): Boolean
+  }
+
+  class PrescriptionItem {
+    - id: UUID
+    - prescription_id: UUID
+    - medication_id: UUID
+    - dosage: String
+    - frequency: String
+    - duration: String
+    - quantity: Integer
+    - status: PrescriptionItemStatus
+    - instructions: String
+    - notes: String
+    + get_medication(): Medication
+    + dispense(): void
+    + cancel(): void
+  }
+
+  class Inventory {
+    - id: UUID
+    - medication_id: UUID
+    - batch_number: String
+    - quantity: Integer
+    - unit_price: Decimal
+    - expiry_date: Date
+    - received_date: Date
+    - status: InventoryStatus
+    - supplier: String
+    - location: String
+    - notes: String
+    + get_medication(): Medication
+    + is_expired(): Boolean
+    + is_low_stock(): Boolean
+    + update_quantity(amount: Integer): void
+  }
+
+  class Dispensing {
+    - id: UUID
+    - prescription_id: UUID
+    - pharmacist_id: UUID
+    - dispensed_date: DateTime
+    - status: DispensingStatus
+    - created_at: DateTime
+    - notes: String
+    - patient_signature: Boolean
+    + get_items(): List<DispensingItem>
+    + complete(): void
+    + cancel(): void
+  }
+
+  class DispensingItem {
+    - id: UUID
+    - dispensing_id: UUID
+    - prescription_item_id: UUID
+    - inventory_id: UUID
+    - quantity_dispensed: Integer
+    - unit_price: Decimal
+    - total_price: Decimal
+    - notes: String
+    + get_prescription_item(): PrescriptionItem
+    + get_inventory(): Inventory
+  }
+
+  class MedicationInteraction {
+    - id: UUID
+    - medication_id_1: UUID
+    - medication_id_2: UUID
+    - severity: InteractionSeverity
+    - description: String
+    - reference: String
+    + get_medication_1(): Medication
+    + get_medication_2(): Medication
+  }
+
+  class MedicationAllergy {
+    - id: UUID
+    - patient_id: UUID
+    - medication_id: UUID
+    - reaction: String
+    - severity: AllergySeverity
+    - reported_date: Date
+    - notes: String
+    + get_medication(): Medication
+  }
+
+  enum MedicationType {
+    TABLET
+    CAPSULE
+    LIQUID
+    INJECTION
+    CREAM
+    OTHER
+  }
+
+  enum PrescriptionStatus {
+    PENDING
+    VERIFIED
+    DISPENSED
+    CANCELLED
+    EXPIRED
+  }
+
+  enum PrescriptionItemStatus {
+    PENDING
+    DISPENSED
+    CANCELLED
+  }
+
+  enum InventoryStatus {
+    IN_STOCK
+    LOW_STOCK
+    OUT_OF_STOCK
+    EXPIRED
+  }
+
+  enum DispensingStatus {
+    COMPLETE
+    PARTIAL
+    CANCELLED
+  }
+
+  enum InteractionSeverity {
+    MINOR
+    MODERATE
+    MAJOR
+    CONTRAINDICATED
+  }
+
+  enum AllergySeverity {
+    MILD
+    MODERATE
+    SEVERE
+  }
+}
+
+package "Serializers" {
+  class MedicationSerializer {
+    + fields: id, name, generic_name, medication_type, unit, strength, manufacturer, is_prescription_required, is_active, description, side_effects, contraindications, storage_instructions
+    + create(validated_data): Medication
+    + update(instance, validated_data): Medication
+  }
+
+  class PrescriptionSerializer {
+    + fields: id, patient_id, doctor_id, prescription_date, status, encounter_id, notes, expiry_date, is_refillable, refill_count, refills_remaining
+    + create(validated_data): Prescription
+    + update(instance, validated_data): Prescription
+  }
+
+  class PrescriptionItemSerializer {
+    + fields: id, prescription_id, medication_id, dosage, frequency, duration, quantity, status, instructions, notes
+    + create(validated_data): PrescriptionItem
+    + update(instance, validated_data): PrescriptionItem
+  }
+
+  class InventorySerializer {
+    + fields: id, medication_id, batch_number, quantity, unit_price, expiry_date, received_date, status, supplier, location, notes
+    + create(validated_data): Inventory
+    + update(instance, validated_data): Inventory
+  }
+}
+
+package "Views" {
+  class MedicationViewSet {
+    + list(): Response
+    + retrieve(pk): Response
+    + create(request): Response
+    + update(request, pk): Response
+    + partial_update(request, pk): Response
+    + destroy(pk): Response
+    + get_inventory(request, pk): Response
+    + get_interactions(request, pk): Response
+  }
+
+  class PrescriptionViewSet {
+    + list(): Response
+    + retrieve(pk): Response
+    + create(request): Response
+    + update(request, pk): Response
+    + partial_update(request, pk): Response
+    + destroy(pk): Response
+    + get_items(request, pk): Response
+    + verify(request, pk): Response
+    + dispense(request, pk): Response
+    + cancel(request, pk): Response
+    + refill(request, pk): Response
+  }
+
+  class InventoryViewSet {
+    + list(): Response
+    + retrieve(pk): Response
+    + create(request): Response
+    + update(request, pk): Response
+    + partial_update(request, pk): Response
+    + destroy(pk): Response
+    + update_quantity(request, pk): Response
+  }
+
+  class DispensingViewSet {
+    + list(): Response
+    + retrieve(pk): Response
+    + create(request): Response
+    + update(request, pk): Response
+    + partial_update(request, pk): Response
+    + destroy(pk): Response
+    + get_items(request, pk): Response
+    + complete(request, pk): Response
+    + cancel(request, pk): Response
+  }
+}
+
+package "Services" {
+  class PrescriptionService {
+    + create_prescription(patient_id: UUID, doctor_id: UUID, items: List<Dict>): Prescription
+    + verify_prescription(prescription_id: UUID): Prescription
+    + dispense_prescription(prescription_id: UUID, pharmacist_id: UUID): Dispensing
+    + check_interactions(prescription_id: UUID): List<MedicationInteraction>
+    + check_allergies(prescription_id: UUID): List<MedicationAllergy>
+    + check_availability(prescription_id: UUID): Dict
+  }
+
+  class InventoryService {
+    + add_inventory(medication_id: UUID, batch_number: String, quantity: Integer, unit_price: Decimal, expiry_date: Date): Inventory
+    + update_quantity(inventory_id: UUID, amount: Integer): Inventory
+    + check_low_stock(): List<Inventory>
+    + check_expired(): List<Inventory>
+    + get_medication_stock(medication_id: UUID): Integer
+  }
+
+  class NotificationService {
+    + notify_low_stock(inventory: Inventory): void
+    + notify_prescription_ready(prescription: Prescription): void
+    + notify_prescription_dispensed(dispensing: Dispensing): void
+  }
+}
+
+package "Permissions" {
+  class IsPharmacist {
+    + has_permission(request, view): Boolean
+  }
+
+  class IsDoctor {
+    + has_permission(request, view): Boolean
+  }
+
+  class IsPatient {
+    + has_permission(request, view): Boolean
+  }
+
+  class IsPrescriptionOwner {
+    + has_object_permission(request, view, obj): Boolean
+  }
+}
+
+' Relationships
+Medication "1" -- "*" PrescriptionItem
+Medication "1" -- "*" Inventory
+Medication "1" -- "*" MedicationInteraction
+Medication "1" -- "*" MedicationAllergy
+Prescription "1" -- "*" PrescriptionItem
+Prescription "1" -- "0..1" Dispensing
+Dispensing "1" -- "*" DispensingItem
+PrescriptionItem "1" -- "*" DispensingItem
+Inventory "1" -- "*" DispensingItem
+
+MedicationSerializer ..> Medication
+PrescriptionSerializer ..> Prescription
+PrescriptionItemSerializer ..> PrescriptionItem
+InventorySerializer ..> Inventory
+
+MedicationViewSet ..> MedicationSerializer
+PrescriptionViewSet ..> PrescriptionSerializer
+InventoryViewSet ..> InventorySerializer
+DispensingViewSet ..> Dispensing
+
+PrescriptionService ..> Prescription
+PrescriptionService ..> PrescriptionItem
+PrescriptionService ..> Dispensing
+PrescriptionService ..> MedicationInteraction
+PrescriptionService ..> MedicationAllergy
+InventoryService ..> Inventory
+InventoryService ..> Medication
+NotificationService ..> Inventory
+NotificationService ..> Prescription
+NotificationService ..> Dispensing
+
+MedicationViewSet ..> IsPharmacist
+PrescriptionViewSet ..> IsPharmacist
+PrescriptionViewSet ..> IsDoctor
+PrescriptionViewSet ..> IsPatient
+PrescriptionViewSet ..> IsPrescriptionOwner
+InventoryViewSet ..> IsPharmacist
+DispensingViewSet ..> IsPharmacist
+
+@enduml

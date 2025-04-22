@@ -1,0 +1,126 @@
+@startuml
+title Entity Relationship Diagram - Pharmacy Service
+
+' Entities
+entity "Medication" as medication {
+  *id: UUID <<PK>>
+  --
+  *name: VARCHAR(255)
+  *generic_name: VARCHAR(255)
+  *medication_type: ENUM [TABLET, CAPSULE, LIQUID, INJECTION, CREAM, OTHER]
+  *unit: VARCHAR(50)
+  *strength: VARCHAR(100)
+  *manufacturer: VARCHAR(255)
+  *is_prescription_required: BOOLEAN
+  *is_active: BOOLEAN
+  description: TEXT
+  side_effects: TEXT
+  contraindications: TEXT
+  storage_instructions: TEXT
+  created_at: TIMESTAMP
+  updated_at: TIMESTAMP
+}
+
+entity "Prescription" as prescription {
+  *id: UUID <<PK>>
+  --
+  *patient_id: UUID <<FK>>
+  *doctor_id: UUID <<FK>>
+  *prescription_date: DATE
+  *status: ENUM [PENDING, VERIFIED, DISPENSED, CANCELLED, EXPIRED]
+  *created_at: TIMESTAMP
+  updated_at: TIMESTAMP
+  encounter_id: UUID <<FK>>
+  notes: TEXT
+  expiry_date: DATE
+  is_refillable: BOOLEAN
+  refill_count: INTEGER
+  refills_remaining: INTEGER
+}
+
+entity "PrescriptionItem" as item {
+  *id: UUID <<PK>>
+  --
+  *prescription_id: UUID <<FK>>
+  *medication_id: UUID <<FK>>
+  *dosage: VARCHAR(100)
+  *frequency: VARCHAR(100)
+  *duration: VARCHAR(100)
+  *quantity: INTEGER
+  *status: ENUM [PENDING, DISPENSED, CANCELLED]
+  instructions: TEXT
+  notes: TEXT
+}
+
+entity "Inventory" as inventory {
+  *id: UUID <<PK>>
+  --
+  *medication_id: UUID <<FK>>
+  *batch_number: VARCHAR(100)
+  *quantity: INTEGER
+  *unit_price: DECIMAL(10,2)
+  *expiry_date: DATE
+  *received_date: DATE
+  *status: ENUM [IN_STOCK, LOW_STOCK, OUT_OF_STOCK, EXPIRED]
+  supplier: VARCHAR(255)
+  location: VARCHAR(100)
+  notes: TEXT
+}
+
+entity "Dispensing" as dispensing {
+  *id: UUID <<PK>>
+  --
+  *prescription_id: UUID <<FK>>
+  *pharmacist_id: UUID <<FK>>
+  *dispensed_date: TIMESTAMP
+  *status: ENUM [COMPLETE, PARTIAL, CANCELLED]
+  *created_at: TIMESTAMP
+  notes: TEXT
+  patient_signature: BOOLEAN
+}
+
+entity "DispensingItem" as dispitem {
+  *id: UUID <<PK>>
+  --
+  *dispensing_id: UUID <<FK>>
+  *prescription_item_id: UUID <<FK>>
+  *inventory_id: UUID <<FK>>
+  *quantity_dispensed: INTEGER
+  *unit_price: DECIMAL(10,2)
+  *total_price: DECIMAL(10,2)
+  notes: TEXT
+}
+
+entity "MedicationInteraction" as interaction {
+  *id: UUID <<PK>>
+  --
+  *medication_id_1: UUID <<FK>>
+  *medication_id_2: UUID <<FK>>
+  *severity: ENUM [MINOR, MODERATE, MAJOR, CONTRAINDICATED]
+  *description: TEXT
+  reference: VARCHAR(255)
+}
+
+entity "MedicationAllergy" as allergy {
+  *id: UUID <<PK>>
+  --
+  *patient_id: UUID <<FK>>
+  *medication_id: UUID <<FK>>
+  *reaction: TEXT
+  *severity: ENUM [MILD, MODERATE, SEVERE]
+  *reported_date: DATE
+  notes: TEXT
+}
+
+' Relationships
+prescription ||--o{ item
+medication ||--o{ item
+medication ||--o{ inventory
+prescription ||--o| dispensing
+dispensing ||--o{ dispitem
+item ||--o{ dispitem
+inventory ||--o{ dispitem
+medication ||--o{ interaction
+medication ||--o{ allergy
+
+@enduml

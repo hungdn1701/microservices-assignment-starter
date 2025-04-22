@@ -1,0 +1,149 @@
+@startuml
+title Entity Relationship Diagram - Billing Service
+
+' Entities
+entity "Invoice" as invoice {
+  *id: UUID <<PK>>
+  --
+  *patient_id: UUID <<FK>>
+  *invoice_number: VARCHAR(50)
+  *invoice_date: DATE
+  *due_date: DATE
+  *total_amount: DECIMAL(10,2)
+  *paid_amount: DECIMAL(10,2)
+  *status: ENUM [DRAFT, ISSUED, PARTIALLY_PAID, PAID, OVERDUE, CANCELLED]
+  *created_at: TIMESTAMP
+  updated_at: TIMESTAMP
+  encounter_id: UUID <<FK>>
+  notes: TEXT
+  discount_amount: DECIMAL(10,2)
+  discount_reason: VARCHAR(255)
+  tax_amount: DECIMAL(10,2)
+  tax_rate: DECIMAL(5,2)
+}
+
+entity "InvoiceItem" as item {
+  *id: UUID <<PK>>
+  --
+  *invoice_id: UUID <<FK>>
+  *item_type: ENUM [CONSULTATION, PROCEDURE, MEDICATION, LAB_TEST, ROOM_CHARGE, OTHER]
+  *description: VARCHAR(255)
+  *quantity: INTEGER
+  *unit_price: DECIMAL(10,2)
+  *total_price: DECIMAL(10,2)
+  *created_at: TIMESTAMP
+  updated_at: TIMESTAMP
+  service_id: UUID
+  service_date: DATE
+  tax_rate: DECIMAL(5,2)
+  tax_amount: DECIMAL(10,2)
+  discount_amount: DECIMAL(10,2)
+  discount_reason: VARCHAR(255)
+}
+
+entity "Payment" as payment {
+  *id: UUID <<PK>>
+  --
+  *invoice_id: UUID <<FK>>
+  *payment_number: VARCHAR(50)
+  *payment_date: DATE
+  *amount: DECIMAL(10,2)
+  *payment_method: ENUM [CASH, CREDIT_CARD, DEBIT_CARD, BANK_TRANSFER, INSURANCE, OTHER]
+  *status: ENUM [PENDING, COMPLETED, FAILED, REFUNDED]
+  *created_at: TIMESTAMP
+  updated_at: TIMESTAMP
+  transaction_id: VARCHAR(100)
+  payment_gateway: VARCHAR(100)
+  receipt_number: VARCHAR(50)
+  notes: TEXT
+  refund_reason: TEXT
+}
+
+entity "InsuranceClaim" as claim {
+  *id: UUID <<PK>>
+  --
+  *invoice_id: UUID <<FK>>
+  *patient_id: UUID <<FK>>
+  *insurance_provider_id: UUID <<FK>>
+  *claim_number: VARCHAR(50)
+  *submission_date: DATE
+  *status: ENUM [DRAFT, SUBMITTED, IN_REVIEW, APPROVED, PARTIALLY_APPROVED, REJECTED, PAID]
+  *created_at: TIMESTAMP
+  updated_at: TIMESTAMP
+  policy_number: VARCHAR(100)
+  member_id: VARCHAR(100)
+  group_number: VARCHAR(100)
+  claim_amount: DECIMAL(10,2)
+  approved_amount: DECIMAL(10,2)
+  rejection_reason: TEXT
+  notes: TEXT
+}
+
+entity "InsuranceProvider" as provider {
+  *id: UUID <<PK>>
+  --
+  *name: VARCHAR(255)
+  *code: VARCHAR(50)
+  *contact_person: VARCHAR(255)
+  *phone: VARCHAR(20)
+  *email: VARCHAR(255)
+  *address: TEXT
+  *is_active: BOOLEAN
+  *created_at: TIMESTAMP
+  updated_at: TIMESTAMP
+  website: VARCHAR(255)
+  notes: TEXT
+}
+
+entity "PriceList" as pricelist {
+  *id: UUID <<PK>>
+  --
+  *name: VARCHAR(255)
+  *effective_from: DATE
+  *effective_to: DATE
+  *is_active: BOOLEAN
+  *created_at: TIMESTAMP
+  updated_at: TIMESTAMP
+  description: TEXT
+  notes: TEXT
+}
+
+entity "PriceListItem" as priceitem {
+  *id: UUID <<PK>>
+  --
+  *price_list_id: UUID <<FK>>
+  *service_code: VARCHAR(50)
+  *service_name: VARCHAR(255)
+  *service_type: ENUM [CONSULTATION, PROCEDURE, MEDICATION, LAB_TEST, ROOM_CHARGE, OTHER]
+  *price: DECIMAL(10,2)
+  *is_active: BOOLEAN
+  *created_at: TIMESTAMP
+  updated_at: TIMESTAMP
+  description: TEXT
+  notes: TEXT
+}
+
+entity "InsuranceCoverage" as coverage {
+  *id: UUID <<PK>>
+  --
+  *insurance_provider_id: UUID <<FK>>
+  *service_code: VARCHAR(50)
+  *service_name: VARCHAR(255)
+  *coverage_percentage: DECIMAL(5,2)
+  *max_coverage_amount: DECIMAL(10,2)
+  *requires_preauthorization: BOOLEAN
+  *is_active: BOOLEAN
+  *created_at: TIMESTAMP
+  updated_at: TIMESTAMP
+  notes: TEXT
+}
+
+' Relationships
+invoice ||--o{ item
+invoice ||--o{ payment
+invoice ||--o| claim
+provider ||--o{ claim
+provider ||--o{ coverage
+pricelist ||--o{ priceitem
+
+@enduml

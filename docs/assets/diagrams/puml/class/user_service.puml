@@ -1,0 +1,226 @@
+@startuml
+title Class Diagram - User Service
+
+package "Models" {
+  class User {
+    - id: UUID
+    - email: String
+    - first_name: String
+    - last_name: String
+    - password: String
+    - role: UserRole
+    - is_active: Boolean
+    - date_joined: DateTime
+    + get_full_name(): String
+    + check_password(password: String): Boolean
+    + set_password(password: String): void
+  }
+
+  class PatientProfile {
+    - id: UUID
+    - user: User
+    - date_of_birth: Date
+    - gender: Gender
+    - blood_type: BloodType
+    - height: Float
+    - weight: Float
+    - allergies: String
+    - emergency_contact_name: String
+    - emergency_contact_phone: String
+    + calculate_age(): Integer
+    + calculate_bmi(): Float
+  }
+
+  class DoctorProfile {
+    - id: UUID
+    - user: User
+    - specialty: String
+    - license_number: String
+    - years_of_experience: Integer
+    - education: String
+    - bio: String
+    + is_available(date: Date, time: Time): Boolean
+  }
+
+  class NurseProfile {
+    - id: UUID
+    - user: User
+    - license_number: String
+    - department: String
+    - years_of_experience: Integer
+  }
+
+  class PharmacistProfile {
+    - id: UUID
+    - user: User
+    - license_number: String
+    - years_of_experience: Integer
+  }
+
+  class LabTechProfile {
+    - id: UUID
+    - user: User
+    - license_number: String
+    - specialization: String
+    - years_of_experience: Integer
+  }
+
+  class Address {
+    - id: UUID
+    - user: User
+    - street: String
+    - city: String
+    - state: String
+    - postal_code: String
+    - country: String
+    - is_primary: Boolean
+    + get_full_address(): String
+  }
+
+  class UserActivity {
+    - id: UUID
+    - user: User
+    - activity_type: ActivityType
+    - timestamp: DateTime
+    - ip_address: String
+    - user_agent: String
+    - details: JSONField
+  }
+
+  enum UserRole {
+    ADMIN
+    DOCTOR
+    NURSE
+    PATIENT
+    PHARMACIST
+    LAB_TECH
+    INSURANCE
+  }
+
+  enum Gender {
+    MALE
+    FEMALE
+    OTHER
+  }
+
+  enum BloodType {
+    A_POSITIVE
+    A_NEGATIVE
+    B_POSITIVE
+    B_NEGATIVE
+    AB_POSITIVE
+    AB_NEGATIVE
+    O_POSITIVE
+    O_NEGATIVE
+  }
+
+  enum ActivityType {
+    LOGIN
+    LOGOUT
+    PASSWORD_CHANGE
+    PROFILE_UPDATE
+    FAILED_LOGIN
+  }
+}
+
+package "Serializers" {
+  class UserSerializer {
+    + fields: id, email, first_name, last_name, role, is_active, date_joined
+    + create(validated_data): User
+    + update(instance, validated_data): User
+  }
+
+  class PatientProfileSerializer {
+    + fields: id, user, date_of_birth, gender, blood_type, height, weight, allergies, emergency_contact_name, emergency_contact_phone
+    + create(validated_data): PatientProfile
+    + update(instance, validated_data): PatientProfile
+  }
+
+  class DoctorProfileSerializer {
+    + fields: id, user, specialty, license_number, years_of_experience, education, bio
+    + create(validated_data): DoctorProfile
+    + update(instance, validated_data): DoctorProfile
+  }
+}
+
+package "Views" {
+  class UserViewSet {
+    + list(): Response
+    + retrieve(pk): Response
+    + create(request): Response
+    + update(request, pk): Response
+    + partial_update(request, pk): Response
+    + destroy(pk): Response
+  }
+
+  class PatientViewSet {
+    + list(): Response
+    + retrieve(pk): Response
+    + create(request): Response
+    + update(request, pk): Response
+    + partial_update(request, pk): Response
+    + destroy(pk): Response
+  }
+
+  class DoctorViewSet {
+    + list(): Response
+    + retrieve(pk): Response
+    + create(request): Response
+    + update(request, pk): Response
+    + partial_update(request, pk): Response
+    + destroy(pk): Response
+    + get_available_slots(request, pk): Response
+  }
+
+  class AuthView {
+    + login(request): Response
+    + logout(request): Response
+    + refresh_token(request): Response
+    + change_password(request): Response
+    + reset_password(request): Response
+  }
+}
+
+package "Permissions" {
+  class IsAdmin {
+    + has_permission(request, view): Boolean
+  }
+
+  class IsDoctor {
+    + has_permission(request, view): Boolean
+  }
+
+  class IsPatient {
+    + has_permission(request, view): Boolean
+  }
+
+  class IsOwnerOrAdmin {
+    + has_object_permission(request, view, obj): Boolean
+  }
+}
+
+' Relationships
+User "1" -- "0..1" PatientProfile
+User "1" -- "0..1" DoctorProfile
+User "1" -- "0..1" NurseProfile
+User "1" -- "0..1" PharmacistProfile
+User "1" -- "0..1" LabTechProfile
+User "1" -- "*" Address
+User "1" -- "*" UserActivity
+
+UserSerializer ..> User
+PatientProfileSerializer ..> PatientProfile
+DoctorProfileSerializer ..> DoctorProfile
+
+UserViewSet ..> UserSerializer
+PatientViewSet ..> PatientProfileSerializer
+DoctorViewSet ..> DoctorProfileSerializer
+
+UserViewSet ..> IsAdmin
+UserViewSet ..> IsOwnerOrAdmin
+PatientViewSet ..> IsPatient
+PatientViewSet ..> IsOwnerOrAdmin
+DoctorViewSet ..> IsDoctor
+DoctorViewSet ..> IsOwnerOrAdmin
+
+@enduml

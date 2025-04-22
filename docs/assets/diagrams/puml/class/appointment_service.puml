@@ -1,0 +1,310 @@
+@startuml
+title Class Diagram - Appointment Service
+
+package "Models" {
+  class DoctorAvailability {
+    - id: UUID
+    - doctor_id: UUID
+    - day_of_week: Integer
+    - start_time: Time
+    - end_time: Time
+    - is_active: Boolean
+    - effective_from: Date
+    - effective_to: Date
+    - notes: String
+    + is_available(date: Date): Boolean
+    + get_available_slots(date: Date): List<TimeSlot>
+  }
+
+  class TimeSlot {
+    - id: UUID
+    - doctor_id: UUID
+    - date: Date
+    - start_time: Time
+    - end_time: Time
+    - status: SlotStatus
+    - created_at: DateTime
+    - updated_at: DateTime
+    - notes: String
+    + is_available(): Boolean
+    + book(): void
+    + cancel(): void
+    + block(): void
+  }
+
+  class Appointment {
+    - id: UUID
+    - patient_id: UUID
+    - doctor_id: UUID
+    - time_slot_id: UUID
+    - appointment_date: Date
+    - start_time: Time
+    - end_time: Time
+    - status: AppointmentStatus
+    - created_at: DateTime
+    - updated_at: DateTime
+    - cancelled_reason: String
+    - notes: String
+    + cancel(reason: String): void
+    + reschedule(new_slot: TimeSlot): void
+    + complete(): void
+    + no_show(): void
+    + get_reason(): AppointmentReason
+    + get_reminders(): List<AppointmentReminder>
+    + get_feedback(): AppointmentFeedback
+  }
+
+  class AppointmentReason {
+    - id: UUID
+    - appointment_id: UUID
+    - reason: String
+    - is_first_visit: Boolean
+    - symptoms: String
+    - duration: String
+  }
+
+  class AppointmentReminder {
+    - id: UUID
+    - appointment_id: UUID
+    - reminder_type: ReminderType
+    - scheduled_time: DateTime
+    - status: ReminderStatus
+    - sent_at: DateTime
+    - error_message: String
+    + send(): void
+    + mark_as_sent(): void
+    + mark_as_failed(error: String): void
+  }
+
+  class DoctorScheduleException {
+    - id: UUID
+    - doctor_id: UUID
+    - exception_date: Date
+    - start_time: Time
+    - end_time: Time
+    - exception_type: ExceptionType
+    - status: ExceptionStatus
+    - created_at: DateTime
+    - reason: String
+    + approve(): void
+    + reject(): void
+    + affects_slot(slot: TimeSlot): Boolean
+  }
+
+  class AppointmentFeedback {
+    - id: UUID
+    - appointment_id: UUID
+    - patient_id: UUID
+    - rating: Integer
+    - submitted_at: DateTime
+    - comments: String
+    - wait_time_rating: Integer
+    - doctor_rating: Integer
+    - staff_rating: Integer
+    - facility_rating: Integer
+    + calculate_average_rating(): Float
+  }
+
+  enum SlotStatus {
+    AVAILABLE
+    BOOKED
+    BLOCKED
+  }
+
+  enum AppointmentStatus {
+    SCHEDULED
+    CONFIRMED
+    CANCELLED
+    COMPLETED
+    NO_SHOW
+  }
+
+  enum ReminderType {
+    EMAIL
+    SMS
+    PUSH
+  }
+
+  enum ReminderStatus {
+    PENDING
+    SENT
+    FAILED
+  }
+
+  enum ExceptionType {
+    VACATION
+    SICK_LEAVE
+    CONFERENCE
+    OTHER
+  }
+
+  enum ExceptionStatus {
+    PENDING
+    APPROVED
+    REJECTED
+  }
+}
+
+package "Serializers" {
+  class DoctorAvailabilitySerializer {
+    + fields: id, doctor_id, day_of_week, start_time, end_time, is_active, effective_from, effective_to, notes
+    + create(validated_data): DoctorAvailability
+    + update(instance, validated_data): DoctorAvailability
+  }
+
+  class TimeSlotSerializer {
+    + fields: id, doctor_id, date, start_time, end_time, status, created_at, updated_at, notes
+    + create(validated_data): TimeSlot
+    + update(instance, validated_data): TimeSlot
+  }
+
+  class AppointmentSerializer {
+    + fields: id, patient_id, doctor_id, time_slot_id, appointment_date, start_time, end_time, status, created_at, updated_at, cancelled_reason, notes
+    + create(validated_data): Appointment
+    + update(instance, validated_data): Appointment
+  }
+
+  class AppointmentReasonSerializer {
+    + fields: id, appointment_id, reason, is_first_visit, symptoms, duration
+    + create(validated_data): AppointmentReason
+    + update(instance, validated_data): AppointmentReason
+  }
+}
+
+package "Views" {
+  class DoctorAvailabilityViewSet {
+    + list(): Response
+    + retrieve(pk): Response
+    + create(request): Response
+    + update(request, pk): Response
+    + partial_update(request, pk): Response
+    + destroy(pk): Response
+    + get_available_slots(request, pk): Response
+  }
+
+  class TimeSlotViewSet {
+    + list(): Response
+    + retrieve(pk): Response
+    + create(request): Response
+    + update(request, pk): Response
+    + partial_update(request, pk): Response
+    + destroy(pk): Response
+    + book(request, pk): Response
+    + cancel(request, pk): Response
+    + block(request, pk): Response
+  }
+
+  class AppointmentViewSet {
+    + list(): Response
+    + retrieve(pk): Response
+    + create(request): Response
+    + update(request, pk): Response
+    + partial_update(request, pk): Response
+    + destroy(pk): Response
+    + cancel(request, pk): Response
+    + reschedule(request, pk): Response
+    + complete(request, pk): Response
+    + no_show(request, pk): Response
+    + get_reason(request, pk): Response
+    + get_reminders(request, pk): Response
+    + get_feedback(request, pk): Response
+  }
+
+  class DoctorScheduleExceptionViewSet {
+    + list(): Response
+    + retrieve(pk): Response
+    + create(request): Response
+    + update(request, pk): Response
+    + partial_update(request, pk): Response
+    + destroy(pk): Response
+    + approve(request, pk): Response
+    + reject(request, pk): Response
+  }
+}
+
+package "Services" {
+  class AppointmentService {
+    + create_appointment(patient_id: UUID, doctor_id: UUID, time_slot_id: UUID, reason: String): Appointment
+    + cancel_appointment(appointment_id: UUID, reason: String): Appointment
+    + reschedule_appointment(appointment_id: UUID, new_slot_id: UUID): Appointment
+    + get_doctor_availability(doctor_id: UUID, date: Date): List<TimeSlot>
+    + get_patient_appointments(patient_id: UUID): List<Appointment>
+    + get_doctor_appointments(doctor_id: UUID): List<Appointment>
+    + create_reminder(appointment_id: UUID, reminder_type: ReminderType, scheduled_time: DateTime): AppointmentReminder
+  }
+
+  class NotificationService {
+    + send_appointment_confirmation(appointment: Appointment): void
+    + send_appointment_reminder(reminder: AppointmentReminder): void
+    + send_appointment_cancellation(appointment: Appointment): void
+    + send_appointment_reschedule(appointment: Appointment): void
+  }
+
+  class SchedulingService {
+    + generate_time_slots(doctor_id: UUID, date: Date): List<TimeSlot>
+    + apply_schedule_exceptions(doctor_id: UUID, date: Date, slots: List<TimeSlot>): List<TimeSlot>
+    + find_available_slots(doctor_id: UUID, date: Date): List<TimeSlot>
+    + find_next_available_slot(doctor_id: UUID): TimeSlot
+  }
+}
+
+package "Permissions" {
+  class IsDoctor {
+    + has_permission(request, view): Boolean
+  }
+
+  class IsPatient {
+    + has_permission(request, view): Boolean
+  }
+
+  class IsAdmin {
+    + has_permission(request, view): Boolean
+  }
+
+  class IsAppointmentOwner {
+    + has_object_permission(request, view, obj): Boolean
+  }
+
+  class IsDoctorOwner {
+    + has_object_permission(request, view, obj): Boolean
+  }
+}
+
+' Relationships
+DoctorAvailability "1" -- "*" TimeSlot
+TimeSlot "1" -- "0..1" Appointment
+Appointment "1" -- "0..1" AppointmentReason
+Appointment "1" -- "*" AppointmentReminder
+Appointment "1" -- "0..1" AppointmentFeedback
+DoctorScheduleException "1" -- "*" TimeSlot
+
+DoctorAvailabilitySerializer ..> DoctorAvailability
+TimeSlotSerializer ..> TimeSlot
+AppointmentSerializer ..> Appointment
+AppointmentReasonSerializer ..> AppointmentReason
+
+DoctorAvailabilityViewSet ..> DoctorAvailabilitySerializer
+TimeSlotViewSet ..> TimeSlotSerializer
+AppointmentViewSet ..> AppointmentSerializer
+DoctorScheduleExceptionViewSet ..> DoctorScheduleException
+
+AppointmentService ..> Appointment
+AppointmentService ..> TimeSlot
+AppointmentService ..> AppointmentReminder
+NotificationService ..> Appointment
+NotificationService ..> AppointmentReminder
+SchedulingService ..> TimeSlot
+SchedulingService ..> DoctorAvailability
+SchedulingService ..> DoctorScheduleException
+
+DoctorAvailabilityViewSet ..> IsDoctor
+DoctorAvailabilityViewSet ..> IsAdmin
+TimeSlotViewSet ..> IsDoctor
+TimeSlotViewSet ..> IsAdmin
+AppointmentViewSet ..> IsDoctor
+AppointmentViewSet ..> IsPatient
+AppointmentViewSet ..> IsAppointmentOwner
+DoctorScheduleExceptionViewSet ..> IsDoctor
+DoctorScheduleExceptionViewSet ..> IsDoctorOwner
+
+@enduml

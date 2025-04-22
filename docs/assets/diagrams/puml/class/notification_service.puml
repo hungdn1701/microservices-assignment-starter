@@ -1,0 +1,365 @@
+@startuml
+title Class Diagram - Notification Service
+
+package "Models" {
+  class NotificationTemplate {
+    - id: UUID
+    - name: String
+    - type: NotificationType
+    - subject: String
+    - body: String
+    - is_active: Boolean
+    - created_at: DateTime
+    - updated_at: DateTime
+    - variables: JSON
+    - language: String
+    - category: String
+    + render(context: Dict): Dict
+    + get_logs(): List<NotificationLog>
+  }
+
+  class NotificationLog {
+    - id: UUID
+    - recipient_id: UUID
+    - recipient_type: RecipientType
+    - notification_type: NotificationType
+    - template_id: UUID
+    - status: NotificationStatus
+    - created_at: DateTime
+    - sent_at: DateTime
+    - delivered_at: DateTime
+    - subject: String
+    - body: String
+    - error_message: String
+    - retry_count: Integer
+    - metadata: JSON
+    + get_template(): NotificationTemplate
+    + mark_as_sent(): void
+    + mark_as_delivered(): void
+    + mark_as_failed(error: String): void
+    + retry(): void
+  }
+
+  class NotificationPreference {
+    - id: UUID
+    - user_id: UUID
+    - notification_category: NotificationCategory
+    - email_enabled: Boolean
+    - sms_enabled: Boolean
+    - push_enabled: Boolean
+    - in_app_enabled: Boolean
+    - created_at: DateTime
+    - updated_at: DateTime
+    + is_enabled(type: NotificationType): Boolean
+    + update_preference(type: NotificationType, enabled: Boolean): void
+  }
+
+  class NotificationQueue {
+    - id: UUID
+    - recipient_id: UUID
+    - recipient_type: RecipientType
+    - notification_type: NotificationType
+    - template_id: UUID
+    - status: QueueStatus
+    - created_at: DateTime
+    - scheduled_at: DateTime
+    - processed_at: DateTime
+    - priority: NotificationPriority
+    - data: JSON
+    - retry_count: Integer
+    - max_retries: Integer
+    - error_message: String
+    + get_template(): NotificationTemplate
+    + process(): void
+    + mark_as_processed(): void
+    + mark_as_failed(error: String): void
+    + reschedule(): void
+  }
+
+  class DeviceToken {
+    - id: UUID
+    - user_id: UUID
+    - device_token: String
+    - device_type: DeviceType
+    - is_active: Boolean
+    - created_at: DateTime
+    - updated_at: DateTime
+    - last_used_at: DateTime
+    - app_version: String
+    - device_name: String
+    - os_version: String
+    + deactivate(): void
+    + update_last_used(): void
+  }
+
+  class WebSocketConnection {
+    - id: UUID
+    - user_id: UUID
+    - connection_id: String
+    - connected_at: DateTime
+    - status: ConnectionStatus
+    - created_at: DateTime
+    - updated_at: DateTime
+    - disconnected_at: DateTime
+    - client_info: JSON
+    - ip_address: String
+    + disconnect(): void
+    + is_connected(): Boolean
+  }
+
+  class InAppNotification {
+    - id: UUID
+    - user_id: UUID
+    - title: String
+    - message: String
+    - is_read: Boolean
+    - created_at: DateTime
+    - read_at: DateTime
+    - action_url: String
+    - notification_type: String
+    - source_id: UUID
+    - source_type: String
+    - metadata: JSON
+    + mark_as_read(): void
+    + get_action_data(): Dict
+  }
+
+  enum NotificationType {
+    EMAIL
+    SMS
+    PUSH
+    IN_APP
+  }
+
+  enum RecipientType {
+    PATIENT
+    DOCTOR
+    NURSE
+    ADMIN
+    PHARMACIST
+    LAB_TECH
+  }
+
+  enum NotificationStatus {
+    PENDING
+    SENT
+    DELIVERED
+    FAILED
+  }
+
+  enum NotificationCategory {
+    APPOINTMENT
+    MEDICATION
+    LAB_RESULT
+    BILLING
+    SYSTEM
+  }
+
+  enum QueueStatus {
+    QUEUED
+    PROCESSING
+    COMPLETED
+    FAILED
+  }
+
+  enum NotificationPriority {
+    LOW
+    NORMAL
+    HIGH
+    URGENT
+  }
+
+  enum DeviceType {
+    IOS
+    ANDROID
+    WEB
+  }
+
+  enum ConnectionStatus {
+    CONNECTED
+    DISCONNECTED
+  }
+}
+
+package "Serializers" {
+  class NotificationTemplateSerializer {
+    + fields: id, name, type, subject, body, is_active, variables, language, category
+    + create(validated_data): NotificationTemplate
+    + update(instance, validated_data): NotificationTemplate
+  }
+
+  class NotificationLogSerializer {
+    + fields: id, recipient_id, recipient_type, notification_type, template_id, status, created_at, sent_at, delivered_at, subject, body, error_message, retry_count, metadata
+    + create(validated_data): NotificationLog
+    + update(instance, validated_data): NotificationLog
+  }
+
+  class NotificationPreferenceSerializer {
+    + fields: id, user_id, notification_category, email_enabled, sms_enabled, push_enabled, in_app_enabled
+    + create(validated_data): NotificationPreference
+    + update(instance, validated_data): NotificationPreference
+  }
+
+  class InAppNotificationSerializer {
+    + fields: id, user_id, title, message, is_read, created_at, read_at, action_url, notification_type, source_id, source_type, metadata
+    + create(validated_data): InAppNotification
+    + update(instance, validated_data): InAppNotification
+  }
+}
+
+package "Views" {
+  class NotificationTemplateViewSet {
+    + list(): Response
+    + retrieve(pk): Response
+    + create(request): Response
+    + update(request, pk): Response
+    + partial_update(request, pk): Response
+    + destroy(pk): Response
+    + render_preview(request, pk): Response
+  }
+
+  class NotificationLogViewSet {
+    + list(): Response
+    + retrieve(pk): Response
+    + create(request): Response
+    + update(request, pk): Response
+    + partial_update(request, pk): Response
+    + destroy(pk): Response
+    + retry(request, pk): Response
+  }
+
+  class NotificationPreferenceViewSet {
+    + list(): Response
+    + retrieve(pk): Response
+    + create(request): Response
+    + update(request, pk): Response
+    + partial_update(request, pk): Response
+    + destroy(pk): Response
+    + update_preference(request, pk): Response
+  }
+
+  class DeviceTokenViewSet {
+    + list(): Response
+    + retrieve(pk): Response
+    + create(request): Response
+    + update(request, pk): Response
+    + partial_update(request, pk): Response
+    + destroy(pk): Response
+    + deactivate(request, pk): Response
+  }
+
+  class InAppNotificationViewSet {
+    + list(): Response
+    + retrieve(pk): Response
+    + create(request): Response
+    + update(request, pk): Response
+    + partial_update(request, pk): Response
+    + destroy(pk): Response
+    + mark_as_read(request, pk): Response
+    + mark_all_as_read(request): Response
+  }
+}
+
+package "Services" {
+  class NotificationService {
+    + send_notification(recipient_id: UUID, recipient_type: RecipientType, template_name: String, context: Dict, notification_types: List<NotificationType>): Dict
+    + send_email(recipient_email: String, subject: String, body: String): void
+    + send_sms(recipient_phone: String, message: String): void
+    + send_push(device_token: String, title: String, body: String, data: Dict): void
+    + create_in_app_notification(user_id: UUID, title: String, message: String, action_url: String): InAppNotification
+    + queue_notification(recipient_id: UUID, template_id: UUID, data: Dict, scheduled_at: DateTime, priority: NotificationPriority): NotificationQueue
+    + process_queue(): void
+    + check_user_preferences(user_id: UUID, category: NotificationCategory): Dict
+  }
+
+  class WebSocketService {
+    + connect(user_id: UUID, connection_id: String, client_info: Dict): WebSocketConnection
+    + disconnect(connection_id: String): void
+    + send_message(user_id: UUID, message: Dict): void
+    + broadcast_message(user_ids: List<UUID>, message: Dict): void
+    + get_active_connections(user_id: UUID): List<WebSocketConnection>
+  }
+
+  class TemplateService {
+    + render_template(template_id: UUID, context: Dict): Dict
+    + create_template(name: String, type: NotificationType, subject: String, body: String, variables: List<String>): NotificationTemplate
+    + update_template(template_id: UUID, subject: String, body: String): NotificationTemplate
+    + get_template_by_name(name: String): NotificationTemplate
+    + validate_template_variables(template_id: UUID, context: Dict): Boolean
+  }
+
+  class PreferenceService {
+    + get_user_preferences(user_id: UUID): Dict
+    + update_user_preferences(user_id: UUID, category: NotificationCategory, preferences: Dict): NotificationPreference
+    + create_default_preferences(user_id: UUID): List<NotificationPreference>
+    + is_notification_enabled(user_id: UUID, category: NotificationCategory, type: NotificationType): Boolean
+  }
+}
+
+package "Consumers" {
+  class NotificationConsumer {
+    + connect(): void
+    + disconnect(): void
+    + receive_json(content): void
+    + notification_message(event): void
+  }
+
+  class NotificationWorker {
+    + process_notification_queue(): void
+    + send_scheduled_notifications(): void
+    + retry_failed_notifications(): void
+    + clean_old_notifications(): void
+  }
+}
+
+package "Permissions" {
+  class IsAdmin {
+    + has_permission(request, view): Boolean
+  }
+
+  class IsOwner {
+    + has_object_permission(request, view, obj): Boolean
+  }
+
+  class IsRecipient {
+    + has_object_permission(request, view, obj): Boolean
+  }
+}
+
+' Relationships
+NotificationTemplate "1" -- "*" NotificationLog
+NotificationTemplate "1" -- "*" NotificationQueue
+NotificationQueue "1" -- "0..1" NotificationLog
+
+NotificationTemplateSerializer ..> NotificationTemplate
+NotificationLogSerializer ..> NotificationLog
+NotificationPreferenceSerializer ..> NotificationPreference
+InAppNotificationSerializer ..> InAppNotification
+
+NotificationTemplateViewSet ..> NotificationTemplateSerializer
+NotificationLogViewSet ..> NotificationLogSerializer
+NotificationPreferenceViewSet ..> NotificationPreferenceSerializer
+DeviceTokenViewSet ..> DeviceToken
+InAppNotificationViewSet ..> InAppNotificationSerializer
+
+NotificationService ..> NotificationTemplate
+NotificationService ..> NotificationLog
+NotificationService ..> NotificationQueue
+NotificationService ..> InAppNotification
+NotificationService ..> NotificationPreference
+WebSocketService ..> WebSocketConnection
+TemplateService ..> NotificationTemplate
+PreferenceService ..> NotificationPreference
+
+NotificationConsumer ..> WebSocketService
+NotificationConsumer ..> NotificationService
+NotificationWorker ..> NotificationQueue
+NotificationWorker ..> NotificationService
+
+NotificationTemplateViewSet ..> IsAdmin
+NotificationLogViewSet ..> IsAdmin
+NotificationPreferenceViewSet ..> IsOwner
+DeviceTokenViewSet ..> IsOwner
+InAppNotificationViewSet ..> IsRecipient
+
+@enduml

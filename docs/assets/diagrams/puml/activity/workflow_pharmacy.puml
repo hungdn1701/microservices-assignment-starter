@@ -1,0 +1,42 @@
+@startuml
+title Quy trình dược sĩ cấp phát thuốc
+
+|Dược sĩ|
+start
+:Nhận đơn thuốc từ hệ thống;
+:Kiểm tra tính hợp lệ của đơn thuốc;
+
+if (Đơn thuốc hợp lệ?) then (Có)
+  :Kiểm tra tồn kho thuốc;
+  
+  if (Đủ thuốc?) then (Có)
+    :Chuẩn bị thuốc theo đơn;
+    :Cập nhật trạng thái đơn thuốc;
+    
+    |Hệ thống|
+    :Gửi thông báo cho bệnh nhân;
+    
+    |Bệnh nhân|
+    :Đến nhận thuốc;
+    
+    |Dược sĩ|
+    :Hướng dẫn sử dụng thuốc;
+    :Bàn giao thuốc cho bệnh nhân;
+    
+    |Hệ thống|
+    :Cập nhật tồn kho;
+    :Cập nhật trạng thái đơn thuốc thành "Đã cấp phát";
+  else (Không)
+    :Đặt thêm thuốc;
+    :Thông báo cho bệnh nhân về thời gian nhận thuốc;
+  endif
+else (Không)
+  :Liên hệ với bác sĩ để làm rõ;
+  :Chỉnh sửa đơn thuốc nếu cần;
+endif
+
+|Bệnh nhân|
+:Nhận thuốc và hướng dẫn sử dụng;
+stop
+
+@enduml

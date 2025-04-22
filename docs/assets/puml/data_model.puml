@@ -1,0 +1,73 @@
+@startuml
+title Mô hình dữ liệu - User Service
+
+entity "User" as user {
+  *id: UUID <<PK>>
+  --
+  *email: string
+  *first_name: string
+  *last_name: string
+  *role: enum
+  *is_active: boolean
+  *date_joined: datetime
+}
+
+entity "PatientProfile" as patient {
+  *id: UUID <<PK>>
+  --
+  *user_id: UUID <<FK>>
+  *date_of_birth: date
+  *gender: enum
+  *blood_type: enum
+  *height: float
+  *weight: float
+}
+
+entity "DoctorProfile" as doctor {
+  *id: UUID <<PK>>
+  --
+  *user_id: UUID <<FK>>
+  *specialty: string
+  *license_number: string
+  *years_of_experience: integer
+}
+
+entity "Address" as address {
+  *id: UUID <<PK>>
+  --
+  *user_id: UUID <<FK>>
+  *street: string
+  *city: string
+  *state: string
+  *postal_code: string
+  *country: string
+  *is_primary: boolean
+}
+
+entity "ContactInfo" as contact {
+  *id: UUID <<PK>>
+  --
+  *user_id: UUID <<FK>>
+  *type: enum
+  *value: string
+  *is_primary: boolean
+}
+
+entity "UserDocument" as document {
+  *id: UUID <<PK>>
+  --
+  *user_id: UUID <<FK>>
+  *type: enum
+  *document_number: string
+  *issue_date: date
+  *expiry_date: date
+  *is_verified: boolean
+}
+
+user ||--o{ address
+user ||--o{ contact
+user ||--o{ document
+user ||--o| patient
+user ||--o| doctor
+
+@enduml

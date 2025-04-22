@@ -1,0 +1,46 @@
+@startuml
+title Quy trình chẩn đoán và kê đơn điều trị
+
+|Bác sĩ|
+start
+:Đăng nhập vào hệ thống;
+:Xem danh sách lịch hẹn;
+:Chọn bệnh nhân;
+
+|Hệ thống|
+:Hiển thị hồ sơ y tế của bệnh nhân;
+
+|Bác sĩ|
+:Khám và ghi nhận triệu chứng;
+:Chẩn đoán bệnh;
+:Nhập chẩn đoán vào hệ thống;
+
+|Bác sĩ|
+if (Cần xét nghiệm?) then (Có)
+  :Yêu cầu xét nghiệm;
+  
+  |Hệ thống|
+  :Tạo yêu cầu xét nghiệm;
+  :Thông báo cho kỹ thuật viên;
+else (Không)
+endif
+
+|Bác sĩ|
+if (Cần kê đơn thuốc?) then (Có)
+  :Kê đơn thuốc;
+  
+  |Hệ thống|
+  :Tạo đơn thuốc mới;
+  :Gửi đơn thuốc đến dược sĩ;
+else (Không)
+endif
+
+|Hệ thống|
+:Cập nhật hồ sơ y tế;
+:Gửi thông báo cho bệnh nhân;
+
+|Bệnh nhân|
+:Nhận thông báo;
+stop
+
+@enduml

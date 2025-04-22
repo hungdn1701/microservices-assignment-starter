@@ -1,0 +1,479 @@
+@startuml
+' Healthcare System - Overall Class Diagram
+' Compatible with Visual Paradigm
+
+' Style settings
+skinparam classAttributeIconSize 0
+skinparam classFontStyle bold
+skinparam classFontSize 14
+skinparam classBackgroundColor #E3F2FD
+skinparam classBorderColor #1976D2
+skinparam classArrowColor #1976D2
+skinparam packageBackgroundColor #F5F5F5
+skinparam packageBorderColor #9E9E9E
+skinparam packageFontStyle bold
+skinparam packageFontSize 16
+skinparam packageFontColor #616161
+skinparam stereotypeFontSize 12
+skinparam stereotypeFontStyle italic
+skinparam stereotypeFontColor #757575
+
+' Package definitions
+package "User Management" {
+  class User {
+    -id: UUID
+    -email: String
+    -password: String
+    -firstName: String
+    -lastName: String
+    -role: UserRole
+    -isActive: Boolean
+    -dateJoined: DateTime
+    +authenticate(): Boolean
+    +getProfile(): Profile
+  }
+  
+  abstract class Profile {
+    -id: UUID
+    -userId: UUID
+    -createdAt: DateTime
+    -updatedAt: DateTime
+  }
+  
+  class PatientProfile {
+    -dateOfBirth: Date
+    -gender: Gender
+    -bloodType: BloodType
+    -allergies: String[]
+    -emergencyContact: Contact
+    +getMedicalRecord(): MedicalRecord
+  }
+  
+  class DoctorProfile {
+    -specialty: String
+    -licenseNumber: String
+    -yearsOfExperience: Integer
+    -education: String
+    -bio: String
+    +getAvailability(): Availability[]
+    +getAppointments(): Appointment[]
+  }
+  
+  class NurseProfile {
+    -licenseNumber: String
+    -department: String
+    -yearsOfExperience: Integer
+  }
+  
+  class PharmacistProfile {
+    -licenseNumber: String
+    -yearsOfExperience: Integer
+  }
+  
+  class LabTechProfile {
+    -licenseNumber: String
+    -specialization: String
+    -yearsOfExperience: Integer
+  }
+  
+  enum UserRole {
+    ADMIN
+    DOCTOR
+    NURSE
+    PATIENT
+    PHARMACIST
+    LAB_TECH
+    INSURANCE
+  }
+  
+  User "1" -- "0..1" Profile
+  Profile <|-- PatientProfile
+  Profile <|-- DoctorProfile
+  Profile <|-- NurseProfile
+  Profile <|-- PharmacistProfile
+  Profile <|-- LabTechProfile
+}
+
+package "Medical Records" {
+  class MedicalRecord {
+    -id: UUID
+    -patientId: UUID
+    -status: RecordStatus
+    -createdAt: DateTime
+    -updatedAt: DateTime
+    +getEncounters(): Encounter[]
+    +getAllergies(): Allergy[]
+    +getMedications(): Medication[]
+    +getLabTests(): LabTest[]
+  }
+  
+  class Encounter {
+    -id: UUID
+    -medicalRecordId: UUID
+    -doctorId: UUID
+    -date: DateTime
+    -type: EncounterType
+    -reason: String
+    -status: EncounterStatus
+    -notes: String
+    +getDiagnoses(): Diagnosis[]
+    +getVitalSigns(): VitalSign[]
+  }
+  
+  class Diagnosis {
+    -id: UUID
+    -encounterId: UUID
+    -code: String
+    -name: String
+    -diagnosedBy: UUID
+    -diagnosisDate: DateTime
+    -severity: SeverityLevel
+    -notes: String
+    +getTreatments(): Treatment[]
+  }
+  
+  class Treatment {
+    -id: UUID
+    -diagnosisId: UUID
+    -type: TreatmentType
+    -name: String
+    -prescribedBy: UUID
+    -startDate: Date
+    -endDate: Date
+    -instructions: String
+  }
+  
+  MedicalRecord "1" -- "*" Encounter
+  Encounter "1" -- "*" Diagnosis
+  Diagnosis "1" -- "*" Treatment
+}
+
+package "Appointments" {
+  class Availability {
+    -id: UUID
+    -doctorId: UUID
+    -dayOfWeek: Integer
+    -startTime: Time
+    -endTime: Time
+    -isActive: Boolean
+    +generateTimeSlots(date: Date): TimeSlot[]
+  }
+  
+  class TimeSlot {
+    -id: UUID
+    -doctorId: UUID
+    -date: Date
+    -startTime: Time
+    -endTime: Time
+    -status: SlotStatus
+    +isAvailable(): Boolean
+    +book(): Appointment
+  }
+  
+  class Appointment {
+    -id: UUID
+    -patientId: UUID
+    -doctorId: UUID
+    -timeSlotId: UUID
+    -date: Date
+    -startTime: Time
+    -endTime: Time
+    -status: AppointmentStatus
+    -reason: String
+    +cancel(reason: String): void
+    +reschedule(newSlot: TimeSlot): void
+    +complete(): void
+    +getReminders(): Reminder[]
+  }
+  
+  class Reminder {
+    -id: UUID
+    -appointmentId: UUID
+    -type: ReminderType
+    -scheduledTime: DateTime
+    -status: ReminderStatus
+    -sentAt: DateTime
+    +send(): void
+  }
+  
+  Availability "1" -- "*" TimeSlot
+  TimeSlot "1" -- "0..1" Appointment
+  Appointment "1" -- "*" Reminder
+}
+
+package "Pharmacy" {
+  class Medication {
+    -id: UUID
+    -name: String
+    -genericName: String
+    -type: MedicationType
+    -strength: String
+    -manufacturer: String
+    -requiresPrescription: Boolean
+    -description: String
+    -sideEffects: String
+    +getInventory(): Inventory[]
+  }
+  
+  class Prescription {
+    -id: UUID
+    -patientId: UUID
+    -doctorId: UUID
+    -date: Date
+    -status: PrescriptionStatus
+    -expiryDate: Date
+    -isRefillable: Boolean
+    -refillsRemaining: Integer
+    +getItems(): PrescriptionItem[]
+    +dispense(): Dispensing
+  }
+  
+  class PrescriptionItem {
+    -id: UUID
+    -prescriptionId: UUID
+    -medicationId: UUID
+    -dosage: String
+    -frequency: String
+    -duration: String
+    -quantity: Integer
+    -instructions: String
+  }
+  
+  class Inventory {
+    -id: UUID
+    -medicationId: UUID
+    -batchNumber: String
+    -quantity: Integer
+    -expiryDate: Date
+    -status: InventoryStatus
+    +updateQuantity(amount: Integer): void
+  }
+  
+  class Dispensing {
+    -id: UUID
+    -prescriptionId: UUID
+    -pharmacistId: UUID
+    -dispensedDate: DateTime
+    -status: DispensingStatus
+    +getItems(): DispensingItem[]
+  }
+  
+  Prescription "1" -- "*" PrescriptionItem
+  PrescriptionItem "*" -- "1" Medication
+  Medication "1" -- "*" Inventory
+  Prescription "1" -- "0..1" Dispensing
+}
+
+package "Laboratory" {
+  class LabTest {
+    -id: UUID
+    -patientId: UUID
+    -doctorId: UUID
+    -testTypeId: UUID
+    -orderedDate: DateTime
+    -status: LabTestStatus
+    -priority: TestPriority
+    -dueDate: Date
+    -notes: String
+    +getSample(): Sample
+    +getResult(): TestResult
+  }
+  
+  class TestType {
+    -id: UUID
+    -name: String
+    -code: String
+    -sampleType: SampleType
+    -turnaroundTime: Integer
+    -price: Decimal
+    +getParameters(): TestParameter[]
+  }
+  
+  class Sample {
+    -id: UUID
+    -labTestId: UUID
+    -collectedBy: UUID
+    -collectedAt: DateTime
+    -sampleId: String
+    -status: SampleStatus
+    +process(): void
+  }
+  
+  class TestResult {
+    -id: UUID
+    -labTestId: UUID
+    -performedBy: UUID
+    -verifiedBy: UUID
+    -resultDate: DateTime
+    -status: ResultStatus
+    -isAbnormal: Boolean
+    +getParameterResults(): ParameterResult[]
+    +generateReport(): String
+  }
+  
+  LabTest "1" -- "1" TestType
+  LabTest "1" -- "0..1" Sample
+  LabTest "1" -- "0..1" TestResult
+}
+
+package "Billing" {
+  class Invoice {
+    -id: UUID
+    -patientId: UUID
+    -invoiceNumber: String
+    -invoiceDate: Date
+    -dueDate: Date
+    -totalAmount: Decimal
+    -paidAmount: Decimal
+    -status: InvoiceStatus
+    +getItems(): InvoiceItem[]
+    +getPayments(): Payment[]
+    +getInsuranceClaim(): InsuranceClaim
+    +calculateBalance(): Decimal
+  }
+  
+  class InvoiceItem {
+    -id: UUID
+    -invoiceId: UUID
+    -itemType: ItemType
+    -description: String
+    -quantity: Integer
+    -unitPrice: Decimal
+    -totalPrice: Decimal
+    -serviceId: UUID
+    -serviceDate: Date
+  }
+  
+  class Payment {
+    -id: UUID
+    -invoiceId: UUID
+    -paymentNumber: String
+    -paymentDate: Date
+    -amount: Decimal
+    -method: PaymentMethod
+    -status: PaymentStatus
+    -transactionId: String
+  }
+  
+  class InsuranceClaim {
+    -id: UUID
+    -invoiceId: UUID
+    -patientId: UUID
+    -providerId: UUID
+    -claimNumber: String
+    -submissionDate: Date
+    -status: ClaimStatus
+    -claimAmount: Decimal
+    -approvedAmount: Decimal
+    +submit(): void
+    +approve(amount: Decimal): void
+    +reject(reason: String): void
+  }
+  
+  Invoice "1" -- "*" InvoiceItem
+  Invoice "1" -- "*" Payment
+  Invoice "1" -- "0..1" InsuranceClaim
+}
+
+package "Notifications" {
+  class Notification {
+    -id: UUID
+    -recipientId: UUID
+    -recipientType: RecipientType
+    -type: NotificationType
+    -title: String
+    -message: String
+    -status: NotificationStatus
+    -createdAt: DateTime
+    -sentAt: DateTime
+    -metadata: JSON
+    +send(): void
+    +markAsRead(): void
+  }
+  
+  class NotificationTemplate {
+    -id: UUID
+    -name: String
+    -type: NotificationType
+    -subject: String
+    -body: String
+    -variables: String[]
+    +render(context: JSON): String
+  }
+  
+  class NotificationPreference {
+    -id: UUID
+    -userId: UUID
+    -category: NotificationCategory
+    -emailEnabled: Boolean
+    -smsEnabled: Boolean
+    -pushEnabled: Boolean
+    -inAppEnabled: Boolean
+    +isEnabled(type: NotificationType): Boolean
+  }
+  
+  Notification "*" -- "1" NotificationTemplate
+  NotificationPreference "1" -- "*" Notification
+}
+
+package "AI ChatBot" {
+  class Conversation {
+    -id: UUID
+    -userId: UUID
+    -startedAt: DateTime
+    -endedAt: DateTime
+    -type: ConversationType
+    -status: ConversationStatus
+    +getMessages(): Message[]
+    +addMessage(content: String, sender: MessageSender): Message
+  }
+  
+  class Message {
+    -id: UUID
+    -conversationId: UUID
+    -content: String
+    -sender: MessageSender
+    -timestamp: DateTime
+    -isRead: Boolean
+    +getAttachments(): Attachment[]
+  }
+  
+  class AIInteraction {
+    -id: UUID
+    -messageId: UUID
+    -prompt: String
+    -response: String
+    -model: String
+    -timestamp: DateTime
+    -processingTime: Integer
+  }
+  
+  class Attachment {
+    -id: UUID
+    -messageId: UUID
+    -fileName: String
+    -fileType: String
+    -fileSize: Integer
+    -filePath: String
+    -uploadedAt: DateTime
+  }
+  
+  Conversation "1" -- "*" Message
+  Message "1" -- "0..1" AIInteraction
+  Message "1" -- "*" Attachment
+}
+
+' Cross-package relationships
+PatientProfile "1" -- "1" MedicalRecord
+DoctorProfile "1" -- "*" Availability
+PatientProfile "1" -- "*" Appointment
+DoctorProfile "1" -- "*" Appointment
+PatientProfile "1" -- "*" Prescription
+DoctorProfile "1" -- "*" Prescription
+PatientProfile "1" -- "*" LabTest
+DoctorProfile "1" -- "*" LabTest
+PatientProfile "1" -- "*" Invoice
+User "1" -- "*" Notification
+User "1" -- "*" Conversation
+
+@enduml

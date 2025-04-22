@@ -1,0 +1,80 @@
+@startuml
+title AI ChatBot Service - Mô hình dữ liệu
+
+entity "Conversation" as conv {
+  *id: UUID <<PK>>
+  --
+  *type: enum [AI, DIRECT]
+  *created_at: datetime
+  *updated_at: datetime
+  *status: enum [ACTIVE, CLOSED, ARCHIVED]
+  title: string
+  metadata: jsonb
+}
+
+entity "ChatParticipant" as part {
+  *id: UUID <<PK>>
+  --
+  *conversation_id: UUID <<FK>>
+  *user_id: UUID <<FK>>
+  *role: enum [PATIENT, DOCTOR, AI]
+  *joined_at: datetime
+  left_at: datetime
+}
+
+entity "Message" as msg {
+  *id: UUID <<PK>>
+  --
+  *conversation_id: UUID <<FK>>
+  *sender_id: UUID <<FK>>
+  *content: text
+  *sent_at: datetime
+  delivered_at: datetime
+  read_at: datetime
+  *message_type: enum [TEXT, FILE, IMAGE, SYSTEM]
+  is_encrypted: boolean
+  metadata: jsonb
+}
+
+entity "AIInteraction" as ai {
+  *id: UUID <<PK>>
+  --
+  *message_id: UUID <<FK>>
+  *prompt: text
+  *response: text
+  *model: string
+  *tokens_used: integer
+  *created_at: datetime
+  response_time_ms: integer
+  metadata: jsonb
+}
+
+entity "MessageAttachment" as attach {
+  *id: UUID <<PK>>
+  --
+  *message_id: UUID <<FK>>
+  *file_name: string
+  *file_type: string
+  *file_size: integer
+  *storage_path: string
+  *uploaded_at: datetime
+  is_image: boolean
+  thumbnail_path: string
+}
+
+entity "ConversationReference" as ref {
+  *id: UUID <<PK>>
+  --
+  *conversation_id: UUID <<FK>>
+  *reference_type: enum [MEDICAL_RECORD, APPOINTMENT, PRESCRIPTION]
+  *reference_id: UUID
+  *created_at: datetime
+}
+
+conv ||--o{ part : "has participants"
+conv ||--o{ msg : "contains"
+msg ||--o| ai : "may have"
+msg ||--o{ attach : "may have"
+conv ||--o{ ref : "may reference"
+
+@enduml

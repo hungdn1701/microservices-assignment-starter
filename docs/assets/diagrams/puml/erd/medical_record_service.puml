@@ -1,0 +1,161 @@
+@startuml
+title Entity Relationship Diagram - Medical Record Service
+
+' Entities
+entity "MedicalRecord" as record {
+  *id: UUID <<PK>>
+  --
+  *patient_id: UUID <<FK>>
+  *created_at: TIMESTAMP
+  *updated_at: TIMESTAMP
+  *status: ENUM
+  notes: TEXT
+}
+
+entity "Encounter" as encounter {
+  *id: UUID <<PK>>
+  --
+  *medical_record_id: UUID <<FK>>
+  *doctor_id: UUID <<FK>>
+  *encounter_date: TIMESTAMP
+  *encounter_type: ENUM
+  *reason: VARCHAR(255)
+  *status: ENUM
+  notes: TEXT
+}
+
+entity "Diagnosis" as diagnosis {
+  *id: UUID <<PK>>
+  --
+  *encounter_id: UUID <<FK>>
+  *diagnosis_code: VARCHAR(20)
+  *diagnosis_name: VARCHAR(255)
+  *diagnosis_date: TIMESTAMP
+  *diagnosed_by: UUID <<FK>>
+  severity: ENUM
+  notes: TEXT
+}
+
+entity "Treatment" as treatment {
+  *id: UUID <<PK>>
+  --
+  *diagnosis_id: UUID <<FK>>
+  *treatment_type: ENUM
+  *treatment_name: VARCHAR(255)
+  *prescribed_by: UUID <<FK>>
+  *start_date: DATE
+  end_date: DATE
+  dosage: VARCHAR(100)
+  frequency: VARCHAR(100)
+  notes: TEXT
+}
+
+entity "Allergy" as allergy {
+  *id: UUID <<PK>>
+  --
+  *medical_record_id: UUID <<FK>>
+  *allergen: VARCHAR(255)
+  *reaction: VARCHAR(255)
+  *severity: ENUM
+  *diagnosed_date: DATE
+  notes: TEXT
+}
+
+entity "Immunization" as immunization {
+  *id: UUID <<PK>>
+  --
+  *medical_record_id: UUID <<FK>>
+  *vaccine_name: VARCHAR(255)
+  *administered_date: DATE
+  *administered_by: UUID <<FK>>
+  *dose_number: INTEGER
+  *lot_number: VARCHAR(50)
+  expiration_date: DATE
+  notes: TEXT
+}
+
+entity "MedicalHistory" as history {
+  *id: UUID <<PK>>
+  --
+  *medical_record_id: UUID <<FK>>
+  *condition: VARCHAR(255)
+  *diagnosed_date: DATE
+  *status: ENUM
+  treatment: TEXT
+  notes: TEXT
+}
+
+entity "Medication" as medication {
+  *id: UUID <<PK>>
+  --
+  *medical_record_id: UUID <<FK>>
+  *name: VARCHAR(255)
+  *dosage: VARCHAR(100)
+  *frequency: VARCHAR(100)
+  *prescribed_by: UUID <<FK>>
+  *prescribed_date: DATE
+  start_date: DATE
+  end_date: DATE
+  is_current: BOOLEAN
+  notes: TEXT
+}
+
+entity "VitalSign" as vital {
+  *id: UUID <<PK>>
+  --
+  *encounter_id: UUID <<FK>>
+  *recorded_at: TIMESTAMP
+  *recorded_by: UUID <<FK>>
+  temperature: FLOAT
+  heart_rate: INTEGER
+  respiratory_rate: INTEGER
+  blood_pressure_systolic: INTEGER
+  blood_pressure_diastolic: INTEGER
+  oxygen_saturation: FLOAT
+  height: FLOAT
+  weight: FLOAT
+  notes: TEXT
+}
+
+entity "LabTest" as labtest {
+  *id: UUID <<PK>>
+  --
+  *medical_record_id: UUID <<FK>>
+  *test_type: VARCHAR(255)
+  *ordered_by: UUID <<FK>>
+  *ordered_date: TIMESTAMP
+  *status: ENUM
+  performed_date: TIMESTAMP
+  performed_by: UUID <<FK>>
+  notes: TEXT
+}
+
+entity "LabResult" as labresult {
+  *id: UUID <<PK>>
+  --
+  *lab_test_id: UUID <<FK>>
+  *result_date: TIMESTAMP
+  *result_value: TEXT
+  *result_unit: VARCHAR(50)
+  *reference_range: VARCHAR(100)
+  *is_abnormal: BOOLEAN
+  *interpreted_by: UUID <<FK>>
+  notes: TEXT
+}
+
+' Relationships
+record ||--o{ encounter
+record ||--o{ allergy
+record ||--o{ immunization
+record ||--o{ history
+record ||--o{ medication
+record ||--o{ labtest
+
+encounter ||--o{ diagnosis
+encounter ||--o{ vital
+
+diagnosis ||--o{ treatment
+
+labtest ||--o| labresult
+
+@enduml

@@ -1,0 +1,47 @@
+@startuml
+title AI ChatBot Service - Kiến trúc
+
+actor "Bệnh nhân" as Patient
+actor "Bác sĩ" as Doctor
+participant "Frontend\n(React)" as FE
+participant "API Gateway\n(Node.js)" as API
+participant "AI ChatBot Service\n(Django/Channels)" as CHAT
+participant "OpenAI API" as OPENAI
+participant "Notification Service" as NS
+participant "Medical Record Service" as MR
+participant "User Service" as US
+database "PostgreSQL" as DB
+queue "Redis" as RD
+
+' Luồng AI Assistant
+Patient -> FE: Gửi tin nhắn đến AI Assistant
+FE -> API: POST /api/chat/ai/message
+API -> CHAT: Chuyển tiếp yêu cầu
+CHAT -> US: Xác thực người dùng
+US --> CHAT: Xác nhận người dùng
+CHAT -> CHAT: Xử lý và lọc nội dung
+CHAT -> OPENAI: Gửi prompt đến OpenAI API
+OPENAI --> CHAT: Trả về phản hồi
+CHAT -> DB: Lưu tương tác
+CHAT -> RD: Đẩy phản hồi vào kênh WebSocket
+RD --> FE: Gửi phản hồi qua WebSocket
+FE --> Patient: Hiển thị phản hồi
+
+' Luồng Patient-Doctor Chat
+Patient -> FE: Gửi tin nhắn đến bác sĩ
+FE -> RD: Gửi tin nhắn qua WebSocket
+RD -> CHAT: Nhận tin nhắn
+CHAT -> US: Kiểm tra mối quan hệ bệnh nhân-bác sĩ
+US --> CHAT: Xác nhận mối quan hệ
+CHAT -> DB: Lưu tin nhắn
+CHAT -> RD: Đẩy tin nhắn đến kênh của bác sĩ
+CHAT -> NS: Gửi thông báo nếu bác sĩ offline
+NS -> Doctor: Gửi email/SMS thông báo
+RD --> FE: Gửi tin nhắn đến bác sĩ
+FE --> Doctor: Hiển thị tin nhắn
+
+' Lưu trữ chat vào hồ sơ y tế
+CHAT -> MR: Đồng bộ lịch sử chat vào hồ sơ y tế
+MR -> DB: Lưu tham chiếu đến chat trong hồ sơ
+
+@enduml

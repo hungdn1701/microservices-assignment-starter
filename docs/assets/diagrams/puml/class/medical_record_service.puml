@@ -1,0 +1,332 @@
+@startuml
+title Class Diagram - Medical Record Service
+
+package "Models" {
+  class MedicalRecord {
+    - id: UUID
+    - patient_id: UUID
+    - created_at: DateTime
+    - updated_at: DateTime
+    - status: RecordStatus
+    - notes: String
+    + get_encounters(): List<Encounter>
+    + get_allergies(): List<Allergy>
+    + get_immunizations(): List<Immunization>
+    + get_medical_history(): List<MedicalHistory>
+    + get_medications(): List<Medication>
+    + get_lab_tests(): List<LabTest>
+  }
+
+  class Encounter {
+    - id: UUID
+    - medical_record_id: UUID
+    - doctor_id: UUID
+    - encounter_date: DateTime
+    - encounter_type: EncounterType
+    - reason: String
+    - status: EncounterStatus
+    - notes: String
+    + get_diagnoses(): List<Diagnosis>
+    + get_vital_signs(): List<VitalSign>
+  }
+
+  class Diagnosis {
+    - id: UUID
+    - encounter_id: UUID
+    - diagnosis_code: String
+    - diagnosis_name: String
+    - diagnosis_date: DateTime
+    - diagnosed_by: UUID
+    - severity: SeverityLevel
+    - notes: String
+    + get_treatments(): List<Treatment>
+  }
+
+  class Treatment {
+    - id: UUID
+    - diagnosis_id: UUID
+    - treatment_type: TreatmentType
+    - treatment_name: String
+    - prescribed_by: UUID
+    - start_date: Date
+    - end_date: Date
+    - dosage: String
+    - frequency: String
+    - notes: String
+  }
+
+  class Allergy {
+    - id: UUID
+    - medical_record_id: UUID
+    - allergen: String
+    - reaction: String
+    - severity: SeverityLevel
+    - diagnosed_date: Date
+    - notes: String
+  }
+
+  class Immunization {
+    - id: UUID
+    - medical_record_id: UUID
+    - vaccine_name: String
+    - administered_date: Date
+    - administered_by: UUID
+    - dose_number: Integer
+    - lot_number: String
+    - expiration_date: Date
+    - notes: String
+  }
+
+  class MedicalHistory {
+    - id: UUID
+    - medical_record_id: UUID
+    - condition: String
+    - diagnosed_date: Date
+    - status: ConditionStatus
+    - treatment: String
+    - notes: String
+  }
+
+  class Medication {
+    - id: UUID
+    - medical_record_id: UUID
+    - name: String
+    - dosage: String
+    - frequency: String
+    - prescribed_by: UUID
+    - prescribed_date: Date
+    - start_date: Date
+    - end_date: Date
+    - is_current: Boolean
+    - notes: String
+  }
+
+  class VitalSign {
+    - id: UUID
+    - encounter_id: UUID
+    - recorded_at: DateTime
+    - recorded_by: UUID
+    - temperature: Float
+    - heart_rate: Integer
+    - respiratory_rate: Integer
+    - blood_pressure_systolic: Integer
+    - blood_pressure_diastolic: Integer
+    - oxygen_saturation: Float
+    - height: Float
+    - weight: Float
+    - notes: String
+    + calculate_bmi(): Float
+  }
+
+  class LabTest {
+    - id: UUID
+    - medical_record_id: UUID
+    - test_type: String
+    - ordered_by: UUID
+    - ordered_date: DateTime
+    - status: LabTestStatus
+    - performed_date: DateTime
+    - performed_by: UUID
+    - notes: String
+    + get_results(): List<LabResult>
+  }
+
+  class LabResult {
+    - id: UUID
+    - lab_test_id: UUID
+    - result_date: DateTime
+    - result_value: String
+    - result_unit: String
+    - reference_range: String
+    - is_abnormal: Boolean
+    - interpreted_by: UUID
+    - notes: String
+  }
+
+  enum RecordStatus {
+    ACTIVE
+    INACTIVE
+    ARCHIVED
+  }
+
+  enum EncounterType {
+    INITIAL_VISIT
+    FOLLOW_UP
+    EMERGENCY
+    ROUTINE_CHECKUP
+    SPECIALIST_CONSULTATION
+    TELEMEDICINE
+  }
+
+  enum EncounterStatus {
+    SCHEDULED
+    IN_PROGRESS
+    COMPLETED
+    CANCELLED
+    NO_SHOW
+  }
+
+  enum SeverityLevel {
+    MILD
+    MODERATE
+    SEVERE
+    LIFE_THREATENING
+  }
+
+  enum TreatmentType {
+    MEDICATION
+    SURGERY
+    THERAPY
+    LIFESTYLE_CHANGE
+    MONITORING
+  }
+
+  enum ConditionStatus {
+    ACTIVE
+    RESOLVED
+    RECURRENT
+    CHRONIC
+  }
+
+  enum LabTestStatus {
+    ORDERED
+    SAMPLE_COLLECTED
+    IN_PROGRESS
+    COMPLETED
+    CANCELLED
+  }
+}
+
+package "Serializers" {
+  class MedicalRecordSerializer {
+    + fields: id, patient_id, created_at, updated_at, status, notes
+    + create(validated_data): MedicalRecord
+    + update(instance, validated_data): MedicalRecord
+  }
+
+  class EncounterSerializer {
+    + fields: id, medical_record_id, doctor_id, encounter_date, encounter_type, reason, status, notes
+    + create(validated_data): Encounter
+    + update(instance, validated_data): Encounter
+  }
+
+  class DiagnosisSerializer {
+    + fields: id, encounter_id, diagnosis_code, diagnosis_name, diagnosis_date, diagnosed_by, severity, notes
+    + create(validated_data): Diagnosis
+    + update(instance, validated_data): Diagnosis
+  }
+
+  class LabTestSerializer {
+    + fields: id, medical_record_id, test_type, ordered_by, ordered_date, status, performed_date, performed_by, notes
+    + create(validated_data): LabTest
+    + update(instance, validated_data): LabTest
+  }
+}
+
+package "Views" {
+  class MedicalRecordViewSet {
+    + list(): Response
+    + retrieve(pk): Response
+    + create(request): Response
+    + update(request, pk): Response
+    + partial_update(request, pk): Response
+    + destroy(pk): Response
+    + get_encounters(request, pk): Response
+    + get_allergies(request, pk): Response
+    + get_immunizations(request, pk): Response
+    + get_medical_history(request, pk): Response
+    + get_medications(request, pk): Response
+    + get_lab_tests(request, pk): Response
+  }
+
+  class EncounterViewSet {
+    + list(): Response
+    + retrieve(pk): Response
+    + create(request): Response
+    + update(request, pk): Response
+    + partial_update(request, pk): Response
+    + destroy(pk): Response
+    + get_diagnoses(request, pk): Response
+    + get_vital_signs(request, pk): Response
+  }
+
+  class DiagnosisViewSet {
+    + list(): Response
+    + retrieve(pk): Response
+    + create(request): Response
+    + update(request, pk): Response
+    + partial_update(request, pk): Response
+    + destroy(pk): Response
+    + get_treatments(request, pk): Response
+  }
+
+  class LabTestViewSet {
+    + list(): Response
+    + retrieve(pk): Response
+    + create(request): Response
+    + update(request, pk): Response
+    + partial_update(request, pk): Response
+    + destroy(pk): Response
+    + get_results(request, pk): Response
+  }
+}
+
+package "Permissions" {
+  class IsDoctor {
+    + has_permission(request, view): Boolean
+  }
+
+  class IsPatient {
+    + has_permission(request, view): Boolean
+  }
+
+  class IsNurse {
+    + has_permission(request, view): Boolean
+  }
+
+  class IsLabTech {
+    + has_permission(request, view): Boolean
+  }
+
+  class IsTreatingDoctor {
+    + has_object_permission(request, view, obj): Boolean
+  }
+
+  class IsOwnerPatient {
+    + has_object_permission(request, view, obj): Boolean
+  }
+}
+
+' Relationships
+MedicalRecord "1" -- "*" Encounter
+MedicalRecord "1" -- "*" Allergy
+MedicalRecord "1" -- "*" Immunization
+MedicalRecord "1" -- "*" MedicalHistory
+MedicalRecord "1" -- "*" Medication
+MedicalRecord "1" -- "*" LabTest
+Encounter "1" -- "*" Diagnosis
+Encounter "1" -- "*" VitalSign
+Diagnosis "1" -- "*" Treatment
+LabTest "1" -- "*" LabResult
+
+MedicalRecordSerializer ..> MedicalRecord
+EncounterSerializer ..> Encounter
+DiagnosisSerializer ..> Diagnosis
+LabTestSerializer ..> LabTest
+
+MedicalRecordViewSet ..> MedicalRecordSerializer
+EncounterViewSet ..> EncounterSerializer
+DiagnosisViewSet ..> DiagnosisSerializer
+LabTestViewSet ..> LabTestSerializer
+
+MedicalRecordViewSet ..> IsDoctor
+MedicalRecordViewSet ..> IsPatient
+MedicalRecordViewSet ..> IsOwnerPatient
+EncounterViewSet ..> IsDoctor
+EncounterViewSet ..> IsTreatingDoctor
+DiagnosisViewSet ..> IsDoctor
+DiagnosisViewSet ..> IsTreatingDoctor
+LabTestViewSet ..> IsLabTech
+LabTestViewSet ..> IsDoctor
+
+@enduml

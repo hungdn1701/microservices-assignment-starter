@@ -1,0 +1,100 @@
+@startuml
+title Luồng kê đơn thuốc
+
+actor "Bác sĩ" as Doctor
+actor "Bệnh nhân" as Patient
+actor "Dược sĩ" as Pharmacist
+participant "Frontend" as FE
+participant "API Gateway" as API
+participant "User Service" as US
+participant "Medical Record Service" as MR
+participant "Pharmacy Service" as PHA
+participant "Notification Service" as NS
+database "PostgreSQL" as DB
+queue "Redis" as RD
+
+Doctor -> FE: Đăng nhập
+FE -> API: POST /api/auth/login
+API -> US: Xác thực người dùng
+US -> DB: Kiểm tra thông tin đăng nhập
+DB --> US: Trả về thông tin người dùng
+US --> API: Trả về JWT token
+API --> FE: Trả về JWT token
+FE --> Doctor: Hiển thị trang chủ
+
+Doctor -> FE: Chọn bệnh nhân
+FE -> API: GET /api/patients/{id}
+API -> US: Lấy thông tin bệnh nhân
+US -> DB: Truy vấn thông tin bệnh nhân
+DB --> US: Trả về thông tin bệnh nhân
+US --> API: Trả về thông tin bệnh nhân
+API --> FE: Trả về thông tin bệnh nhân
+FE --> Doctor: Hiển thị thông tin bệnh nhân
+
+Doctor -> FE: Chọn "Kê đơn thuốc"
+FE -> API: GET /api/medications
+API -> PHA: Lấy danh sách thuốc
+PHA -> DB: Truy vấn danh sách thuốc
+DB --> PHA: Trả về danh sách thuốc
+PHA --> API: Trả về danh sách thuốc
+API --> FE: Trả về danh sách thuốc
+FE --> Doctor: Hiển thị danh sách thuốc
+
+Doctor -> FE: Chọn thuốc và nhập liều lượng
+Doctor -> FE: Nhập hướng dẫn sử dụng
+Doctor -> FE: Xác nhận kê đơn
+FE -> API: POST /api/prescriptions
+API -> PHA: Tạo đơn thuốc mới
+PHA -> DB: Lưu đơn thuốc
+DB --> PHA: Xác nhận lưu thành công
+PHA -> MR: Cập nhật hồ sơ y tế
+MR -> DB: Lưu thông tin vào hồ sơ
+DB --> MR: Xác nhận lưu thành công
+MR --> PHA: Xác nhận cập nhật thành công
+PHA -> RD: Đẩy sự kiện "prescription_created"
+PHA --> API: Trả về thông tin đơn thuốc
+API --> FE: Trả về thông tin đơn thuốc
+FE --> Doctor: Hiển thị xác nhận kê đơn thành công
+
+RD --> NS: Nhận sự kiện "prescription_created"
+NS -> DB: Lưu thông báo
+NS -> Patient: Gửi email thông báo
+NS -> Pharmacist: Gửi thông báo có đơn thuốc mới
+NS -> FE: Gửi thông báo real-time qua WebSocket
+
+Patient -> FE: Đăng nhập và xem đơn thuốc
+FE -> API: GET /api/prescriptions/{id}
+API -> PHA: Lấy thông tin đơn thuốc
+PHA -> DB: Truy vấn thông tin đơn thuốc
+DB --> PHA: Trả về thông tin đơn thuốc
+PHA --> API: Trả về thông tin đơn thuốc
+API --> FE: Trả về thông tin đơn thuốc
+FE --> Patient: Hiển thị thông tin đơn thuốc
+
+Pharmacist -> FE: Đăng nhập
+Pharmacist -> FE: Xem danh sách đơn thuốc chờ cấp phát
+FE -> API: GET /api/prescriptions?status=pending
+API -> PHA: Lấy danh sách đơn thuốc chờ cấp phát
+PHA -> DB: Truy vấn danh sách đơn thuốc
+DB --> PHA: Trả về danh sách đơn thuốc
+PHA --> API: Trả về danh sách đơn thuốc
+API --> FE: Trả về danh sách đơn thuốc
+FE --> Pharmacist: Hiển thị danh sách đơn thuốc
+
+Pharmacist -> FE: Chọn đơn thuốc để cấp phát
+Pharmacist -> FE: Xác nhận cấp phát
+FE -> API: PUT /api/prescriptions/{id}/dispense
+API -> PHA: Cập nhật trạng thái đơn thuốc
+PHA -> DB: Cập nhật trạng thái và tồn kho
+DB --> PHA: Xác nhận cập nhật thành công
+PHA -> RD: Đẩy sự kiện "prescription_dispensed"
+PHA --> API: Trả về thông tin đơn thuốc đã cấp phát
+API --> FE: Trả về thông tin đơn thuốc đã cấp phát
+FE --> Pharmacist: Hiển thị xác nhận cấp phát thành công
+
+RD --> NS: Nhận sự kiện "prescription_dispensed"
+NS -> DB: Lưu thông báo
+NS -> Patient: Gửi thông báo thuốc đã sẵn sàng
+NS -> FE: Gửi thông báo real-time qua WebSocket
+
+@enduml

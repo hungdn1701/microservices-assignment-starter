@@ -1,0 +1,103 @@
+@startuml
+title Entity Relationship Diagram - Appointment Service
+
+' Entities
+entity "DoctorAvailability" as availability {
+  *id: UUID <<PK>>
+  --
+  *doctor_id: UUID <<FK>>
+  *day_of_week: INTEGER
+  *start_time: TIME
+  *end_time: TIME
+  *is_active: BOOLEAN
+  effective_from: DATE
+  effective_to: DATE
+  notes: TEXT
+}
+
+entity "TimeSlot" as timeslot {
+  *id: UUID <<PK>>
+  --
+  *doctor_id: UUID <<FK>>
+  *date: DATE
+  *start_time: TIME
+  *end_time: TIME
+  *status: ENUM [AVAILABLE, BOOKED, BLOCKED]
+  *created_at: TIMESTAMP
+  updated_at: TIMESTAMP
+  notes: TEXT
+}
+
+entity "Appointment" as appointment {
+  *id: UUID <<PK>>
+  --
+  *patient_id: UUID <<FK>>
+  *doctor_id: UUID <<FK>>
+  *time_slot_id: UUID <<FK>>
+  *appointment_date: DATE
+  *start_time: TIME
+  *end_time: TIME
+  *status: ENUM [SCHEDULED, CONFIRMED, CANCELLED, COMPLETED, NO_SHOW]
+  *created_at: TIMESTAMP
+  updated_at: TIMESTAMP
+  cancelled_reason: TEXT
+  notes: TEXT
+}
+
+entity "AppointmentReason" as reason {
+  *id: UUID <<PK>>
+  --
+  *appointment_id: UUID <<FK>>
+  *reason: TEXT
+  *is_first_visit: BOOLEAN
+  symptoms: TEXT
+  duration: VARCHAR(100)
+}
+
+entity "AppointmentReminder" as reminder {
+  *id: UUID <<PK>>
+  --
+  *appointment_id: UUID <<FK>>
+  *reminder_type: ENUM [EMAIL, SMS, PUSH]
+  *scheduled_time: TIMESTAMP
+  *status: ENUM [PENDING, SENT, FAILED]
+  sent_at: TIMESTAMP
+  error_message: TEXT
+}
+
+entity "DoctorScheduleException" as exception {
+  *id: UUID <<PK>>
+  --
+  *doctor_id: UUID <<FK>>
+  *exception_date: DATE
+  *start_time: TIME
+  *end_time: TIME
+  *exception_type: ENUM [VACATION, SICK_LEAVE, CONFERENCE, OTHER]
+  *status: ENUM [PENDING, APPROVED, REJECTED]
+  *created_at: TIMESTAMP
+  reason: TEXT
+}
+
+entity "AppointmentFeedback" as feedback {
+  *id: UUID <<PK>>
+  --
+  *appointment_id: UUID <<FK>>
+  *patient_id: UUID <<FK>>
+  *rating: INTEGER
+  *submitted_at: TIMESTAMP
+  comments: TEXT
+  wait_time_rating: INTEGER
+  doctor_rating: INTEGER
+  staff_rating: INTEGER
+  facility_rating: INTEGER
+}
+
+' Relationships
+availability ||--o{ timeslot
+timeslot ||--o| appointment
+appointment ||--o| reason
+appointment ||--o{ reminder
+appointment ||--o| feedback
+exception ||--o{ timeslot
+
+@enduml

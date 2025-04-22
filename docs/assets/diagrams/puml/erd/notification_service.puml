@@ -1,0 +1,120 @@
+@startuml
+title Entity Relationship Diagram - Notification Service
+
+' Entities
+entity "NotificationTemplate" as template {
+  *id: UUID <<PK>>
+  --
+  *name: VARCHAR(255)
+  *type: ENUM [EMAIL, SMS, PUSH, IN_APP]
+  *subject: VARCHAR(255)
+  *body: TEXT
+  *is_active: BOOLEAN
+  *created_at: TIMESTAMP
+  updated_at: TIMESTAMP
+  variables: JSONB
+  language: VARCHAR(10)
+  category: VARCHAR(100)
+}
+
+entity "NotificationLog" as log {
+  *id: UUID <<PK>>
+  --
+  *recipient_id: UUID
+  *recipient_type: ENUM [PATIENT, DOCTOR, NURSE, ADMIN, PHARMACIST, LAB_TECH]
+  *notification_type: ENUM [EMAIL, SMS, PUSH, IN_APP]
+  *template_id: UUID <<FK>>
+  *status: ENUM [PENDING, SENT, DELIVERED, FAILED]
+  *created_at: TIMESTAMP
+  sent_at: TIMESTAMP
+  delivered_at: TIMESTAMP
+  subject: VARCHAR(255)
+  body: TEXT
+  error_message: TEXT
+  retry_count: INTEGER
+  metadata: JSONB
+}
+
+entity "NotificationPreference" as preference {
+  *id: UUID <<PK>>
+  --
+  *user_id: UUID
+  *notification_category: ENUM [APPOINTMENT, MEDICATION, LAB_RESULT, BILLING, SYSTEM]
+  *email_enabled: BOOLEAN
+  *sms_enabled: BOOLEAN
+  *push_enabled: BOOLEAN
+  *in_app_enabled: BOOLEAN
+  *created_at: TIMESTAMP
+  updated_at: TIMESTAMP
+}
+
+entity "NotificationQueue" as queue {
+  *id: UUID <<PK>>
+  --
+  *recipient_id: UUID
+  *recipient_type: ENUM [PATIENT, DOCTOR, NURSE, ADMIN, PHARMACIST, LAB_TECH]
+  *notification_type: ENUM [EMAIL, SMS, PUSH, IN_APP]
+  *template_id: UUID <<FK>>
+  *status: ENUM [QUEUED, PROCESSING, COMPLETED, FAILED]
+  *created_at: TIMESTAMP
+  scheduled_at: TIMESTAMP
+  processed_at: TIMESTAMP
+  priority: ENUM [LOW, NORMAL, HIGH, URGENT]
+  data: JSONB
+  retry_count: INTEGER
+  max_retries: INTEGER
+  error_message: TEXT
+}
+
+entity "DeviceToken" as token {
+  *id: UUID <<PK>>
+  --
+  *user_id: UUID
+  *device_token: VARCHAR(255)
+  *device_type: ENUM [IOS, ANDROID, WEB]
+  *is_active: BOOLEAN
+  *created_at: TIMESTAMP
+  updated_at: TIMESTAMP
+  last_used_at: TIMESTAMP
+  app_version: VARCHAR(50)
+  device_name: VARCHAR(100)
+  os_version: VARCHAR(50)
+}
+
+entity "WebSocketConnection" as websocket {
+  *id: UUID <<PK>>
+  --
+  *user_id: UUID
+  *connection_id: VARCHAR(255)
+  *connected_at: TIMESTAMP
+  *status: ENUM [CONNECTED, DISCONNECTED]
+  *created_at: TIMESTAMP
+  updated_at: TIMESTAMP
+  disconnected_at: TIMESTAMP
+  client_info: JSONB
+  ip_address: VARCHAR(45)
+}
+
+entity "InAppNotification" as inapp {
+  *id: UUID <<PK>>
+  --
+  *user_id: UUID
+  *title: VARCHAR(255)
+  *message: TEXT
+  *is_read: BOOLEAN
+  *created_at: TIMESTAMP
+  read_at: TIMESTAMP
+  action_url: VARCHAR(255)
+  notification_type: VARCHAR(100)
+  source_id: UUID
+  source_type: VARCHAR(100)
+  metadata: JSONB
+}
+
+' Relationships
+template ||--o{ log
+template ||--o{ queue
+queue ||--o{ log
+preference ||--o{ log
+
+@enduml

@@ -1,0 +1,57 @@
+@startuml
+title Luồng đặt lịch hẹn
+
+actor "Bệnh nhân" as Patient
+participant "Frontend" as FE
+participant "API Gateway" as API
+participant "User Service" as US
+participant "Appointment Service" as APPT
+participant "Notification Service" as NS
+database "PostgreSQL" as DB
+queue "Redis" as RD
+
+Patient -> FE: Đăng nhập
+FE -> API: POST /api/auth/login
+API -> US: Xác thực người dùng
+US -> DB: Kiểm tra thông tin đăng nhập
+DB --> US: Trả về thông tin người dùng
+US --> API: Trả về JWT token
+API --> FE: Trả về JWT token
+FE --> Patient: Hiển thị trang chủ
+
+Patient -> FE: Chọn "Đặt lịch hẹn"
+FE -> API: GET /api/doctors
+API -> US: Lấy danh sách bác sĩ
+US -> DB: Truy vấn danh sách bác sĩ
+DB --> US: Trả về danh sách bác sĩ
+US --> API: Trả về danh sách bác sĩ
+API --> FE: Trả về danh sách bác sĩ
+FE --> Patient: Hiển thị danh sách bác sĩ
+
+Patient -> FE: Chọn bác sĩ
+FE -> API: GET /api/doctors/{id}/availability
+API -> APPT: Lấy lịch làm việc của bác sĩ
+APPT -> DB: Truy vấn lịch làm việc
+DB --> APPT: Trả về lịch làm việc
+APPT --> API: Trả về lịch làm việc
+API --> FE: Trả về lịch làm việc
+FE --> Patient: Hiển thị lịch làm việc
+
+Patient -> FE: Chọn ngày và giờ
+Patient -> FE: Nhập lý do khám
+FE -> API: POST /api/appointments
+API -> APPT: Tạo lịch hẹn mới
+APPT -> DB: Lưu lịch hẹn
+DB --> APPT: Xác nhận lưu thành công
+APPT -> RD: Đẩy sự kiện "appointment_created"
+APPT --> API: Trả về thông tin lịch hẹn
+API --> FE: Trả về thông tin lịch hẹn
+FE --> Patient: Hiển thị xác nhận đặt lịch thành công
+
+RD --> NS: Nhận sự kiện "appointment_created"
+NS -> DB: Lưu thông báo
+NS -> Patient: Gửi email xác nhận
+NS -> Patient: Gửi SMS xác nhận
+NS -> FE: Gửi thông báo real-time qua WebSocket
+
+@enduml

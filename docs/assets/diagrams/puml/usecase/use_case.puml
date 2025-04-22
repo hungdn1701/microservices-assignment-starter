@@ -1,0 +1,71 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Bệnh nhân" as Patient
+actor "Bác sĩ" as Doctor
+actor "Y tá" as Nurse
+actor "Dược sĩ" as Pharmacist
+actor "Kỹ thuật viên xét nghiệm" as LabTech
+actor "Nhà cung cấp bảo hiểm" as Insurance
+actor "Quản trị viên" as Admin
+
+rectangle "Hệ thống quản lý y tế" {
+  usecase "Đăng nhập/Đăng ký" as UC1
+  usecase "Quản lý hồ sơ cá nhân" as UC2
+  usecase "Đặt lịch hẹn" as UC3
+  usecase "Quản lý lịch hẹn" as UC4
+  usecase "Xem hồ sơ y tế" as UC5
+  usecase "Cập nhật hồ sơ y tế" as UC6
+  usecase "Kê đơn thuốc" as UC7
+  usecase "Cấp phát thuốc" as UC8
+  usecase "Yêu cầu xét nghiệm" as UC9
+  usecase "Nhập kết quả xét nghiệm" as UC10
+  usecase "Tạo hóa đơn" as UC11
+  usecase "Thanh toán" as UC12
+  usecase "Xử lý yêu cầu bảo hiểm" as UC13
+  usecase "Quản lý người dùng" as UC14
+  usecase "Nhận thông báo" as UC15
+}
+
+Patient --> UC1
+Patient --> UC2
+Patient --> UC3
+Patient --> UC5
+Patient --> UC12
+Patient --> UC15
+
+Doctor --> UC1
+Doctor --> UC4
+Doctor --> UC5
+Doctor --> UC6
+Doctor --> UC7
+Doctor --> UC9
+Doctor --> UC15
+
+Nurse --> UC1
+Nurse --> UC4
+Nurse --> UC5
+Nurse --> UC6
+Nurse --> UC15
+
+Pharmacist --> UC1
+Pharmacist --> UC5
+Pharmacist --> UC8
+Pharmacist --> UC15
+
+LabTech --> UC1
+LabTech --> UC5
+LabTech --> UC10
+LabTech --> UC15
+
+Insurance --> UC1
+Insurance --> UC5
+Insurance --> UC13
+Insurance --> UC15
+
+Admin --> UC1
+Admin --> UC14
+Admin --> UC15
+
+@enduml

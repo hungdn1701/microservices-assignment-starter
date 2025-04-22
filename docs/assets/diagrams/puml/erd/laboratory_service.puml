@@ -1,0 +1,148 @@
+@startuml
+title Entity Relationship Diagram - Laboratory Service
+
+' Entities
+entity "TestType" as testtype {
+  *id: UUID <<PK>>
+  --
+  *name: VARCHAR(255)
+  *code: VARCHAR(50)
+  *category: VARCHAR(100)
+  *description: TEXT
+  *sample_type: ENUM [BLOOD, URINE, STOOL, TISSUE, SWAB, OTHER]
+  *is_active: BOOLEAN
+  *created_at: TIMESTAMP
+  updated_at: TIMESTAMP
+  preparation_instructions: TEXT
+  normal_range: TEXT
+  price: DECIMAL(10,2)
+  turnaround_time: INTEGER
+}
+
+entity "LabTest" as labtest {
+  *id: UUID <<PK>>
+  --
+  *patient_id: UUID <<FK>>
+  *doctor_id: UUID <<FK>>
+  *test_type_id: UUID <<FK>>
+  *ordered_date: TIMESTAMP
+  *status: ENUM [ORDERED, SAMPLE_COLLECTED, IN_PROGRESS, COMPLETED, CANCELLED]
+  *priority: ENUM [ROUTINE, URGENT, STAT]
+  *created_at: TIMESTAMP
+  updated_at: TIMESTAMP
+  encounter_id: UUID <<FK>>
+  notes: TEXT
+  clinical_information: TEXT
+  due_date: DATE
+}
+
+entity "SampleCollection" as sample {
+  *id: UUID <<PK>>
+  --
+  *lab_test_id: UUID <<FK>>
+  *collected_by: UUID <<FK>>
+  *collected_at: TIMESTAMP
+  *sample_id: VARCHAR(100)
+  *status: ENUM [COLLECTED, REJECTED, PROCESSED]
+  *created_at: TIMESTAMP
+  updated_at: TIMESTAMP
+  rejection_reason: TEXT
+  notes: TEXT
+  collection_method: VARCHAR(100)
+  collection_site: VARCHAR(100)
+}
+
+entity "TestResult" as result {
+  *id: UUID <<PK>>
+  --
+  *lab_test_id: UUID <<FK>>
+  *performed_by: UUID <<FK>>
+  *verified_by: UUID <<FK>>
+  *result_date: TIMESTAMP
+  *status: ENUM [PRELIMINARY, FINAL, AMENDED, CANCELLED]
+  *created_at: TIMESTAMP
+  updated_at: TIMESTAMP
+  result_value: TEXT
+  unit: VARCHAR(50)
+  reference_range: VARCHAR(100)
+  interpretation: TEXT
+  is_abnormal: BOOLEAN
+  notes: TEXT
+  report_file_path: VARCHAR(255)
+}
+
+entity "TestParameter" as parameter {
+  *id: UUID <<PK>>
+  --
+  *test_type_id: UUID <<FK>>
+  *name: VARCHAR(255)
+  *code: VARCHAR(50)
+  *unit: VARCHAR(50)
+  *reference_range: VARCHAR(100)
+  *order: INTEGER
+  *is_active: BOOLEAN
+  description: TEXT
+}
+
+entity "ParameterResult" as paramresult {
+  *id: UUID <<PK>>
+  --
+  *test_result_id: UUID <<FK>>
+  *parameter_id: UUID <<FK>>
+  *value: VARCHAR(255)
+  *is_abnormal: BOOLEAN
+  *created_at: TIMESTAMP
+  notes: TEXT
+}
+
+entity "LabEquipment" as equipment {
+  *id: UUID <<PK>>
+  --
+  *name: VARCHAR(255)
+  *model: VARCHAR(100)
+  *serial_number: VARCHAR(100)
+  *status: ENUM [OPERATIONAL, MAINTENANCE, OUT_OF_ORDER]
+  *last_maintenance_date: DATE
+  *next_maintenance_date: DATE
+  *created_at: TIMESTAMP
+  updated_at: TIMESTAMP
+  notes: TEXT
+}
+
+entity "TestEquipmentUsage" as usage {
+  *id: UUID <<PK>>
+  --
+  *test_result_id: UUID <<FK>>
+  *equipment_id: UUID <<FK>>
+  *used_by: UUID <<FK>>
+  *used_at: TIMESTAMP
+  *created_at: TIMESTAMP
+  notes: TEXT
+}
+
+entity "Notification" as notification {
+  *id: UUID <<PK>>
+  --
+  *lab_test_id: UUID <<FK>>
+  *notification_type: ENUM [RESULT_READY, SAMPLE_REJECTED, TEST_CANCELLED, REMINDER]
+  *recipient_id: UUID <<FK>>
+  *recipient_type: ENUM [PATIENT, DOCTOR, LAB_TECH]
+  *status: ENUM [PENDING, SENT, FAILED]
+  *created_at: TIMESTAMP
+  sent_at: TIMESTAMP
+  message: TEXT
+  error_message: TEXT
+}
+
+' Relationships
+testtype ||--o{ labtest
+testtype ||--o{ parameter
+labtest ||--o| sample
+labtest ||--o| result
+result ||--o{ paramresult
+parameter ||--o{ paramresult
+result ||--o{ usage
+equipment ||--o{ usage
+labtest ||--o{ notification
+
+@enduml

@@ -1,0 +1,32 @@
+@startuml
+title Quy trình thực hiện và tải kết quả xét nghiệm
+
+|Kỹ thuật viên|
+start
+:Nhận yêu cầu xét nghiệm;
+
+|Bệnh nhân|
+:Đến phòng xét nghiệm;
+
+|Kỹ thuật viên|
+:Lấy mẫu xét nghiệm từ bệnh nhân;
+:Tiến hành xét nghiệm;
+:Phân tích kết quả;
+:Nhập kết quả vào hệ thống;
+
+|Hệ thống|
+:Lưu kết quả xét nghiệm;
+:Cập nhật hồ sơ y tế;
+:Gửi thông báo cho bác sĩ;
+:Gửi thông báo cho bệnh nhân;
+
+|Bác sĩ|
+:Xem kết quả xét nghiệm;
+:Đưa ra quyết định điều trị;
+
+|Bệnh nhân|
+:Nhận thông báo kết quả;
+:Xem kết quả xét nghiệm;
+stop
+
+@enduml

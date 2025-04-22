@@ -1,0 +1,57 @@
+@startuml
+title Quy trình nhà cung cấp bảo hiểm xử lý yêu cầu bồi thường
+
+|Hệ thống|
+start
+:Tạo yêu cầu bồi thường bảo hiểm;
+:Gửi yêu cầu đến nhà cung cấp bảo hiểm;
+
+|Nhà cung cấp bảo hiểm|
+:Nhận yêu cầu bồi thường;
+:Xác minh thông tin bệnh nhân;
+:Kiểm tra hợp đồng bảo hiểm;
+:Kiểm tra phạm vi bảo hiểm;
+
+if (Yêu cầu hợp lệ?) then (Có)
+  if (Cần thêm thông tin?) then (Có)
+    :Yêu cầu bổ sung thông tin;
+    
+    |Hệ thống|
+    :Gửi yêu cầu bổ sung thông tin;
+    
+    |Bệnh nhân/Quản trị viên|
+    :Cung cấp thông tin bổ sung;
+    
+    |Nhà cung cấp bảo hiểm|
+    :Xem xét thông tin bổ sung;
+  else (Không)
+  endif
+  
+  :Tính toán số tiền bồi thường;
+  :Phê duyệt yêu cầu;
+  :Xử lý thanh toán;
+  
+  |Hệ thống|
+  :Cập nhật trạng thái yêu cầu thành "Đã phê duyệt";
+  :Ghi nhận số tiền bồi thường;
+else (Không)
+  :Từ chối yêu cầu;
+  :Ghi chú lý do từ chối;
+  
+  |Hệ thống|
+  :Cập nhật trạng thái yêu cầu thành "Bị từ chối";
+endif
+
+|Hệ thống|
+:Gửi thông báo cho bệnh nhân;
+:Gửi thông báo cho quản trị viên;
+
+|Bệnh nhân|
+:Nhận thông báo kết quả yêu cầu bồi thường;
+
+|Quản trị viên|
+:Xem kết quả yêu cầu bồi thường;
+:Cập nhật hóa đơn nếu cần;
+stop
+
+@enduml
