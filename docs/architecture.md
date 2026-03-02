@@ -1,24 +1,88 @@
-# System Architecture
+# 🏗️ System Architecture
 
-## Overview
-- Describe the purpose of the microservices system.
-- Outline the main components and their responsibilities.
+## 1. Overview
 
-## System Components
-- **Service A**: Brief description of its functionality and role.
-- **Service B**: Brief description of its functionality and role.
-- **API Gateway**: Explain its role in routing and managing requests.
+Describe the purpose and high-level goals of your microservices system.
 
-## Communication
-- Describe how services interact (e.g., REST APIs, message queues).
-- Mention internal networking (e.g., Docker Compose service names).
+- What problem does it solve?
+- Who are the target users?
+- What are the key quality attributes (scalability, reliability, etc.)?
 
-## Data Flow
-- Explain the flow of data between services and the gateway.
-- Include any external dependencies (e.g., databases, third-party APIs).
+## 2. Architecture Style
 
-## Diagram
-- Reference a high-level architecture diagram (place in `docs/asset/`).
+Describe the architectural patterns and styles used:
 
-## Scalability & Fault Tolerance
-- Briefly discuss how the system can scale or handle failures.
+- [ ] Microservices
+- [ ] API Gateway pattern
+- [ ] Event-driven / Message queue
+- [ ] CQRS / Event Sourcing
+- [ ] Database per service
+- [ ] Saga pattern
+- [ ] Other: ___
+
+## 3. System Components
+
+| Component     | Responsibility                          | Tech Stack       | Port  |
+|---------------|----------------------------------------|------------------|-------|
+| **Frontend**  | User interface                         | *(your choice)*  | 3000  |
+| **Gateway**   | API routing, auth, rate limiting       | *(your choice)*  | 8080  |
+| **Service A** | *(describe domain)*                    | *(your choice)*  | 5001  |
+| **Service B** | *(describe domain)*                    | *(your choice)*  | 5002  |
+| **Database**  | *(persistent storage)*                 | *(your choice)*  | 5432  |
+
+## 4. Communication Patterns
+
+Describe how services communicate:
+
+- **Synchronous**: REST API / gRPC between services
+- **Asynchronous**: Message queue (RabbitMQ, Kafka, Redis Pub/Sub)
+- **Service Discovery**: Docker Compose DNS / Consul / etc.
+
+### Inter-service Communication Matrix
+
+| From → To     | Service A | Service B | Gateway | Database |
+|---------------|-----------|-----------|---------|----------|
+| **Frontend**  |           |           | REST    |          |
+| **Gateway**   | REST      | REST      |         |          |
+| **Service A** |           | *(?)* |         | SQL      |
+| **Service B** | *(?)* |           |         | SQL      |
+
+## 5. Data Flow
+
+Describe the typical request flow:
+
+```
+User → Frontend → Gateway → Service A → Database
+                          → Service B → Database
+```
+
+## 6. Architecture Diagram
+
+> Place your diagrams in `docs/asset/` and reference them here.
+>
+> Recommended tools: draw.io, Mermaid, PlantUML, Excalidraw
+
+```mermaid
+graph LR
+    U[User] --> FE[Frontend]
+    FE --> GW[API Gateway]
+    GW --> SA[Service A]
+    GW --> SB[Service B]
+    SA --> DB1[(Database A)]
+    SB --> DB2[(Database B)]
+```
+
+![Architecture Diagram](asset/architecture-diagram.png)
+
+## 7. Deployment
+
+- All services containerized with Docker
+- Orchestrated via Docker Compose
+- Single command: `docker compose up --build`
+
+## 8. Scalability & Fault Tolerance
+
+- How can individual services scale independently?
+- What happens when a service goes down?
+- Are there retry mechanisms or circuit breakers?
+- How is data consistency maintained across services?

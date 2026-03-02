@@ -1,38 +1,54 @@
-# Frontend README
+# Frontend
 
-## Project Overview
-This is the frontend module of the microservices assignment. It is built to handle the user interface and communicate with backend services.
+## Overview
+
+This is the frontend module of the microservices system. It provides the user interface and communicates with backend services through the API Gateway.
 
 ## Tech Stack
-- **Framework**: React
-- **Styling**: CSS/SCSS
-- **Package Manager**: npm/yarn
+
+| Component        | Choice               |
+|------------------|----------------------|
+| Framework        | *(e.g., React, Vue, Angular, Svelte, plain HTML/JS)* |
+| Styling          | *(e.g., CSS, Tailwind, Bootstrap, Material UI)*       |
+| Package Manager  | *(e.g., npm, yarn, pnpm)*                             |
+| Build Tool       | *(e.g., Vite, Webpack, esbuild)*                      |
 
 ## Getting Started
-1. Clone the repository:
-    ```bash
-    git clone <repository-url>
-    ```
-2. Navigate to the frontend directory:
-    ```bash
-    cd frontend
-    ```
-3. Install dependencies:
-    ```bash
-    npm install
-    ```
-4. Start the development server:
-    ```bash
-    npm start
-    ```
 
-## Folder Structure
-- `src/` - Contains the source code.
-- `public/` - Static files and assets.
+```bash
+# From project root
+docker compose up frontend --build
 
-## Scripts
-- `npm start` - Run the development server.
-- `npm run build` - Build the project for production.
+# Or run locally (adapt to your stack)
+cd src/
+# npm install && npm run dev
+# yarn && yarn dev
+```
 
-## License
-This project is licensed under the [MIT License](LICENSE).
+## Project Structure
+
+```
+frontend/
+├── Dockerfile
+├── readme.md
+└── src/           # Your source code goes here
+```
+
+## Environment Variables
+
+| Variable       | Description                | Default                  |
+|----------------|----------------------------|--------------------------|
+| `API_BASE_URL` | URL of the API Gateway     | `http://localhost:8080`  |
+
+## Build for Production
+
+```bash
+# Example:
+# npm run build
+# yarn build
+```
+
+## Notes
+
+- All API calls should go through the **API Gateway** (`gateway`), not directly to individual services.
+- Configure proxy or API base URL to point to the gateway.

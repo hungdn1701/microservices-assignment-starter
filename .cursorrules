@@ -1,0 +1,20 @@
+# Cursor Rules
+# Docs: https://docs.cursor.com/context/rules
+#
+# Full project rules and context: .ai/AGENTS.md
+# This file contains a summary for Cursor. Edit .ai/AGENTS.md for the source of truth.
+
+## Project
+
+Microservices university assignment. Technology-agnostic.
+Run with: `docker compose up --build`
+
+## Key Rules
+
+- Every service exposes `GET /health` → `{"status": "ok"}`
+- Services communicate via Docker Compose DNS (service names, not localhost)
+- API specs in `docs/api-specs/*.yaml` (OpenAPI 3.0)
+- Use environment variables for config — never hardcode secrets
+- Code runs inside Docker containers
+- Include error handling, input validation, and tests
+- Update OpenAPI specs when changing endpoints

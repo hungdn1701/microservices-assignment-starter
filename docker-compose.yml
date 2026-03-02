@@ -1,16 +1,86 @@
-version: '3.8'
+# Docker Compose — Multi-container orchestration
+# Run: docker compose up --build
+# Docs: https://docs.docker.com/compose/
+
 services:
-  service-a:
-    build: ./services/service-a
+  # ─── Frontend ────────────────────────────────────
+  frontend:
+    build: ./frontend
     ports:
-      - "5001:5000"
+      - "${FRONTEND_PORT:-3000}:3000"
+    depends_on:
+      - gateway
+    networks:
+      - app-network
 
-  service-b:
-    build: ./services/service-b
-    ports:
-      - "5002:5000"
-
+  # ─── API Gateway ─────────────────────────────────
   gateway:
     build: ./gateway
     ports:
-      - "8080:8000"
+      - "${GATEWAY_PORT:-8080}:8000"
+    depends_on:
+      - service-a
+      - service-b
+    networks:
+      - app-network
+
+  # ─── Service A ───────────────────────────────────
+  service-a:
+    build: ./services/service-a
+    ports:
+      - "${SERVICE_A_PORT:-5001}:5000"
+    env_file:
+      - .env
+    networks:
+      - app-network
+    # healthcheck:
+    #   test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 3
+
+  # ─── Service B ───────────────────────────────────
+  service-b:
+    build: ./services/service-b
+    ports:
+      - "${SERVICE_B_PORT:-5002}:5000"
+    env_file:
+      - .env
+    networks:
+      - app-network
+
+  # ─── Shared Infrastructure (uncomment as needed) ─
+  # db:
+  #   image: postgres:16-alpine    # or mysql:8, mongo:7, etc.
+  #   ports:
+  #     - "${DB_PORT:-5432}:5432"
+  #   environment:
+  #     POSTGRES_DB: ${DB_NAME:-mydb}
+  #     POSTGRES_USER: ${DB_USER:-admin}
+  #     POSTGRES_PASSWORD: ${DB_PASSWORD:-changeme}
+  #   volumes:
+  #     - db-data:/var/lib/postgresql/data
+  #   networks:
+  #     - app-network
+
+  # redis:
+  #   image: redis:7-alpine
+  #   ports:
+  #     - "6379:6379"
+  #   networks:
+  #     - app-network
+
+  # rabbitmq:
+  #   image: rabbitmq:3-management-alpine
+  #   ports:
+  #     - "5672:5672"
+  #     - "15672:15672"
+  #   networks:
+  #     - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+# volumes:
+#   db-data:

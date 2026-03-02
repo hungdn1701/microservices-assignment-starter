@@ -2,107 +2,216 @@
 
 This repository is a **starter template** for building a microservices-based system. Use it as a base for your group assignment.
 
+> **Technology-agnostic**: You are free to choose any programming language, framework, or database for each service.
+
 ---
 
-## 📁 Folder Structure
+## 👥 Team Members
+
+| Name | Student ID | Role | Contribution |
+|------|------------|------|-------------|
+| ...  | ...        | ...  | ...         |
+
+---
+
+## 📁 Project Structure
 
 ```
 microservices-assignment-starter/
-├── README.md                       # This instruction file
-├── .env.example                    # Example environment variables
-├── docker-compose.yml              # Multi-container setup for all services
-├── docs/                           # Documentation folder
-│   ├── architecture.md             # Describe your system design here
-│   ├── analysis-and-design.md      # Document system analysis and design details
-│   ├── asset/                      # Store images, diagrams, or other visual assets for documentation
-│   └── api-specs/                  # API specifications in OpenAPI (YAML)
+├── README.md                       # This file — project overview
+├── .env.example                    # Environment variable template
+├── docker-compose.yml              # Multi-container orchestration
+├── Makefile                        # Common development commands
+│
+├── docs/                           # 📖 Documentation
+│   ├── analysis-and-design.md      # System analysis & service design
+│   ├── architecture.md             # Architecture overview & diagrams
+│   ├── asset/                      # Images, diagrams, visual assets
+│   └── api-specs/                  # OpenAPI 3.0 specifications
 │       ├── service-a.yaml
 │       └── service-b.yaml
-├── scripts/                        # Utility or deployment scripts
-│   └── init.sh
-├── services/                       # Application microservices
+│
+├── frontend/                       # 🖥️ Frontend application
+│   ├── Dockerfile
+│   ├── readme.md
+│   └── src/
+│
+├── gateway/                        # 🚪 API Gateway / reverse proxy
+│   ├── Dockerfile
+│   ├── readme.md
+│   └── src/
+│
+├── services/                       # ⚙️ Backend microservices
 │   ├── service-a/
 │   │   ├── Dockerfile
+│   │   ├── readme.md
 │   │   └── src/
-│   │   └── readme.md               # Service A instructions and description
 │   └── service-b/
 │       ├── Dockerfile
+│       ├── readme.md
 │       └── src/
-│   │   └── readme.md               # Service B instructions and description
-└── frontend/                       # API Gateway / reverse proxy
-    ├── Dockerfile
-    └── src/
-    └── readme.md                   # Frontend instructions and description
-└── gateway/                        # API Gateway / reverse proxy
-    ├── Dockerfile
-    └── src/
-    └── readme.md                   # API gateway instructions and description
-
-
+│
+├── scripts/                        # 🔧 Utility scripts
+│   └── init.sh
+│
+├── .ai/                            # 🤖 AI-assisted development
+│   ├── AGENTS.md                   # Agent instructions (source of truth)
+│   ├── vibe-coding-guide.md        # Hướng dẫn vibe coding
+│   └── prompts/                    # Reusable prompt templates
+│       ├── new-service.md
+│       ├── api-endpoint.md
+│       ├── dockerfile.md
+│       ├── testing.md
+│       └── debugging.md
+│
+├── .github/copilot-instructions.md # GitHub Copilot instructions
+├── .cursorrules                    # Cursor AI instructions
+├── .windsurfrules                  # Windsurf AI instructions
+└── CLAUDE.md                       # Claude Code instructions
 ```
 
 ---
 
 ## 🚀 Getting Started
 
-1. **Clone this repository**
+### Prerequisites
 
-   ```bash
-   git clone https://github.com/hungdn1701/microservices-assignment-starter.git
-   cd microservices-assignment-starter
-   ```
+- [Docker Desktop](https://docs.docker.com/get-docker/) (includes Docker Compose)
+- [Git](https://git-scm.com/)
+- An AI coding tool (recommended): [GitHub Copilot](https://github.com/features/copilot), [Cursor](https://cursor.sh), [Windsurf](https://codeium.com/windsurf), or [Claude Code](https://docs.anthropic.com/en/docs/claude-code)
 
-2. **Copy environment file**
+### Quick Start
 
-   ```bash
-   cp .env.example .env
-   ```
+```bash
+# 1. Clone this repository
+git clone https://github.com/hungdn1701/microservices-assignment-starter.git
+cd microservices-assignment-starter
 
-3. **Run with Docker Compose**
+# 2. Initialize the project
+bash scripts/init.sh
+# Or manually:
+cp .env.example .env
 
-   ```bash
-   docker-compose up --build
-   ```
----
+# 3. Build and run all services
+docker compose up --build
 
-## 🧪 Development Notes
+# 4. Verify services are running
+curl http://localhost:8080   # Gateway
+curl http://localhost:5001   # Service A
+curl http://localhost:5002   # Service B
+curl http://localhost:3000   # Frontend
+```
 
-- Use `docs/api-specs/*.yaml` to document REST APIs using OpenAPI format (Swagger).
+### Using Make (optional)
 
----
-
-## 📚 Recommended Tasks
-- [ ] Document system analysis and design in `analysis-and-design.md` as the first step
-- [ ] Update `architecture.md` to describe your system components.
-- [ ] Define all APIs using OpenAPI YAML in `docs/api-specs/`.
-- [ ] Implement business logic in `service-a` and `service-b`.
-- [ ] Configure API Gateway
-- [ ] Ensure services can communicate internally using service names (Docker Compose handles networking).
-
----
-
-## 📌 Notes
-
-- Use Git branches for team collaboration.
-- Commit early, commit often!
+```bash
+make help      # Show all available commands
+make init      # Initialize project
+make up        # Build and start all services
+make down      # Stop all services
+make logs      # View logs
+make clean     # Remove everything
+```
 
 ---
 
-## 👩‍🏫 Assignment Submission
+## 🏗️ Architecture
 
-Please make sure:
-- `README.md` is updated with service descriptions and API usage, following standard README conventions (e.g., clear structure, usage instructions, and contribution guidelines).
-- Include a list of team members and their contributions in the `README.md`.
-- All your code should be **runnable with one command**: `docker-compose up`.
+```mermaid
+graph LR
+    U[User] --> FE[Frontend :3000]
+    FE --> GW[API Gateway :8080]
+    GW --> SA[Service A :5001]
+    GW --> SB[Service B :5002]
+    SA --> DB1[(Database A)]
+    SB --> DB2[(Database B)]
+```
 
+- **Frontend** → User interface, communicates only with the Gateway
+- **Gateway** → Routes requests to appropriate backend services
+- **Services** → Independent microservices, each with their own database
+- **Communication** → REST APIs over Docker Compose network
 
+> 📖 Full architecture documentation: [`docs/architecture.md`](docs/architecture.md)
+
+---
+
+## 🤖 AI-Assisted Development (Vibe Coding)
+
+This repo is pre-configured for **AI-powered development**. Each AI tool auto-loads its instruction file:
+
+| Tool | Config File |
+|------|-------------|
+| GitHub Copilot | `.github/copilot-instructions.md` |
+| Cursor | `.cursorrules` |
+| Claude Code | `CLAUDE.md` |
+| Windsurf | `.windsurfrules` |
+
+All instruction files point to [`.ai/AGENTS.md`](.ai/AGENTS.md) as the single source of truth.
+Ready-to-use prompt templates are in [`.ai/prompts/`](.ai/prompts/).
+
+> 📖 Full guide (Vietnamese): [`.ai/vibe-coding-guide.md`](.ai/vibe-coding-guide.md)
+
+---
+
+## 📋 Recommended Workflow
+
+### Phase 1: Analysis & Design
+- [ ] Read and understand this starter template
+- [ ] Choose your business domain and use case
+- [ ] Document analysis in [`docs/analysis-and-design.md`](docs/analysis-and-design.md)
+- [ ] Design system architecture in [`docs/architecture.md`](docs/architecture.md)
+
+### Phase 2: API Design
+- [ ] Define APIs using OpenAPI 3.0 in [`docs/api-specs/`](docs/api-specs/)
+- [ ] Include all endpoints, request/response schemas
+- [ ] Review API design with the team
+
+### Phase 3: Implementation
+- [ ] Choose tech stack for each service (can be different per service!)
+- [ ] Update Dockerfiles for each service
+- [ ] Implement `GET /health` endpoint in every service
+- [ ] Implement business logic and API endpoints
+- [ ] Configure API Gateway routing
+- [ ] Build frontend UI
+
+### Phase 4: Testing & Documentation
+- [ ] Write unit and integration tests
+- [ ] Verify `docker compose up --build` starts everything
+- [ ] Update service `readme.md` files
+- [ ] Update this `README.md` with your project details
+
+---
+
+## 🧪 Development Guidelines
+
+- **Health checks**: Every service MUST expose `GET /health` → `{"status": "ok"}`
+- **Environment**: Use `.env` for configuration, never hardcode secrets
+- **Networking**: Services communicate via Docker Compose DNS (use service names, not `localhost`)
+- **API specs**: Keep OpenAPI specs in sync with implementation
+- **Git workflow**: Use branches, write meaningful commit messages, commit often
+
+---
+
+## 👩‍🏫 Assignment Submission Checklist
+
+- [ ] `README.md` updated with team info, service descriptions, and usage instructions
+- [ ] All services start with `docker compose up --build`
+- [ ] Every service has a working `GET /health` endpoint
+- [ ] API documentation complete in `docs/api-specs/`
+- [ ] Architecture documented in `docs/architecture.md`
+- [ ] Analysis and design documented in `docs/analysis-and-design.md`
+- [ ] Each service has its own `readme.md`
+- [ ] Code is clean, organized, and follows chosen language conventions
+- [ ] Tests are included and passing
+
+---
 
 ## Author
 
-This template was created by Hung Dang.
+This template was created by **Hung Dang**.
 - Email: hungdn@ptit.edu.vn
-- GitHub: hungdn1701
-
+- GitHub: [hungdn1701](https://github.com/hungdn1701)
 
 Good luck! 💪🚀
 

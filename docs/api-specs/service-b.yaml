@@ -1,1 +1,38 @@
-# service-b.yaml
+# ============================================
+# Service B — OpenAPI 3.0 Specification
+# Docs: https://swagger.io/specification/
+# ============================================
+openapi: 3.0.3
+info:
+  title: Service B API
+  description: |
+    API specification for Service B.
+    Replace with your actual service name and description.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:5002
+    description: Local development
+
+paths:
+  /health:
+    get:
+      summary: Health check
+      operationId: healthCheck
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+
+  # Define your endpoints here following the pattern above
+
+components:
+  schemas: {}
+    # Define your data models here

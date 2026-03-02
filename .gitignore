@@ -1,0 +1,112 @@
+# ==============================
+# OS & Editor
+# ==============================
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.vscode/settings.json
+.idea/
+*.iml
+
+# ==============================
+# Environment & Secrets
+# ==============================
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+*.cert
+
+# ==============================
+# Dependencies (multi-language)
+# ==============================
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+venv/
+.venv/
+env/
+pip-log.txt
+
+# Java / Kotlin / Gradle / Maven
+target/
+*.class
+*.jar
+*.war
+*.ear
+.gradle/
+build/
+!gradle-wrapper.jar
+
+# Go
+/vendor/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Rust
+/target/
+Cargo.lock
+
+# .NET / C#
+bin/
+obj/
+*.suo
+*.user
+*.csproj.user
+
+# Ruby
+*.gem
+.bundle/
+vendor/bundle
+
+# PHP
+/vendor/
+composer.lock
+
+# ==============================
+# Build & Output
+# ==============================
+dist/
+build/
+out/
+*.log
+coverage/
+.nyc_output/
+
+# ==============================
+# Docker
+# ==============================
+# Do not ignore Dockerfiles or docker-compose
+# Ignore local docker volumes data
+docker-data/
+*.tar
+
+# ==============================
+# Testing
+# ==============================
+coverage/
+*.lcov
+.pytest_cache/
+htmlcov/
+test-results/
