@@ -58,3 +58,7 @@
 # COPY --from=builder /out .
 # EXPOSE 5000
 # CMD ["dotnet", "ServiceA.dll"]
+
+# TODO: Uncomment one of the examples above and adapt it,
+#       or write your own Dockerfile for your chosen stack.
+FROM scratch

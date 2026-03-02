@@ -8,3 +8,6 @@
 #
 # Copy and adapt the appropriate template for
 # your chosen technology stack.
+
+# TODO: Replace with your actual Dockerfile.
+FROM scratch

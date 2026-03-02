@@ -33,3 +33,7 @@
 # RUN npm run build
 # EXPOSE 3000
 # CMD ["npm", "start"]
+
+# TODO: Uncomment one of the examples above and adapt it,
+#       or write your own Dockerfile for your chosen stack.
+FROM scratch

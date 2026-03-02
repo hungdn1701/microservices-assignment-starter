@@ -40,3 +40,7 @@
 # COPY nginx.conf /etc/nginx/nginx.conf
 # EXPOSE 8000
 # CMD ["nginx", "-g", "daemon off;"]
+
+# TODO: Uncomment one of the examples above and adapt it,
+#       or write your own Dockerfile for your chosen stack.
+FROM scratch

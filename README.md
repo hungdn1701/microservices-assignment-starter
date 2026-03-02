@@ -60,7 +60,7 @@ microservices-assignment-starter/
 │   └── prompts/                    # Reusable prompt templates
 │       ├── new-service.md
 │       ├── api-endpoint.md
-│       ├── dockerfile.md
+│       ├── create-dockerfile.md
 │       ├── testing.md
 │       └── debugging.md
 │

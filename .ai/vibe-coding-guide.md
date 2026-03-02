@@ -27,7 +27,7 @@ Thư mục `.ai/prompts/` chứa các mẫu prompt sẵn dùng. Copy, thay `[PLA
 |--------|----------|
 | [new-service.md](prompts/new-service.md) | Tạo microservice mới |
 | [api-endpoint.md](prompts/api-endpoint.md) | Thêm API endpoint |
-| [dockerfile.md](prompts/dockerfile.md) | Tạo Dockerfile |
+| [create-dockerfile.md](prompts/create-dockerfile.md) | Tạo Dockerfile |
 | [testing.md](prompts/testing.md) | Viết tests |
 | [debugging.md](prompts/debugging.md) | Debug lỗi |
 
