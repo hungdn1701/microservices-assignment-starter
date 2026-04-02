@@ -16,5 +16,5 @@ Run with: `docker compose up --build`
 - API specs in `docs/api-specs/*.yaml` (OpenAPI 3.0)
 - Use environment variables for config — never hardcode secrets
 - Code runs inside Docker containers
-- Include error handling, input validation, and tests
+- Include error handling and input validation
 - Update OpenAPI specs when changing endpoints

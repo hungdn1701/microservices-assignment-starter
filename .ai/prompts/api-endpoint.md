@@ -25,8 +25,7 @@ Requirements:
 2. Add input validation
 3. Add error handling
 4. Update the OpenAPI spec in docs/api-specs/[SERVICE_NAME].yaml
-5. Add unit tests for the new endpoint
-6. Handle edge cases: [EDGE_CASES]
+5. Handle edge cases: [EDGE_CASES]
 
 The endpoint should follow existing patterns in the service.
 ```

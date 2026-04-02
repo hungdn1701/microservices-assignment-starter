@@ -123,11 +123,25 @@ microservices-assignment-starter/
 - [ ] Configure Gateway routing
 - [ ] Build frontend
 
-### Phase 4: Testing & Documentation
-- [ ] Write tests
-- [ ] Verify `docker compose up --build` works
+### Phase 4: Documentation & Finalization
+- [ ] Verify `docker compose up --build` works end-to-end
 - [ ] Update [`README.md`](README.md) with your project details
 - [ ] Update each service's `readme.md`
+
+---
+
+## Submission Checklist
+
+> Use this checklist before submitting your assignment.
+
+- [ ] `README.md` updated with team info and service descriptions
+- [ ] All services start with `docker compose up --build`
+- [ ] Every service has a working `GET /health` endpoint
+- [ ] [`docs/analysis-and-design.md`](docs/analysis-and-design.md) completed
+- [ ] [`docs/architecture.md`](docs/architecture.md) completed
+- [ ] OpenAPI specs in `docs/api-specs/` match implementation
+- [ ] Each service has its own `readme.md`
+- [ ] Code is clean, organized, and follows chosen language conventions
 
 ---
 
@@ -172,3 +186,13 @@ main
 - **Networking**: Services communicate via Docker Compose DNS (use service names, not `localhost`)
 - **API specs**: Keep OpenAPI specs in sync with implementation
 - **Git**: Use branches, meaningful commit messages, commit often
+
+---
+
+## Template Author
+
+This starter template was created by **Hung Dang**.
+- Email: hungdn@ptit.edu.vn
+- GitHub: [hungdn1701](https://github.com/hungdn1701)
+
+Good luck! 💪🚀

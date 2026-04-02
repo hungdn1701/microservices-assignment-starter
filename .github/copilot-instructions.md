@@ -17,4 +17,3 @@ Run with: `docker compose up --build`
 - Use environment variables for config — never hardcode secrets
 - Code runs inside Docker containers
 - Follow OpenAPI specs when implementing endpoints
-- Generate tests alongside code

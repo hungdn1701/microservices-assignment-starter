@@ -38,7 +38,6 @@ docker-compose.yml → Container orchestration
 - Follow idiomatic conventions for the service's chosen language
 - Include proper error handling with meaningful error messages
 - Add input validation on all endpoints
-- Write tests (unit + integration) alongside source code
 - Use type safety where available (TypeScript, Python type hints, etc.)
 - Keep functions small, focused, and well-named
 - Comments explain "why", not "what"
@@ -51,7 +50,6 @@ docker-compose.yml → Container orchestration
 4. Update the OpenAPI spec when adding/changing endpoints
 5. Update the service's `readme.md`
 6. Verify the Dockerfile builds correctly
-7. Add/update tests
 
 ## When Debugging
 

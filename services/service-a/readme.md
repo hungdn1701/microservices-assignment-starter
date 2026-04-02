@@ -56,14 +56,4 @@ service-a/
 | `DB_HOST`  | Database hostname   | localhost |
 | `DB_PORT`  | Database port       | 5432      |
 
-## Testing
 
-Describe how to run tests for this service:
-
-```bash
-# Example:
-# npm test
-# pytest
-# go test ./...
-# dotnet test
-```

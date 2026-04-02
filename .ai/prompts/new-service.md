@@ -24,9 +24,8 @@ Requirements:
 5. Database connection using environment variables (DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASSWORD)
 6. Input validation and error handling
 7. OpenAPI spec in docs/api-specs/[SERVICE_NAME].yaml
-8. Basic unit tests
-9. Update docker-compose.yml to include this service
-10. Service readme.md with setup instructions
+8. Update docker-compose.yml to include this service
+9. Service readme.md with setup instructions
 
 The service should:
 - Listen on port 5000 inside the container

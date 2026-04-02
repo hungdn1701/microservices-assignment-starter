@@ -28,7 +28,6 @@ Thư mục `.ai/prompts/` chứa các mẫu prompt sẵn dùng. Copy, thay `[PLA
 | [new-service.md](prompts/new-service.md) | Tạo microservice mới |
 | [api-endpoint.md](prompts/api-endpoint.md) | Thêm API endpoint |
 | [create-dockerfile.md](prompts/create-dockerfile.md) | Tạo Dockerfile |
-| [testing.md](prompts/testing.md) | Viết tests |
 | [debugging.md](prompts/debugging.md) | Debug lỗi |
 
 ---
@@ -39,7 +38,7 @@ Thư mục `.ai/prompts/` chứa các mẫu prompt sẵn dùng. Copy, thay `[PLA
 - Review code AI sinh ra trước khi commit
 - Chia nhỏ yêu cầu — từng endpoint, từng feature
 - Cung cấp context đầy đủ (error logs, file liên quan)
-- Dùng AI để iterate: refactor, thêm test, cải thiện
+- Dùng AI để iterate: refactor, cải thiện code
 
 ### ❌ Không nên:
 - Copy-paste code mà không hiểu

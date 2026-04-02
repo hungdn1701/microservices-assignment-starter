@@ -49,8 +49,4 @@ service-b/
 | `DB_HOST`  | Database hostname   | localhost |
 | `DB_PORT`  | Database port       | 5432      |
 
-## Testing
 
-```bash
-# Add your test commands here
-```

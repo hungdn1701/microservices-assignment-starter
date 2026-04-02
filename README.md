@@ -76,28 +76,9 @@ curl http://localhost:5002/health   # Service B
 
 ---
 
-## Submission Checklist
+## License
 
-- [ ] `README.md` updated with team info and service descriptions
-- [ ] All services start with `docker compose up --build`
-- [ ] Every service has a working `GET /health` endpoint
-- [ ] [`docs/analysis-and-design.md`](docs/analysis-and-design.md) completed
-- [ ] [`docs/architecture.md`](docs/architecture.md) completed
-- [ ] OpenAPI specs match implementation
-- [ ] API documentation complete in `docs/api-specs/`
-- [ ] Architecture documented in `docs/architecture.md`
-- [ ] Analysis and design documented in `docs/analysis-and-design.md`
-- [ ] Each service has its own `readme.md`
-- [ ] Code is clean, organized, and follows chosen language conventions
-- [ ] Tests are included and passing
+This project uses the [MIT License](LICENSE).
 
----
-
-## Author
-
-This template was created by **Hung Dang**.
-- Email: hungdn@ptit.edu.vn
-- GitHub: [hungdn1701](https://github.com/hungdn1701)
-
-Good luck! 💪🚀
+> Template by [Hung Dang](https://github.com/hungdn1701) · [Template guide](GETTING_STARTED.md)
 
