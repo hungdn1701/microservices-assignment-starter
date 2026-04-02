@@ -1,66 +1,63 @@
-# 🏗️ System Architecture
+# System Architecture
 
-## 1. Overview
+> This document is completed **after** [Analysis and Design](analysis-and-design.md).
+> Based on the Service Candidates and Non-Functional Requirements identified there, select appropriate architecture patterns and design the deployment architecture.
 
-Describe the purpose and high-level goals of your microservices system.
+**References:**
+1. *Service-Oriented Architecture: Analysis and Design for Services and Microservices* — Thomas Erl (2nd Edition)
+2. *Microservices Patterns: With Examples in Java* — Chris Richardson
+3. *Bài tập — Phát triển phần mềm hướng dịch vụ* — Hung Dang (available in Vietnamese)
 
-- What problem does it solve?
-- Who are the target users?
-- What are the key quality attributes (scalability, reliability, etc.)?
+---
 
-## 2. Architecture Style
+## 1. Pattern Selection
 
-Describe the architectural patterns and styles used:
+Select patterns based on business/technical justifications from your analysis.
 
-- [ ] Microservices
-- [ ] API Gateway pattern
-- [ ] Event-driven / Message queue
-- [ ] CQRS / Event Sourcing
-- [ ] Database per service
-- [ ] Saga pattern
-- [ ] Other: ___
+| Pattern | Selected? | Business/Technical Justification |
+|---------|-----------|----------------------------------|
+| API Gateway | | |
+| Database per Service | | |
+| Shared Database | | |
+| Saga | | |
+| Event-driven / Message Queue | | |
+| CQRS | | |
+| Circuit Breaker | | |
+| Service Registry / Discovery | | |
+| Other: ___ | | |
 
-## 3. System Components
+> Reference: *Microservices Patterns* — Chris Richardson, chapters on decomposition, data management, and communication patterns.
 
-| Component     | Responsibility                          | Tech Stack       | Port  |
-|---------------|----------------------------------------|------------------|-------|
-| **Frontend**  | User interface                         | *(your choice)*  | 3000  |
-| **Gateway**   | API routing, auth, rate limiting       | *(your choice)*  | 8080  |
-| **Service A** | *(describe domain)*                    | *(your choice)*  | 5001  |
-| **Service B** | *(describe domain)*                    | *(your choice)*  | 5002  |
-| **Database**  | *(persistent storage)*                 | *(your choice)*  | 5432  |
+---
 
-## 4. Communication Patterns
+## 2. System Components
 
-Describe how services communicate:
+| Component     | Responsibility | Tech Stack      | Port  |
+|---------------|----------------|-----------------|-------|
+| **Frontend**  |                | *(your choice)* | 3000  |
+| **Gateway**   |                | *(your choice)* | 8080  |
+| **Service A** |                | *(your choice)* | 5001  |
+| **Service B** |                | *(your choice)* | 5002  |
+| **Database**  |                | *(your choice)* | 5432  |
 
-- **Synchronous**: REST API / gRPC between services
-- **Asynchronous**: Message queue (RabbitMQ, Kafka, Redis Pub/Sub)
-- **Service Discovery**: Docker Compose DNS / Consul / etc.
+---
+
+## 3. Communication
 
 ### Inter-service Communication Matrix
 
 | From → To     | Service A | Service B | Gateway | Database |
 |---------------|-----------|-----------|---------|----------|
-| **Frontend**  |           |           | REST    |          |
-| **Gateway**   | REST      | REST      |         |          |
-| **Service A** |           | *(?)* |         | SQL      |
-| **Service B** | *(?)* |           |         | SQL      |
+| **Frontend**  |           |           |         |          |
+| **Gateway**   |           |           |         |          |
+| **Service A** |           |           |         |          |
+| **Service B** |           |           |         |          |
 
-## 5. Data Flow
+---
 
-Describe the typical request flow:
+## 4. Architecture Diagram
 
-```
-User → Frontend → Gateway → Service A → Database
-                          → Service B → Database
-```
-
-## 6. Architecture Diagram
-
-> Place your diagrams in `docs/asset/` and reference them here.
->
-> Recommended tools: draw.io, Mermaid, PlantUML, Excalidraw
+> Place diagrams in `docs/asset/` and reference here.
 
 ```mermaid
 graph LR
@@ -72,17 +69,10 @@ graph LR
     SB --> DB2[(Database B)]
 ```
 
-![Architecture Diagram](asset/architecture-diagram.png)
+---
 
-## 7. Deployment
+## 5. Deployment
 
 - All services containerized with Docker
 - Orchestrated via Docker Compose
 - Single command: `docker compose up --build`
-
-## 8. Scalability & Fault Tolerance
-
-- How can individual services scale independently?
-- What happens when a service goes down?
-- Are there retry mechanisms or circuit breakers?
-- How is data consistency maintained across services?

@@ -1,142 +1,165 @@
-# 📊 Microservices System — Analysis and Design
+# Analysis and Design — Business Process Automation Solution
 
-This document outlines the business logic analysis and service-oriented design for a specific business process (use case) in the microservices-based system.
+> **Goal**: Analyze a specific business process and design a service-oriented automation solution (SOA/Microservices).
+> Scope: 4–6 week assignment — focus on **one business process**, not an entire system.
 
 **References:**
 1. *Service-Oriented Architecture: Analysis and Design for Services and Microservices* — Thomas Erl (2nd Edition)
 2. *Microservices Patterns: With Examples in Java* — Chris Richardson
-3. *Bài tập — Phát triển phần mềm hướng dịch vụ* — Hung DN (2024)
+3. *Bài tập — Phát triển phần mềm hướng dịch vụ* — Hung Dang (available in Vietnamese)
 
 ---
 
-## 1. 🎯 Problem Statement
+## Part 1 — Analysis Preparation
 
-Describe the specific business process (use case) your system addresses:
+### 1.1 Business Process Definition
 
-- **Domain**: *(e.g., E-commerce, Healthcare, Education)*
-- **Problem**: *(What pain point does this system solve?)*
-- **Users/Actors**: *(Who interacts with the system?)*
-- **Scope**: *(What is in and out of scope?)*
+Describe or diagram the high-level Business Process to be automated.
+
+- **Domain**: *(fill in)*
+- **Business Process**: *(fill in)*
+- **Actors**: *(fill in)*
+- **Scope**: *(fill in)*
+
+**Process Diagram:**
+
+*(Insert BPMN, flowchart, or image into `docs/asset/` and reference here)*
+
+### 1.2 Existing Automation Systems
+
+List existing systems, databases, or legacy logic related to this process.
+
+| System Name | Type | Current Role | Interaction Method |
+|-------------|------|--------------|-------------------|
+|             |      |              |                   |
+
+> If none exist, state: *"None — the process is currently performed manually."*
+
+### 1.3 Non-Functional Requirements
+
+Non-functional requirements serve as input for identifying Utility Service and Microservice Candidates in step 2.7.
+
+| Requirement    | Description |
+|----------------|-------------|
+| Performance    |             |
+| Security       |             |
+| Scalability    |             |
+| Availability   |             |
 
 ---
 
-## 2. 🧩 Service-Oriented Analysis
+## Part 2 — REST/Microservices Modeling
 
-Analyze the business process to identify key functionalities and potential microservices.
+### 2.1 Decompose Business Process & 2.2 Filter Unsuitable Actions
 
-### 2.1 Business Process Decomposition
+Decompose the process from 1.1 into granular actions. Mark actions unsuitable for service encapsulation.
 
-| Step | Activity               | Actor    | Description                      |
-|------|------------------------|----------|----------------------------------|
-| 1    | *(e.g., Browse items)* | Customer | *(describe the step)*           |
-| 2    | ...                    | ...      | ...                              |
+| # | Action | Actor | Description | Suitable? |
+|---|--------|-------|-------------|-----------|
+|   |        |       |             | ✅ / ❌    |
 
-### 2.2 Entity Identification
+> Actions marked ❌: manual-only, require human judgment, or cannot be encapsulated as a service.
 
-| Entity      | Attributes                     | Owned By      |
-|-------------|--------------------------------|---------------|
-| *(e.g., User)* | id, name, email, role       | Service A     |
-| ...         | ...                            | ...           |
+### 2.3 Entity Service Candidates
 
-### 2.3 Service Candidate Identification
+Identify business entities and group reusable (agnostic) actions into Entity Service Candidates.
 
-Identify candidate services based on:
-- **Business capability** decomposition
-- **Domain-Driven Design** bounded contexts
-- **Data ownership** boundaries
+| Entity | Service Candidate | Agnostic Actions |
+|--------|-------------------|------------------|
+|        |                   |                  |
 
----
+### 2.4 Task Service Candidate
 
-## 3. 🔄 Service-Oriented Design
+Group process-specific (non-agnostic) actions into a Task Service Candidate.
 
-### 3.1 Service Inventory
+| Non-agnostic Action | Task Service Candidate |
+|---------------------|------------------------|
+|                     |                        |
 
-| Service     | Responsibility              | Type          |
-|-------------|-----------------------------|---------------|
-| Service A   | *(e.g., User management)*   | Entity / Task |
-| Service B   | *(e.g., Order processing)*  | Entity / Task |
-| Gateway     | API routing & aggregation   | Utility       |
+### 2.5 Identify Resources
 
-### 3.2 Service Capabilities (Interface Design)
+Map entities/processes to REST URI Resources.
 
-**Service A:**
-| Capability          | Method | Endpoint        | Input              | Output            |
-|---------------------|--------|-----------------|--------------------|--------------------|
-| List items          | GET    | `/items`        | query params       | Item[]             |
-| Create item         | POST   | `/items`        | ItemCreate body    | Item               |
+| Entity / Process | Resource URI |
+|------------------|--------------|
+|                  |              |
 
-**Service B:**
-| Capability          | Method | Endpoint        | Input              | Output            |
-|---------------------|--------|-----------------|--------------------|--------------------|
-| ...                 | ...    | ...             | ...                | ...                |
+### 2.6 Associate Capabilities with Resources and Methods
 
-### 3.3 Service Interactions
+| Service Candidate | Capability | Resource | HTTP Method |
+|-------------------|------------|----------|-------------|
+|                   |            |          |             |
 
-Describe the collaboration patterns:
+### 2.7 Utility Service & Microservice Candidates
+
+Based on Non-Functional Requirements (1.3) and Processing Requirements, identify cross-cutting utility logic or logic requiring high autonomy/performance.
+
+| Candidate | Type (Utility / Microservice) | Justification |
+|-----------|-------------------------------|---------------|
+|           |                               |               |
+
+### 2.8 Service Composition Candidates
+
+Interaction diagram showing how Service Candidates collaborate to fulfill the business process.
 
 ```mermaid
 sequenceDiagram
-    participant U as User
-    participant GW as Gateway
-    participant SA as Service A
-    participant SB as Service B
-    participant DB as Database
+    participant Client
+    participant TaskService
+    participant EntityServiceA
+    participant EntityServiceB
+    participant UtilityService
 
-    U->>GW: POST /api/action
-    GW->>SA: Forward request
-    SA->>DB: Query/Update
-    SA->>SB: Inter-service call (if needed)
-    SB-->>SA: Response
-    SA-->>GW: Result
-    GW-->>U: Response
+    Client->>TaskService: (fill in)
+    TaskService->>EntityServiceA: (fill in)
+    EntityServiceA-->>TaskService: (fill in)
+    TaskService->>EntityServiceB: (fill in)
+    EntityServiceB-->>TaskService: (fill in)
+    TaskService-->>Client: (fill in)
 ```
-
-### 3.4 Data Ownership & Boundaries
-
-| Data Entity | Owner Service | Access Pattern          |
-|-------------|---------------|-------------------------|
-| ...         | Service A     | CRUD via REST API       |
-| ...         | Service B     | Read via events/API     |
 
 ---
 
-## 4. 📋 API Specifications
+## Part 3 — Service-Oriented Design
 
-Complete API definitions are in:
+### 3.1 Uniform Contract Design
+
+Service Contract specification for each service. Full OpenAPI specs:
 - [`docs/api-specs/service-a.yaml`](api-specs/service-a.yaml)
 - [`docs/api-specs/service-b.yaml`](api-specs/service-b.yaml)
 
----
+**Service A:**
 
-## 5. 🗄️ Data Model
+| Endpoint | Method | Media Type | Response Codes |
+|----------|--------|------------|----------------|
+|          |        |            |                |
 
-Describe the data model for each service:
+**Service B:**
 
-### Service A — Data Model
+| Endpoint | Method | Media Type | Response Codes |
+|----------|--------|------------|----------------|
+|          |        |            |                |
 
+### 3.2 Service Logic Design
+
+Internal processing flow for each service.
+
+**Service A:**
+
+```mermaid
+flowchart TD
+    A[Receive Request] --> B{Validate?}
+    B -->|Valid| C[(Process / DB)]
+    B -->|Invalid| D[Return 4xx Error]
+    C --> E[Return Response]
 ```
-┌─────────────────┐
-│     Entity       │
-├─────────────────┤
-│ id: UUID         │
-│ name: string     │
-│ created_at: date │
-└─────────────────┘
-```
 
-### Service B — Data Model
+**Service B:**
 
-*(Add your data model here)*
-
----
-
-## 6. ❗ Non-Functional Requirements
-
-| Requirement    | Description                                         |
-|----------------|-----------------------------------------------------|
-| Performance    | *(e.g., < 200ms response time)*                    |
-| Scalability    | *(e.g., handle 1000 concurrent users)*             |
-| Availability   | *(e.g., 99.9% uptime)*                              |
-| Security       | *(e.g., JWT auth, HTTPS, input validation)*        |
-
+```mermaid
+flowchart TD
+    A[Receive Request] --> B{Validate?}
+    B -->|Valid| C[(Process / DB)]
+    B -->|Invalid| D[Return 4xx Error]
+    C --> E[Return Response]
 ```

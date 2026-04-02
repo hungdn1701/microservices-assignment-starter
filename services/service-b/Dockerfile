@@ -1,13 +1,8 @@
-# ==============================================
 # Service B — Dockerfile
-# Replace this template with your actual setup
-# ==============================================
+# Replace with your actual setup.
+# See .ai/prompts/create-dockerfile.md for templates (Node.js, Python, Java, Go, .NET).
 #
-# See services/service-a/Dockerfile for examples
-# covering Node.js, Python, Java, Go, and .NET.
-#
-# Copy and adapt the appropriate template for
-# your chosen technology stack.
+# Requirements: expose port 5000, implement GET /health endpoint.
 
 # TODO: Replace with your actual Dockerfile.
 FROM scratch

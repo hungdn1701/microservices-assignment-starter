@@ -21,9 +21,7 @@ Describe the responsibility of this service:
 
 | Method | Endpoint      | Description          |
 |--------|---------------|----------------------|
-| GET    | `/`           | Health check         |
-| GET    | `/items`      | List all items       |
-| POST   | `/items`      | Create a new item    |
+| GET    | `/health`     | Health check         |
 | ...    | ...           | ...                  |
 
 > Full API specification: [`docs/api-specs/service-a.yaml`](../../docs/api-specs/service-a.yaml)
