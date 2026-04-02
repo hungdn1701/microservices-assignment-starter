@@ -9,7 +9,7 @@
 
 - [Docker Desktop](https://docs.docker.com/get-docker/) (includes Docker Compose)
 - [Git](https://git-scm.com/)
-- An AI coding tool (recommended): [GitHub Copilot](https://github.com/features/copilot), [Cursor](https://cursor.sh), [Windsurf](https://codeium.com/windsurf), or [Claude Code](https://docs.anthropic.com/en/docs/claude-code)
+- An AI coding tool (recommended): [GitHub Copilot](https://github.com/features/copilot), [Cursor](https://cursor.sh), or [Claude Code](https://docs.anthropic.com/en/docs/claude-code)
 
 ---
 
@@ -154,7 +154,6 @@ This repo is pre-configured for AI-powered development:
 | GitHub Copilot | `.github/copilot-instructions.md` |
 | Cursor | `.cursorrules` |
 | Claude Code | `CLAUDE.md` |
-| Windsurf | `.windsurfrules` |
 
 All config files point to [`.ai/AGENTS.md`](.ai/AGENTS.md) as the single source of truth.
 Prompt templates: [`.ai/prompts/`](.ai/prompts/).

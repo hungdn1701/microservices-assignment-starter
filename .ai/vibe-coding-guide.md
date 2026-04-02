@@ -11,7 +11,6 @@
 | GitHub Copilot | `.github/copilot-instructions.md` | [docs](https://docs.github.com/en/copilot/customizing-copilot/adding-repository-custom-instructions) |
 | Cursor | `.cursorrules` | [docs](https://docs.cursor.com/context/rules) |
 | Claude Code | `CLAUDE.md` | [docs](https://docs.anthropic.com/en/docs/claude-code) |
-| Windsurf | `.windsurfrules` | [docs](https://docs.codeium.com/windsurf) |
 | ChatGPT / Claude / Gemini | Dùng trực tiếp | Web/API |
 | v0, bolt.new, Lovable | Tạo UI nhanh | Web |
 
