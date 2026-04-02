@@ -1,61 +1,61 @@
-# 🚀 Hướng dẫn làm bài tập Microservices
+# 🚀 Microservices Assignment — Student Guide
 
 [![GitHub Stars](https://img.shields.io/github/stars/hungdn1701/microservices-assignment-starter?style=social)](https://github.com/hungdn1701/microservices-assignment-starter/stargazers)
 [![GitHub Forks](https://img.shields.io/github/forks/hungdn1701/microservices-assignment-starter?style=social)](https://github.com/hungdn1701/microservices-assignment-starter/forks)
 
-> 📋 Đây là hướng dẫn từng bước cho sinh viên. Đọc kỹ trước khi bắt đầu.
+> 📋 Step-by-step guide for students. Read this carefully before starting.
 
 ---
 
-## ⚡ Bắt đầu nhanh
+## ⚡ Quick Start
 
-### Bước 1 — Tạo tài khoản GitHub
+### Step 1 — Create a GitHub account
 
-Nếu chưa có tài khoản, đăng ký tại https://github.com/signup
+If you don't have an account yet, sign up at https://github.com/signup
 
 ---
 
-### Bước 2 — Star ⭐ và Fork repo starter
+### Step 2 — Star ⭐ and Fork the starter repo
 
-1. Mở repo starter: https://github.com/hungdn1701/microservices-assignment-starter
-2. Nhấn nút **⭐ Star** (góc trên bên phải trang)
-3. Nhấn nút **Fork** → chọn tài khoản của bạn → **Create fork**
+1. Open the starter repo: https://github.com/hungdn1701/microservices-assignment-starter
+2. Click the **⭐ Star** button (top-right corner of the page)
+3. Click **Fork** → select your account → **Create fork**
 
-> 📌 Sau khi fork, bạn sẽ có bản copy tại:
+> 📌 After forking, you will have a copy at:
 > `https://github.com/<your-username>/microservices-assignment-starter`
 
 ---
 
-### Bước 3 — Cài công cụ cần thiết
+### Step 3 — Install required tools
 
 #### Git
 
-| Hệ điều hành | Cách cài |
-|---------------|----------|
-| **Windows** | Tải tại https://git-scm.com/download/win → cài mặc định |
-| **macOS** | Mở Terminal → gõ `git --version` (tự cài nếu chưa có) |
+| OS | How to install |
+|-----|----------------|
+| **Windows** | Download from https://git-scm.com/download/win → install with defaults |
+| **macOS** | Open Terminal → type `git --version` (installs automatically if missing) |
 | **Linux** | `sudo apt install git` |
 
-Kiểm tra:
+Verify:
 ```bash
 git --version
-# → git version 2.x.x là OK
+# → git version 2.x.x means it's installed
 ```
 
 #### Docker Desktop
 
-Tải và cài tại https://docs.docker.com/get-docker/
+Download and install from https://docs.docker.com/get-docker/
 
-Kiểm tra:
+Verify:
 ```bash
 docker --version
-# → Docker version 2x.x.x là OK
+# → Docker version 2x.x.x means it's installed
 
 docker compose version
-# → Docker Compose version v2.x.x là OK
+# → Docker Compose version v2.x.x means it's installed
 ```
 
-> ⚠️ Trên Windows, đảm bảo Docker Desktop đang chạy (icon 🐳 trên taskbar).
+> ⚠️ On Windows, make sure Docker Desktop is running (🐳 icon in the taskbar).
 
 ---
 
@@ -115,45 +115,45 @@ git push
 
 ---
 
-## 📝 Quy trình làm bài
+## 📝 Development Workflow
 
-### Giai đoạn 1: Phân tích & Thiết kế
+### Phase 1: Analysis & Design
 
-1. Đọc file `GETTING_STARTED.md` trong repo để hiểu cấu trúc dự án
-2. Chọn **một** phương pháp phân tích:
-   - **Cách 1 — SOA (Erl)**: Hoàn thành `docs/analysis-and-design.md`
-   - **Cách 2 — Strategic DDD**: Hoàn thành `docs/analysis-and-design-ddd.md`
-3. Xác định các service cần thiết
+1. Read `GETTING_STARTED.md` in the repo to understand the project structure
+2. Choose **one** analysis approach:
+   - **Approach 1 — SOA (Erl)**: Complete `docs/analysis-and-design.md`
+   - **Approach 2 — Strategic DDD**: Complete `docs/analysis-and-design-ddd.md`
+3. Identify the services needed for your domain
 
-### Giai đoạn 2: Kiến trúc & API
+### Phase 2: Architecture & API
 
-1. Chọn patterns và hoàn thành `docs/architecture.md`
-2. Thiết kế API trong `docs/api-specs/`
+1. Select patterns and complete `docs/architecture.md`
+2. Design APIs in `docs/api-specs/`
 
-### Giai đoạn 3: Lập trình
+### Phase 3: Implementation
 
-1. Chọn tech stack cho mỗi service
-2. Cập nhật Dockerfile
-3. Implement `GET /health` cho mỗi service (làm đầu tiên!)
-4. Implement business logic và API endpoints
-5. Cấu hình Gateway routing
-6. Xây dựng Frontend
+1. Choose the tech stack for each service
+2. Update each Dockerfile
+3. Implement `GET /health` in every service (do this first!)
+4. Implement business logic and API endpoints
+5. Configure Gateway routing
+6. Build the Frontend
 
-### Giai đoạn 4: Hoàn thiện
+### Phase 4: Finalization
 
-1. Kiểm tra `docker compose up --build` chạy được
-2. Cập nhật `README.md` với thông tin nhóm
-3. Cập nhật `readme.md` của từng service
+1. Verify `docker compose up --build` runs successfully
+2. Update `README.md` with your team information
+3. Update each service's `readme.md`
 
 ---
 
-## 💻 Cách nộp bài
+## 💻 How to Submit
 
-Trong quá trình làm bài, **commit thường xuyên** sau mỗi phần hoàn thành:
+Throughout development, **commit frequently** after each completed part:
 
 ```bash
 git add .
-git commit -m "Hoàn thành phân tích và thiết kế"
+git commit -m "Complete analysis and design"
 git push
 ```
 
@@ -163,63 +163,63 @@ git commit -m "Implement service-a health endpoint"
 git push
 ```
 
-> ✅ Mỗi lần `push` = giảng viên thấy tiến độ của bạn.
+> ✅ Every `push` = your instructor can see your progress.
 >
-> ⏰ **Deadline** = thời điểm commit cuối cùng được chấm.
+> ⏰ **Deadline** = the timestamp of your last commit is what counts.
 >
-> ❌ **KHÔNG** cần tạo Pull Request hay thông báo nộp bài thêm.
+> ❌ **No** Pull Request or additional submission notification needed.
 
 ---
 
-## ✅ Checklist trước khi nộp
+## ✅ Pre-submission Checklist
 
-- [ ] `README.md` đã cập nhật thông tin nhóm và mô tả service
-- [ ] Tất cả services khởi động được: `docker compose up --build`
-- [ ] Mỗi service có endpoint `GET /health` hoạt động
-- [ ] `docs/analysis-and-design.md` (hoặc `analysis-and-design-ddd.md`) đã hoàn thành
-- [ ] `docs/architecture.md` đã hoàn thành
-- [ ] OpenAPI specs trong `docs/api-specs/` khớp với implementation
-- [ ] Mỗi service có file `readme.md` riêng
-- [ ] Code sạch, tổ chức tốt, theo convention của ngôn ngữ đã chọn
-
----
-
-## 🎯 Mẹo quan trọng
-
-| # | Mẹo | Tại sao |
-|---|------|---------|
-| 1 | Làm phân tích trước, code sau | Hiểu rõ domain → code đúng hướng |
-| 2 | `GET /health` là endpoint đầu tiên | Xác nhận service chạy được trong Docker |
-| 3 | Chạy `docker compose up --build` thường xuyên | Đừng đợi đến cuối mới test |
-| 4 | Mỗi thành viên làm một service | Chia theo service, không chia theo layer |
-| 5 | Commit nhỏ, commit thường xuyên | Dễ rollback, thể hiện tiến độ |
-| 6 | Dùng service name, không dùng `localhost` | `http://service-a:5001` thay vì `http://localhost:5001` |
-| 7 | Không hardcode password trong code | Dùng file `.env` cho cấu hình |
-| 8 | Dùng AI tools để hỗ trợ | Xem `.ai/vibe-coding-guide.md` trong repo |
+- [ ] `README.md` updated with team info and service descriptions
+- [ ] All services start with: `docker compose up --build`
+- [ ] Every service has a working `GET /health` endpoint
+- [ ] `docs/analysis-and-design.md` (or `analysis-and-design-ddd.md`) completed
+- [ ] `docs/architecture.md` completed
+- [ ] OpenAPI specs in `docs/api-specs/` match implementation
+- [ ] Each service has its own `readme.md`
+- [ ] Code is clean, organized, and follows the chosen language conventions
 
 ---
 
-## ❓ Lỗi thường gặp
+## 🎯 Key Tips
 
-| Lỗi | Nguyên nhân | Cách sửa |
-|-----|-------------|----------|
-| `docker: command not found` | Chưa cài Docker Desktop | Cài tại https://docs.docker.com/get-docker/ |
-| `Cannot connect to Docker daemon` | Docker Desktop chưa khởi động | Mở Docker Desktop, đợi icon 🐳 xuất hiện |
-| `port is already in use` | Port đang bị ứng dụng khác chiếm | Tắt ứng dụng đó hoặc đổi port trong `docker-compose.yml` |
-| Service A không gọi được Service B | Dùng `localhost` thay vì service name | Đổi thành `http://service-b:5002` |
-| `git push` bị rejected | Có thay đổi trên remote chưa pull | `git pull --rebase` rồi `push` lại |
+| # | Tip | Why |
+|---|-----|-----|
+| 1 | Analysis first, code second | Clear domain understanding → fewer wrong turns |
+| 2 | `GET /health` is your first endpoint | Confirms the service runs inside Docker |
+| 3 | Run `docker compose up --build` frequently | Don't wait until the end to test |
+| 4 | One service per team member | Split by service, not by layer |
+| 5 | Small commits, commit frequently | Easy to roll back, shows progress to instructor |
+| 6 | Use service names, not `localhost` | Use `http://service-a:5001` not `http://localhost:5001` |
+| 7 | Never hardcode passwords in code | Use `.env` for all configuration |
+| 8 | Use AI tools to assist | See `.ai/vibe-coding-guide.md` in the repo |
 
 ---
 
-## 📚 Tài liệu tham khảo
+## ❓ Common Errors
+
+| Error | Cause | Fix |
+|-------|-------|-----|
+| `docker: command not found` | Docker Desktop not installed | Install from https://docs.docker.com/get-docker/ |
+| `Cannot connect to Docker daemon` | Docker Desktop not running | Open Docker Desktop and wait for the 🐳 icon |
+| `port is already in use` | Port occupied by another app | Stop that app or change the port in `docker-compose.yml` |
+| Service A cannot call Service B | Using `localhost` instead of service name | Change to `http://service-b:5002` |
+| `git push` rejected | Remote has unpulled changes | Run `git pull --rebase` then push again |
+
+---
+
+## 📚 References
 
 - [Starter Template Repo](https://github.com/hungdn1701/microservices-assignment-starter)
-- [GETTING_STARTED.md](https://github.com/hungdn1701/microservices-assignment-starter/blob/main/GETTING_STARTED.md) — Hướng dẫn chi tiết trong repo
+- [GETTING_STARTED.md](https://github.com/hungdn1701/microservices-assignment-starter/blob/main/GETTING_STARTED.md) — Detailed project guide inside the repo
 - [Docker Compose Docs](https://docs.docker.com/compose/)
 - [OpenAPI 3.0 Specification](https://swagger.io/specification/)
 
 ---
 
-> 💡 Có thắc mắc? Liên hệ giảng viên qua email hoặc đặt câu hỏi trên GitHub Discussions của repo starter.
+> 💡 Questions? Contact your instructor via email or post on GitHub Discussions in the starter repo.
 >
 > **Good luck!** 💪🚀
