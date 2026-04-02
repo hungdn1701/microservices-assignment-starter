@@ -16,8 +16,12 @@
 ## Quick Start
 
 ```bash
-# 1. Clone this repository
-git clone https://github.com/hungdn1701/microservices-assignment-starter.git
+# 1. Fork this repository on GitHub
+#    Go to https://github.com/hungdn1701/microservices-assignment-starter
+#    Click "Fork" → create fork under your account or team organization
+
+# 2. Clone YOUR fork (not the original)
+git clone https://github.com/<your-username>/microservices-assignment-starter.git
 cd microservices-assignment-starter
 
 # 2. Initialize the project
