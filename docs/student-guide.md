@@ -59,47 +59,49 @@ docker compose version
 
 ---
 
-### Bước 4 — Clone fork về máy
+### Step 4 - Clone your fork locally
 
-Mở Terminal (hoặc Git Bash trên Windows):
+Open Terminal (or Git Bash on Windows):
 
 ```bash
 git clone https://github.com/<your-username>/microservices-assignment-starter.git
 cd microservices-assignment-starter
 ```
 
-> 🔁 Thay `<your-username>` bằng username GitHub của bạn.
+> Replace `<your-username>` with your actual GitHub username.
 
 ---
 
-### Bước 5 — Nhận bài tập từ GitHub Classroom
+### Step 5 - Accept the assignment from GitHub Classroom
 
-1. Mở **link assignment** từ giảng viên (dạng `https://classroom.github.com/a/...`)
-2. Nhấn **"Accept this assignment"**
-3. GitHub tự tạo repo riêng cho bạn/nhóm:
+1. Open the assignment link from your instructor (format: `https://classroom.github.com/a/...`).
+2. Click **Accept this assignment**.
+3. If prompted, select your identifier from the **roster list**.
+4. If this is a group assignment, choose your team (or create it if your instructor allows).
+5. GitHub Classroom will create a dedicated repository for you/team:
    `https://github.com/<org-name>/<assignment-name>-<your-username>`
-4. Clone repo assignment đó về máy:
+6. Clone that assignment repository:
 
 ```bash
 git clone https://github.com/<org-name>/<assignment-name>-<your-username>.git
 cd <assignment-name>-<your-username>
 ```
 
-5. **Copy toàn bộ nội dung** từ thư mục starter (đã clone ở Bước 4) vào thư mục assignment — **trừ thư mục `.git`**:
+7. Copy all files from the starter folder (cloned in Step 4) into the assignment folder, excluding `.git`:
 
 **Windows (PowerShell):**
 ```powershell
-# Đứng trong thư mục assignment
+# Run inside your assignment folder
 Copy-Item -Path ..\microservices-assignment-starter\* -Destination . -Recurse -Force -Exclude ".git"
 ```
 
 **macOS / Linux:**
 ```bash
-# Đứng trong thư mục assignment
+# Run inside your assignment folder
 rsync -av --exclude='.git' ../microservices-assignment-starter/ .
 ```
 
-6. Commit lần đầu:
+8. Create your first commit:
 
 ```bash
 git add .
@@ -107,7 +109,9 @@ git commit -m "Initial setup from starter template"
 git push
 ```
 
-> ✅ Repo assignment bây giờ có đầy đủ cấu trúc starter, sẵn sàng làm bài.
+> Your assignment repository now contains the full starter structure and is ready for development.
+>
+> If you cannot find your name in the roster, stop here and contact your instructor. Do not continue with a random roster entry.
 
 ---
 
