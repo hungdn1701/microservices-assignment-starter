@@ -6,7 +6,7 @@
 
 > Brief description of the business process being automated and the service-oriented solution.
 
-> **New to this repo?** See [`GETTING_STARTED.md`](GETTING_STARTED.md) for setup instructions and workflow guide.
+> **New to this repo?** See [`GETTING_STARTED.md`](GETTING_STARTED.md) for setup instructions, workflow guide, and submission checklist.
 
 ---
 
@@ -20,11 +20,13 @@
 
 ## Business Process
 
-*(Summarize the business process being automated — domain, actors, scope)*
+*(Summarize the **one business process** being automated — domain, actors, scope. Example: "Customer places an order and receives delivery in the Online Food Delivery domain.")*
 
 ---
 
 ## Architecture
+
+*(Paste or update the architecture diagram from [`docs/architecture.md`](docs/architecture.md) here.)*
 
 ```mermaid
 graph LR
@@ -43,36 +45,29 @@ graph LR
 | **Service A** |                |            | 5001 |
 | **Service B** |                |            | 5002 |
 
-> Full documentation: [`docs/architecture.md`](docs/architecture.md) · [`docs/analysis-and-design.md`](docs/analysis-and-design.md)
-
 ---
 
-## Getting Started
+## Quick Start
 
 ```bash
-# Clone and initialize
-git clone <your-repo-url>
-cd <project-folder>
-cp .env.example .env
-
-# Build and run
 docker compose up --build
 ```
 
-### Verify
+Verify: `curl http://localhost:8080/health`
 
-```bash
-curl http://localhost:8080/health   # Gateway
-curl http://localhost:5001/health   # Service A
-curl http://localhost:5002/health   # Service B
-```
+> For full setup instructions, prerequisites, and development commands, see [`GETTING_STARTED.md`](GETTING_STARTED.md).
 
 ---
 
-## API Documentation
+## Documentation
 
-- [Service A — OpenAPI Spec](docs/api-specs/service-a.yaml)
-- [Service B — OpenAPI Spec](docs/api-specs/service-b.yaml)
+| Document | Description |
+|----------|-------------|
+| [`GETTING_STARTED.md`](GETTING_STARTED.md) | Setup, workflow, submission checklist |
+| [`docs/analysis-and-design.md`](docs/analysis-and-design.md) | Analysis & Design — Step-by-Step Action approach |
+| [`docs/analysis-and-design-ddd.md`](docs/analysis-and-design-ddd.md) | Analysis & Design — Domain-Driven Design approach |
+| [`docs/architecture.md`](docs/architecture.md) | Architecture patterns, components & deployment |
+| [`docs/api-specs/`](docs/api-specs/) | OpenAPI 3.0 specifications for each service |
 
 ---
 

@@ -122,23 +122,27 @@ sequenceDiagram
 
 ## Part 3 — Service-Oriented Design
 
+> Part 3 is the **convergence point** — regardless of whether you used Step-by-Step Action or DDD in Part 2, the outputs here are the same: service contracts and service logic.
+
 ### 3.1 Uniform Contract Design
 
 Service Contract specification for each service. Full OpenAPI specs:
 - [`docs/api-specs/service-a.yaml`](api-specs/service-a.yaml)
 - [`docs/api-specs/service-b.yaml`](api-specs/service-b.yaml)
 
-**Service A:**
+> 💡 **Derive from Part 2:** Each service capability from 2.6 maps to one API endpoint. Update the OpenAPI spec files to match.
 
-| Endpoint | Method | Media Type | Response Codes |
-|----------|--------|------------|----------------|
-|          |        |            |                |
+**Service A — *(service name)*:**
 
-**Service B:**
+| Endpoint | Method | Description | Request Body | Response Codes |
+|----------|--------|-------------|--------------|----------------|
+|          |        |             |              |                |
 
-| Endpoint | Method | Media Type | Response Codes |
-|----------|--------|------------|----------------|
-|          |        |            |                |
+**Service B — *(service name)*:**
+
+| Endpoint | Method | Description | Request Body | Response Codes |
+|----------|--------|-------------|--------------|----------------|
+|          |        |             |              |                |
 
 ### 3.2 Service Logic Design
 

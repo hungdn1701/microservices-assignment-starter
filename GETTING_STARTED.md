@@ -63,8 +63,8 @@ microservices-assignment-starter/
 ├── Makefile                        # Common development commands
 │
 ├── docs/                           # Documentation
-│   ├── analysis-and-design.md      # Approach 1: SOA/Erl analysis & design
-│   ├── analysis-and-design-ddd.md  # Approach 2: Strategic DDD analysis & design
+│   ├── analysis-and-design.md      # Approach 1: Step-by-Step Action analysis & design
+│   ├── analysis-and-design-ddd.md  # Approach 2: Domain-Driven Design analysis & design
 │   ├── architecture.md             # Architecture patterns & deployment
 │   ├── asset/                      # Images, diagrams, visual assets
 │   └── api-specs/                  # OpenAPI 3.0 specifications
@@ -104,22 +104,61 @@ microservices-assignment-starter/
 
 ## Recommended Workflow
 
+> **Document flow:** Analysis & Design → Detailed Design (API specs + Architecture) → Implementation
+>
+> ```
+> ┌──────────────────────────────────┐
+> │  Phase 1: Analysis & Design      │  Choose ONE approach:
+> │  (Part 1 + Part 2 + Part 3)     │  • Step-by-Step Action
+> │                                  │  • Domain-Driven Design
+> │  Output: service candidates,     │
+> │  service contracts, service logic│
+> └───────────────┬──────────────────┘
+>                 │
+>                 ▼
+> ┌──────────────────────────────────┐
+> │  Phase 2: Architecture Design    │  Patterns, tech stack,
+> │  architecture.md + api-specs/    │  communication, deployment
+> │                                  │
+> │  Output: deployable system design│
+> └───────────────┬──────────────────┘
+>                 │
+>                 ▼
+> ┌──────────────────────────────────┐
+> │  Phase 3: Implementation         │  Code services, gateway,
+> │  services/ + gateway/ + frontend/│  frontend inside Docker
+> └───────────────┬──────────────────┘
+>                 │
+>                 ▼
+> ┌──────────────────────────────────┐
+> │  Phase 4: Documentation          │  README, service readmes,
+> │  & Finalization                  │  verify docker compose
+> └──────────────────────────────────┘
+> ```
+
 ### Phase 1: Analysis & Design
+Complete **one** of the two analysis documents. Both produce the same deliverables (service candidates, service contracts, service logic) — they differ only in *how* you discover service boundaries.
+
+> ⚠️ **Scope reminder:** Focus on **one business process** (e.g., "Customer places and receives an order"), not an entire system. A good scope is 5–15 process steps and 2–4 actors. This keeps the assignment manageable within 4–6 weeks.
+
 - [ ] Read and understand this starter template
-- [ ] Choose your business domain and use case
-- [ ] Choose **one** analysis approach and complete it:
-  - **Approach 1 — SOA (Erl)**: [`docs/analysis-and-design.md`](docs/analysis-and-design.md) — step-by-step process decomposition
-  - **Approach 2 — Strategic DDD**: [`docs/analysis-and-design-ddd.md`](docs/analysis-and-design-ddd.md) — domain events and bounded contexts
+- [ ] Choose your business domain and **one** specific business process
+- [ ] Choose **one** analysis approach and complete **all three Parts**:
+  - **Approach 1 — Step-by-Step Action**: [`docs/analysis-and-design.md`](docs/analysis-and-design.md) — decompose process into actions, group actions into services
+  - **Approach 2 — Domain-Driven Design**: [`docs/analysis-and-design-ddd.md`](docs/analysis-and-design-ddd.md) — discover domain events and bounded contexts, map to services
+- [ ] Complete Part 3 (Service-Oriented Design) — this is the same in both approaches: define service contracts and internal logic
 
 ### Phase 2: Architecture & API Design
-- [ ] Select patterns and complete [`docs/architecture.md`](docs/architecture.md)
-- [ ] Define APIs in [`docs/api-specs/`](docs/api-specs/)
+Use the service candidates and contracts from Phase 1 as input.
+
+- [ ] Select architecture patterns and complete [`docs/architecture.md`](docs/architecture.md)
+- [ ] Write full OpenAPI specs in [`docs/api-specs/`](docs/api-specs/) — these should match the contracts defined in Part 3
 
 ### Phase 3: Implementation
 - [ ] Choose tech stack for each service
 - [ ] Update Dockerfiles
 - [ ] Implement `GET /health` in every service
-- [ ] Implement business logic and API endpoints
+- [ ] Implement business logic and API endpoints (following your OpenAPI specs)
 - [ ] Configure Gateway routing
 - [ ] Build frontend
 
@@ -137,7 +176,9 @@ microservices-assignment-starter/
 - [ ] `README.md` updated with team info and service descriptions
 - [ ] All services start with `docker compose up --build`
 - [ ] Every service has a working `GET /health` endpoint
-- [ ] [`docs/analysis-and-design.md`](docs/analysis-and-design.md) completed
+- [ ] Analysis & Design completed (one of the two approaches):
+  - [ ] [`docs/analysis-and-design.md`](docs/analysis-and-design.md) — **or** —
+  - [ ] [`docs/analysis-and-design-ddd.md`](docs/analysis-and-design-ddd.md)
 - [ ] [`docs/architecture.md`](docs/architecture.md) completed
 - [ ] OpenAPI specs in `docs/api-specs/` match implementation
 - [ ] Each service has its own `readme.md`
