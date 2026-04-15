@@ -1,0 +1,31 @@
+openapi: 3.0.0
+info:
+  title: Ticketing Task Service API
+  description: Orchestrator Service - Nhạc trưởng điều phối Mua Vé theo cơ chế Saga
+  version: 1.0.0
+servers:
+  - url: http://localhost:5003
+paths:
+  /api/ticketing/checkout:
+    post:
+      summary: Khởi tạo quy trình mua vé (Lock ghế -> Trợ tiền -> Sinh vé -> Emit msg)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                showtimeId:
+                  type: integer
+                seatId:
+                  type: integer
+                userId:
+                  type: integer
+      responses:
+        '201':
+          description: Giao dịch kết thúc hoàn toàn viên mãn - Xuất vé.
+        '400':
+          description: Giao dịch gãy tại bước Payment (Đã tự động Rollback nhả ghế).
+        '409':
+          description: Giao dịch gãy tại bước Lock (Ghế đã trùng).

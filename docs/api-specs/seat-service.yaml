@@ -1,0 +1,63 @@
+openapi: 3.0.0
+info:
+  title: Seat Service API
+  description: Quản lý ma trận sơ đồ ghế (Trạng thái ghế)
+  version: 1.0.0
+servers:
+  - url: http://localhost:5002
+paths:
+  /api/showtimes/{id}/seats:
+    get:
+      summary: Lấy sơ đồ bàn cờ ghế ngồi của phòng chiếu
+      parameters:
+        - name: id
+          in: path
+          description: ID suất chiếu (Showtime)
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Seat'
+  /api/showtimes/{id}/seats/lock:
+    post:
+      summary: Xin cấp khóa cứng một ghế (Temporary Lock)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                seatId:
+                  type: integer
+      responses:
+        '200':
+          description: Lock ghế thành công (Giữ chỗ)
+        '409':
+          description: Khóa thất bại (Ghế đã mất do có người khác chọn)
+components:
+  schemas:
+    Seat:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          example: 'A1'
+        status:
+          type: string
+          enum: [AVAILABLE, LOCKED, BOOKED]

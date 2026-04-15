@@ -1,0 +1,60 @@
+openapi: 3.0.0
+info:
+  title: Showtime Service API
+  description: Quản lý danh mục Phim và Lịch chiếu rạp
+  version: 1.0.0
+servers:
+  - url: http://localhost:5001
+paths:
+  /api/movies:
+    get:
+      summary: Lấy danh sách phim đang chiếu
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Movie'
+  /api/movies/{id}/showtimes:
+    get:
+      summary: Lấy lịch chiếu của một phim cụ thể
+      parameters:
+        - name: id
+          in: path
+          description: ID của bộ phim
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Thành công
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Showtime'
+        '404':
+          description: Không tìm thấy phim
+components:
+  schemas:
+    Movie:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+    Showtime:
+      type: object
+      properties:
+        id:
+          type: integer
+        movieId:
+          type: integer
+        startTime:
+          type: string
+          format: date-time

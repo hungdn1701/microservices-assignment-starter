@@ -1,0 +1,46 @@
+openapi: 3.0.0
+info:
+  title: Payment Service API
+  description: Dịch vụ giả lập tính tiền, hoàn tiền
+  version: 1.0.0
+servers:
+  - url: http://localhost:5004
+paths:
+  /api/payments/process:
+    post:
+      summary: Thực thi giao dịch charge tiền
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amount:
+                  type: number
+                  example: 100000
+                userId:
+                  type: integer
+      responses:
+        '200':
+          description: Phê duyệt (Duyệt qua tài khoản mock)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  transactionId:
+                    type: string
+                  status:
+                    type: string
+                    example: SUCCESS
+        '400':
+          description: Từ chối số dư
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: FAILED
