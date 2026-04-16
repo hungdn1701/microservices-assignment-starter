@@ -1,23 +1,42 @@
-# ============================================
-# Service B — OpenAPI 3.0 Specification
-# Docs: https://swagger.io/specification/
-# ============================================
+# =======================================================================
+# Service B — Complete Service Contract
+# =======================================================================
+#
+# This file is the SINGLE SOURCE OF TRUTH for Service B's interface.
+# Same structure as service-a.yaml — three sections:
+#
+#   SECTION 1 — REST/HTTP  (OpenAPI 3.0 standard paths)
+#   SECTION 2 — gRPC       (x-grpc extension)
+#   SECTION 3 — Async      (x-async-events extension)
+#
+# See service-a.yaml for the full explanation of why gRPC and async
+# use x-* extensions rather than native OpenAPI fields.
+# =======================================================================
+
 openapi: 3.0.3
+
 info:
-  title: Service B API
+  title: Service B — [Your Service Name]
   description: |
-    API specification for Service B.
-    Replace with your actual service name and description.
+    Replace with your actual service name and a one-sentence description
+    of what this service is responsible for (its Bounded Context or entity).
   version: 1.0.0
 
 servers:
   - url: http://localhost:5002
-    description: Local development
+    description: Local development (direct)
+  - url: http://localhost:8080/service-b
+    description: Local development (via API Gateway)
+
+# =======================================================================
+# SECTION 1 — REST / HTTP endpoints (OpenAPI 3.0 standard)
+# =======================================================================
 
 paths:
   /health:
     get:
       summary: Health check
+      description: Required by all services. Returns {"status":"ok"} when the service is running.
       operationId: healthCheck
       responses:
         '200':
@@ -25,14 +44,77 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                    example: ok
+                $ref: '#/components/schemas/HealthResponse'
 
-  # Define your endpoints here following the pattern above
+  # ── Add your REST endpoints below ─────────────────────────────────────
+  # Follow the same pattern as service-a.yaml.
+
+# =======================================================================
+# SECTION 2 — gRPC interface  (x-grpc extension)
+# =======================================================================
+# Delete this block if Service B does not expose a gRPC endpoint.
+
+x-grpc:
+  enabled: false   # Set to true and fill in if this service exposes gRPC
+
+  # service: [ServiceName]
+  #   rpcs:
+  #     - name: [MethodName]
+  #       description: ...
+  #       analysisRef: "DDD 2.3 command: ... / Step-by-Step 2.6 capability: ..."
+  #       request:
+  #         message: [RequestMessage]
+  #         fields:
+  #           - name: ..., type: ...
+  #       response:
+  #         message: [ResponseMessage]
+  #         fields:
+  #           - name: ..., type: ...
+  #       errors: [INVALID_ARGUMENT, NOT_FOUND, INTERNAL]
+
+# =======================================================================
+# SECTION 3 — Async / Event-driven  (x-async-events extension)
+# =======================================================================
+# Delete this block if Service B does not use a message broker.
+
+x-async-events:
+  enabled: false   # Set to true and fill in if this service uses a message broker
+
+  # broker: kafka
+  # brokerUrl: kafka:9092
+  #
+  # publishes:
+  #   - channel: [domain/event-name]
+  #     description: ...
+  #     analysisRef: "DDD 2.2 Domain Event: ..."
+  #     message:
+  #       name: [EventName]
+  #       fields:
+  #         - name: eventId,    type: string (uuid)
+  #         - name: occurredAt, type: string (ISO-8601 datetime)
+  #         # ... domain-specific fields
+  #
+  # consumes:
+  #   - channel: [domain/event-name]
+  #     description: ...
+  #     analysisRef: "DDD 2.2 Domain Event: ... (from [other-service])"
+  #     message:
+  #       name: [EventName]
+  #       fields:
+  #         - name: eventId,    type: string (uuid)
+  #         - name: occurredAt, type: string (ISO-8601 datetime)
+
+# =======================================================================
+# Shared Schemas
+# =======================================================================
 
 components:
-  schemas: {}
-    # Define your data models here
+  schemas:
+    HealthResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: ok
+
+    # Define your domain entity schemas here (same pattern as service-a.yaml)

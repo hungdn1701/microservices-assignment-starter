@@ -1,23 +1,62 @@
-# ============================================
-# Service A — OpenAPI 3.0 Specification
-# Docs: https://swagger.io/specification/
-# ============================================
+# =======================================================================
+# Service A — Complete Service Contract
+# =======================================================================
+#
+# This file is the SINGLE SOURCE OF TRUTH for Service A's interface.
+# It covers all three communication styles in one place:
+#
+#   SECTION 1 — REST/HTTP (OpenAPI 3.0 standard paths)
+#   SECTION 2 — gRPC     (x-grpc extension)
+#   SECTION 3 — Async    (x-async-events extension)
+#
+# ── Why are sections 2 and 3 using x- extensions? ──────────────────────
+# OpenAPI 3.0 is designed exclusively for HTTP/REST APIs. It technically
+# cannot describe:
+#   • gRPC  — uses Protocol Buffers (binary) over HTTP/2, not JSON over
+#             HTTP/1.1. The RPC model (service + method) has no equivalent
+#             in the OpenAPI path/operation model.
+#   • Async — Kafka/RabbitMQ events have no request/response cycle.
+#             There is no "caller" waiting for a response, so OpenAPI's
+#             path + response structure does not apply.
+#
+# The industry solution is separate formats:
+#   • .proto files  (gRPC)   → see grpc-spec-guide.md
+#   • AsyncAPI YAML (events) → see async-spec-guide.md
+#
+# For this assignment we use OpenAPI's x-* extension mechanism to keep
+# ALL communication styles documented in this one file. This makes it
+# easier to see the full picture of one service. If you need formal
+# tooling (code generation, contract testing), extract the x- sections
+# to their respective formats using the guides above.
+# =======================================================================
+
 openapi: 3.0.3
+
 info:
-  title: Service A API
+  title: Service A — [Your Service Name]
   description: |
-    API specification for Service A.
-    Replace with your actual service name and description.
+    Replace with your actual service name and a one-sentence description
+    of what this service is responsible for (its Bounded Context or entity).
   version: 1.0.0
 
 servers:
   - url: http://localhost:5001
-    description: Local development
+    description: Local development (direct)
+  - url: http://localhost:8080/service-a
+    description: Local development (via API Gateway)
+
+# =======================================================================
+# SECTION 1 — REST / HTTP endpoints (OpenAPI 3.0 standard)
+# =======================================================================
+# Derive from: Step-by-Step 2.6 (capabilities table) or DDD 3.1 (commands)
+# Each capability/command = one path+method entry below.
+# =======================================================================
 
 paths:
   /health:
     get:
       summary: Health check
+      description: Required by all services. Returns {"status":"ok"} when the service is running.
       operationId: healthCheck
       responses:
         '200':
@@ -25,56 +64,221 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                    example: ok
+                $ref: '#/components/schemas/HealthResponse'
 
-  # Add your endpoints below
-  # /items:
+  # ── Add your REST endpoints below ─────────────────────────────────────
+  # Uncomment and adapt the example, or write your own.
+  #
+  # /orders:
   #   get:
-  #     summary: List all items
-  #     operationId: listItems
+  #     summary: List all orders
+  #     operationId: listOrders
+  #     # Derived from: capability "GetOrders" in analysis step 2.6 / DDD command 2.3
+  #     parameters:
+  #       - name: status
+  #         in: query
+  #         schema:
+  #           type: string
+  #           enum: [pending, confirmed, cancelled]
   #     responses:
   #       '200':
-  #         description: A list of items
+  #         description: List of orders
   #         content:
   #           application/json:
   #             schema:
   #               type: array
   #               items:
-  #                 $ref: '#/components/schemas/Item'
+  #                 $ref: '#/components/schemas/Order'
+  #
   #   post:
-  #     summary: Create a new item
-  #     operationId: createItem
+  #     summary: Create a new order
+  #     operationId: createOrder
+  #     # Derived from: capability "CreateOrder" / DDD command "PlaceOrder"
   #     requestBody:
   #       required: true
   #       content:
   #         application/json:
   #           schema:
-  #             $ref: '#/components/schemas/ItemCreate'
+  #             $ref: '#/components/schemas/CreateOrderRequest'
   #     responses:
   #       '201':
-  #         description: Item created
+  #         description: Order created
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/Order'
+  #       '400':
+  #         description: Invalid request body
+  #       '422':
+  #         description: Business rule violation (e.g., empty cart)
+
+# =======================================================================
+# SECTION 2 — gRPC interface  (x-grpc extension)
+# =======================================================================
+# Use this section ONLY if this service exposes a gRPC endpoint
+# (typically for internal service-to-service calls, not for the browser).
+#
+# This is NOT standard OpenAPI — it uses the x-* extension mechanism.
+# OpenAPI 3.0 parsers will ignore x-* fields, so this is safe to include
+# alongside standard paths above.
+#
+# To generate a formal .proto file from this section, follow the mapping
+# in grpc-spec-guide.md.
+#
+# If you are NOT using gRPC: delete this entire x-grpc block.
+# =======================================================================
+
+x-grpc:
+  enabled: false   # Set to true and fill in if this service exposes gRPC
+
+  # package: com.example.servicea.v1
+  # port: 50051
+  #
+  # service: OrderService
+  #   description: Handles order lifecycle for internal callers
+  #   # Each rpc maps to one Command from DDD 2.3 or one Capability from Step-by-Step 2.6
+  #   rpcs:
+  #     - name: CreateOrder
+  #       description: Creates a new order. Equivalent REST → POST /orders
+  #       analysisRef: "DDD 2.3 command: PlaceOrder"
+  #       request:
+  #         message: CreateOrderRequest
+  #         fields:
+  #           - name: customer_id,  type: string (uuid)
+  #           - name: items,        type: repeated OrderItem
+  #       response:
+  #         message: CreateOrderResponse
+  #         fields:
+  #           - name: order_id,  type: string (uuid)
+  #           - name: status,    type: OrderStatus (enum)
+  #       errors: [INVALID_ARGUMENT, ALREADY_EXISTS, INTERNAL]
+  #
+  #     - name: GetOrder
+  #       description: Retrieves an order by ID. Equivalent REST → GET /orders/{id}
+  #       request:
+  #         message: GetOrderRequest
+  #         fields:
+  #           - name: order_id, type: string (uuid)
+  #       response:
+  #         message: Order
+  #       errors: [NOT_FOUND, INTERNAL]
+
+# =======================================================================
+# SECTION 3 — Async / Event-driven  (x-async-events extension)
+# =======================================================================
+# Use this section ONLY if this service publishes or consumes events via
+# a message broker (Kafka, RabbitMQ, etc.).
+#
+# This is NOT standard OpenAPI — same x-* extension rationale as above.
+# OpenAPI has no concept of fire-and-forget pub/sub events.
+#
+# To generate a formal AsyncAPI YAML from this section, follow the
+# mapping in async-spec-guide.md.
+#
+# If you are NOT using async messaging: delete this entire x-async-events block.
+# =======================================================================
+
+x-async-events:
+  enabled: false   # Set to true and fill in if this service uses a message broker
+
+  # broker: kafka                     # kafka | rabbitmq | other
+  # brokerUrl: kafka:9092             # Docker Compose service name, not localhost
+  #
+  # publishes:   # Events this service SENDS to the broker
+  #   - channel: order/placed
+  #     description: Emitted when a customer successfully places an order
+  #     analysisRef: "DDD 2.2 Domain Event: OrderPlaced"
+  #     message:
+  #       name: OrderPlacedEvent
+  #       fields:
+  #         - name: eventId,      type: string (uuid), description: Deduplication ID
+  #         - name: orderId,      type: string (uuid)
+  #         - name: customerId,   type: string (uuid)
+  #         - name: totalAmount,  type: number
+  #         - name: occurredAt,   type: string (ISO-8601 datetime)
+  #
+  #   - channel: order/cancelled
+  #     description: Emitted when an order is cancelled by customer or system
+  #     analysisRef: "DDD 2.2 Domain Event: OrderCancelled"
+  #     message:
+  #       name: OrderCancelledEvent
+  #       fields:
+  #         - name: eventId,    type: string (uuid)
+  #         - name: orderId,    type: string (uuid)
+  #         - name: reason,     type: string
+  #         - name: occurredAt, type: string (ISO-8601 datetime)
+  #
+  # consumes:   # Events this service RECEIVES from the broker
+  #   - channel: payment/received
+  #     description: Consumed to advance order status after successful payment
+  #     analysisRef: "DDD 2.2 Domain Event: PaymentReceived (from payment-service)"
+  #     message:
+  #       name: PaymentReceivedEvent
+  #       fields:
+  #         - name: eventId,    type: string (uuid)
+  #         - name: orderId,    type: string (uuid)
+  #         - name: paymentId,  type: string (uuid)
+  #         - name: amountPaid, type: number
+  #         - name: occurredAt, type: string (ISO-8601 datetime)
+
+# =======================================================================
+# Shared Schemas (used by REST paths above; gRPC and async use x- blocks)
+# =======================================================================
 
 components:
-  schemas: {}
-    # Item:
+  schemas:
+    HealthResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: ok
+
+    # ── Uncomment and adapt for your domain entities ──────────────────
+    # Order:
     #   type: object
     #   properties:
     #     id:
     #       type: string
     #       format: uuid
-    #     name:
+    #     customerId:
     #       type: string
+    #       format: uuid
+    #     status:
+    #       type: string
+    #       enum: [pending, confirmed, cancelled, delivered]
+    #     totalAmount:
+    #       type: number
     #     createdAt:
     #       type: string
     #       format: date-time
-    # ItemCreate:
+    #
+    # CreateOrderRequest:
     #   type: object
     #   required:
-    #     - name
+    #     - customerId
+    #     - items
     #   properties:
-    #     name:
+    #     customerId:
     #       type: string
+    #       format: uuid
+    #     items:
+    #       type: array
+    #       minItems: 1
+    #       items:
+    #         $ref: '#/components/schemas/OrderItem'
+    #
+    # OrderItem:
+    #   type: object
+    #   required:
+    #     - productId
+    #     - quantity
+    #   properties:
+    #     productId:
+    #       type: string
+    #       format: uuid
+    #     quantity:
+    #       type: integer
+    #       minimum: 1
+    #     unitPrice:
+    #       type: number

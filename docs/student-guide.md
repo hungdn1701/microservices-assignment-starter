@@ -184,6 +184,69 @@ git push
 
 ---
 
+## 🔍 How Your Submission Will Be Evaluated
+
+> This section describes the exact steps your instructor follows when reviewing your submission. Use it as a final self-check before pushing.
+
+### Step 1 — Review Analysis, Design, and Architecture (Documents)
+
+The instructor reads your documentation to verify the thinking is sound and consistent end-to-end.
+
+| What the instructor checks | Where to look | What "pass" looks like |
+|----------------------------|---------------|------------------------|
+| Business process is clearly scoped | `docs/analysis-and-design*.md` Part 1 | One concrete process, defined actors and scope |
+| Service candidates are justified | Part 2 of your chosen approach | Each service traces back to entities/bounded contexts/actions — not arbitrary splits |
+| NFRs in 1.3 explain pattern choices in `architecture.md` | `docs/architecture.md` Section 1 | "Derived from" column filled; NFR → pattern logic is coherent |
+| API endpoints are consistent with service design | `docs/api-specs/*.yaml` and Part 3 | Every endpoint in the YAML matches a capability identified in Part 2 |
+| Architecture diagram reflects all running components | `docs/architecture.md` Section 4 | Diagram shows gateway, services, databases — matches what actually runs |
+| Documents are internally consistent | Cross-file | Service names, endpoint paths, and data fields are the same in analysis, architecture, and code |
+
+### Step 2 — Review Source Code Against Design
+
+The instructor verifies that the implementation matches what was designed.
+
+| What the instructor checks | Where to look | What "pass" looks like |
+|----------------------------|---------------|------------------------|
+| Each service implements the endpoints declared in its API spec | `services/*/src/` vs `docs/api-specs/*.yaml` | All paths, methods, and response shapes match |
+| Each service has `GET /health` → `{"status": "ok"}` | `services/*/src/` | Returns 200 + correct JSON |
+| Services call each other using Docker Compose service names | `services/*/src/` | No `localhost` in inter-service calls |
+| Secrets and config are in `.env`, not hardcoded | All source files | No passwords, tokens, or ports hardcoded in code |
+| Each Dockerfile builds correctly | `services/*/Dockerfile`, `gateway/Dockerfile`, `frontend/Dockerfile` | No `ADD . .` without `.dockerignore`; no secrets baked in |
+| Database schema / models match data described in analysis | `services/*/src/` | Entities and fields align with aggregates/entities identified in Part 2 |
+
+### Step 3 — Live Demo: `docker compose down` → `up` → Run
+
+The instructor does a clean cold-start to verify the system runs end-to-end without manual intervention.
+
+```bash
+# 1. Ensure a clean state
+docker compose down --volumes --remove-orphans
+
+# 2. Cold start — build everything from scratch
+docker compose up --build
+
+# 3. Wait for all services to report healthy, then verify:
+curl http://localhost:8080          # Gateway
+curl http://localhost:5001/health   # Service A → {"status": "ok"}
+curl http://localhost:5002/health   # Service B → {"status": "ok"}
+curl http://localhost:3000          # Frontend loads without errors
+```
+
+> ✅ **Pass criteria for the demo:**
+> - All containers start without error logs on first `up --build`
+> - Every `GET /health` returns `{"status": "ok"}` with HTTP 200
+> - At least one end-to-end business flow (e.g., create → read → update) works through the Gateway
+> - Frontend displays meaningful UI (not a blank page or error screen)
+> - No manual steps required between `docker compose up --build` and the working demo
+
+> ❌ **Automatic fail conditions:**
+> - Any service fails to start (exits immediately, crash loop)
+> - A service requires manual DB migration steps not scripted into the container startup
+> - Inter-service calls fail because `localhost` was used instead of service names
+> - `.env.example` is missing or `docker-compose.yml` references a variable with no default
+
+---
+
 ## 🎯 Key Tips
 
 | # | Tip | Why |

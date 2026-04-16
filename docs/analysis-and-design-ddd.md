@@ -17,12 +17,18 @@
 
 | | Step-by-Step Action | DDD (this document) |
 |---|---|---|
-| **Thinking direction** | Bottom-up: actions → group → service | Top-down: domain → bounded context → service |
+| **Thinking direction** | Bottom-up: concrete actions → group → service | Dual: top-down framing + bottom-up discovery |
 | **Service boundary decided by** | Similarity of actions/functions | Semantic boundary of business domain |
-| **Best suited for** | Small–medium systems, simple logic | Complex business logic, ≥ 30 use cases |
+| **Best suited for** | Small–medium systems, clearer technical scope | Complex business logic, multiple subdomains |
 | **Key risk** | Services may be fragmented by technical logic | Requires deep domain understanding upfront |
 
 Both approaches lead to a list of services with clear responsibilities. DDD produces services aligned with *business boundaries* — changes in one business area only affect the corresponding service.
+
+> 💡 **DDD's dual direction explained:**
+> - **Top-down — strategic framing**: you start by understanding the business domain as a whole, building a shared vocabulary (Ubiquitous Language) before touching any implementation detail. This prevents premature fragmentation by technical concerns.
+> - **Bottom-up — tactical discovery (Event Storming)**: within the domain, you discover the structure by listing granular events → tracing commands → clustering aggregates → drawing bounded contexts. This is deliberately bottom-up so that structure *emerges* from real business facts rather than being imposed from a high-level guess.
+>
+> The combination is intentional: the domain framing guides *what* you're looking for, while Event Storming builds it *from the ground up* using business evidence.
 
 ### Progression Overview
 
@@ -85,7 +91,7 @@ Non-functional requirements help justify design decisions in later steps (e.g., 
 
 ## Part 2 — Strategic Domain-Driven Design
 
-> In DDD, we work **top-down**: understand the domain first, then let the business structure guide how we split services. This contrasts with the Step-by-Step approach which works bottom-up from individual actions.
+> In DDD, **strategic framing is top-down** (we understand the domain vocabulary and boundaries first), but **tactical discovery is bottom-up** (we list events → trace commands → cluster aggregates → draw bounded contexts). This dual direction is what makes DDD powerful: domain knowledge guides the discovery, while bottom-up evidence prevents over-engineering boundaries that don't reflect real business facts.
 
 ### 2.1 Ubiquitous Language
 
@@ -216,6 +222,29 @@ sequenceDiagram
 
 ---
 
+### Part 2 Summary — How DDD Steps Map to Service Candidates and API Endpoints
+
+The table below answers: *"How does each DDD step connect to the final deliverables — service candidates and API endpoints?"* It also shows the equivalent step in the Step-by-Step Action approach so you can compare how both paths converge.
+
+| DDD Step | Equivalent in Step-by-Step Action | Intermediate Output | What it contributes to |
+|----------|-----------------------------------|---------------------|------------------------|
+| **2.1** Ubiquitous Language | *(no equivalent)* | Shared glossary | Consistent naming across all services and APIs |
+| **2.2** Domain Events (Event Storming) | 2.1–2.2 Decompose & filter actions | Chronological event list | Evidence base for commands and service boundaries |
+| **2.3** Commands + Actors | 2.1 Actions (suitable ✅) | Command list with triggering actors | → **API endpoints** (each command ≈ one endpoint) |
+| **2.4** Aggregates | 2.3 Entity grouping by shared entity | Aggregate table with owned data | → **Service boundaries** (aggregates cluster by context) |
+| **2.5** Bounded Contexts | 2.3 Entity Service + 2.4 Task Service | **→ Service Candidates** *(primary output)* | Each Bounded Context = one service candidate |
+| **2.6** Context Map | 2.8 Service Composition | Upstream/downstream relationships | → Deployment topology and communication patterns |
+| **2.7** Service Composition | 2.8 Service Composition (sequence diagram) | Inter-service sequence | → Architecture diagram in `architecture.md` |
+| **3.1** Contract Design | 3.1 Contract Design | **→ API Endpoints** *(final output)* | OpenAPI specs in `docs/api-specs/` |
+
+**Key insight:** Both approaches converge at the same two deliverables:
+1. **Service Candidates** (from 2.5 Bounded Contexts or 2.3–2.4 Entity/Task services)
+2. **API Endpoints** (from 3.1 Contract Design, traced back to Commands in 2.3 or Capabilities in 2.6)
+
+The difference is *how* you get there: DDD builds service boundaries from *business meaning*, while Step-by-Step Action builds them from *action similarity*. For the same problem, both should produce approximately the same services — DDD boundaries tend to be more stable under business change.
+
+---
+
 ## Part 3 — Service-Oriented Design
 
 > Part 3 is the **convergence point** — regardless of whether you used Step-by-Step Action or DDD in Part 2, the outputs here are the same: service contracts and service logic.
@@ -241,26 +270,34 @@ Full OpenAPI specs:
 |----------|--------|-------------|--------------|----------------|
 |          |        |             |              |                |
 
+> 💡 **Then:** Update the corresponding OpenAPI YAML files in `docs/api-specs/` to match this table. The YAML is the authoritative contract — the table here is a summary.
+
 ### 3.2 Service Logic Design
 
 Internal processing flow for each service.
+
+> 💡 **How to do it:** For each service, pick its most important endpoint and draw the internal logic. Focus on: input validation → business rule checks → persistence/external calls → response.
 
 **Service A — *(Bounded Context name)*:**
 
 ```mermaid
 flowchart TD
-    A[Receive Request] --> B{Validate?}
-    B -->|Valid| C[(Process / DB)]
-    B -->|Invalid| D[Return 4xx Error]
-    C --> E[Return Response]
+    A[Receive Request] --> B{Validate input?}
+    B -->|Valid| C{Business rule check?}
+    B -->|Invalid| D[Return 400 Bad Request]
+    C -->|Pass| E[(Persist / Call downstream)]
+    C -->|Fail| F[Return 409 / 422 Error]
+    E --> G[Return 200/201 Response]
 ```
 
 **Service B — *(Bounded Context name)*:**
 
 ```mermaid
 flowchart TD
-    A[Receive Request] --> B{Validate?}
-    B -->|Valid| C[(Process / DB)]
-    B -->|Invalid| D[Return 4xx Error]
-    C --> E[Return Response]
+    A[Receive Request] --> B{Validate input?}
+    B -->|Valid| C{Business rule check?}
+    B -->|Invalid| D[Return 400 Bad Request]
+    C -->|Pass| E[(Persist / Call downstream)]
+    C -->|Fail| F[Return 409 / 422 Error]
+    E --> G[Return 200/201 Response]
 ```
