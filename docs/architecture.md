@@ -86,6 +86,36 @@
 
 ### Inter-service Communication Matrix
 
+> **How to fill in this table:**
+>
+> Each cell describes **how** the row component talks to the column component. Use one of the values below — choose based on your Pattern Selection (Section 1) and your service contracts (`docs/api-specs/`):
+>
+> | Value | Meaning | When to use |
+> |-------|---------|-------------|
+> | `REST` | Synchronous HTTP/JSON call | Default for Gateway → Service, Frontend → Gateway |
+> | `gRPC` | Synchronous binary RPC (Protocol Buffers) | Service-to-service calls where performance matters; requires `x-grpc` filled in `service-*.yaml` |
+> | `async/event` | Fire-and-forget via message broker (Kafka, RabbitMQ) | Cross-context notifications; requires `x-async-events` filled in `service-*.yaml` and Message Broker in diagram |
+> | `TCP` | Direct database protocol | Service → its own database only (never cross-service DB access) |
+> | `—` | No direct communication | Leave as `—`, do not leave blank |
+>
+> **Rules:**
+> - A service should **only** connect to its **own** database (Database per Service pattern). If Service A and Service B share one database, mark it as `Shared DB` and justify in Section 1.
+> - Frontend should **never** call a service directly — all traffic goes through the Gateway.
+> - If two services need to exchange data, choose either `gRPC` (synchronous) or `async/event` (asynchronous) — not a direct database read across services.
+>
+> **Example (food delivery domain):**
+>
+> | From → To     | Order Service | Payment Service | Gateway | DB-Orders | DB-Payments |
+> |---------------|---------------|-----------------|---------|-----------|-------------|
+> | **Frontend**  | —             | —               | REST    | —         | — |
+> | **Gateway**   | REST          | REST            | —       | —         | — |
+> | **Order Svc** | —             | async/event     | —       | TCP       | — |
+> | **Payment Svc**| async/event  | —               | —       | —         | TCP |
+
+### Your Communication Matrix
+
+> Replace the column/row headers with your actual service names from Section 2.
+
 | From → To     | Service A | Service B | Gateway | Database |
 |---------------|-----------|-----------|---------|----------|
 | **Frontend**  |           |           |         |          |
