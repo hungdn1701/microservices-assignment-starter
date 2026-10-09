@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  instruction:
+    name: INSTRUCTION.md unchanged
+    # Skipped in the official starter itself — that copy *is* the official version.
+    if: github.repository != 'hungdn1701/microservices-assignment-starter'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash scripts/check-instruction.sh
+
+  build-and-smoke:
+    name: Build & health checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate docker-compose.yml
+        run: cp .env.example .env && docker compose config --quiet
+
+      - name: Detect components with code
+        id: src
+        run: |
+          services=""
+          for dir in frontend gateway services/*; do
+            [ -f "$dir/Dockerfile" ] || continue
+            if find "$dir/src" -type f ! -name .gitkeep 2>/dev/null | grep -q .; then
+              services="$services $(basename "$dir")"
+            fi
+          done
+          echo "services=$services" >> "$GITHUB_OUTPUT"
+          [ -n "$services" ] || echo "::notice::No component has code yet — build & health checks skipped"
+
+      - name: Build and start
+        if: steps.src.outputs.services != ''
+        run: docker compose up -d --build --no-deps ${{ steps.src.outputs.services }}
+
+      - name: Health checks
+        if: steps.src.outputs.services != ''
+        run: bash scripts/smoke-test.sh
+
+      - name: Logs on failure
+        if: failure()
+        run: docker compose logs
+
+      - name: Cleanup
+        if: always()
+        run: docker compose down -v

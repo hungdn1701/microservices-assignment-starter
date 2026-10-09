@@ -1,6 +1,6 @@
 # API Gateway — Dockerfile
 # Replace with your actual setup.
-# See .ai/prompts/create-dockerfile.md for templates (Node.js, Python, Go, Nginx).
+# Language guides: https://docs.docker.com/guides/ (pick your stack).
 #
 # Requirements: expose port 8000, route to backend services.
 

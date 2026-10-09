@@ -1,6 +1,6 @@
 # Service A — Dockerfile
 # Replace with your actual setup.
-# See .ai/prompts/create-dockerfile.md for templates (Node.js, Python, Java, Go, .NET).
+# Language guides: https://docs.docker.com/guides/ (pick your stack).
 #
 # Requirements: expose port 5000, implement GET /health endpoint.
 

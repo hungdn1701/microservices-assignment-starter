@@ -3,16 +3,14 @@
 # Usage: make <target>
 # ============================================
 
-.PHONY: help up down build logs clean init
+.PHONY: help up up-d down build logs logs-service clean init status restart smoke check-instruction
 
 help: ## Show this help message
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | \
 		awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2}'
 
-init: ## Initial setup — copy .env and build
-	@test -f .env || cp .env.example .env
-	@echo "Environment file ready."
-	docker compose build
+init: ## Create .env from .env.example and check Docker
+	@bash scripts/init.sh
 
 up: ## Start all services
 	docker compose up --build
@@ -41,7 +39,8 @@ status: ## Show status of all services
 restart: ## Restart all services
 	docker compose restart
 
-test: ## Run tests (customize per your stack)
-	@echo "Add your test commands here"
-	@echo "Example: docker compose exec service-a npm test"
-	@echo "Example: docker compose exec service-a pytest"
+smoke: ## Health-check every component that has code (system must be running)
+	@bash scripts/smoke-test.sh
+
+check-instruction: ## Check INSTRUCTION.md matches the official version
+	@bash scripts/check-instruction.sh

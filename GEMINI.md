@@ -1,3 +1,3 @@
-# CLAUDE.md
+# GEMINI.md
 
 @AGENTS.md
