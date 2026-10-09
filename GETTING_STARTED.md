@@ -18,24 +18,57 @@
 
 ---
 
-## 2. Create Your Team Repository (GitHub Classroom)
+## 2. Create Your Team Repository
 
-1. Open the **GitHub Classroom assignment link** from your instructor (`https://classroom.github.com/a/...`).
-2. Pick your name from the roster. If it is missing, **stop and contact the instructor** — never pick someone else's entry.
-3. The first member **creates the team** (name: as instructed); other members **join** that team. Max 3 members.
-4. Classroom creates a private repository with all starter files: `https://github.com/<org>/<assignment>-<team>`.
-5. Every member clones it:
+The public starter is the **template source**; your team works in a **private repository** in the course organization
+announced on the LMS. Never push project work to a public repository.
+
+### 2.1 Every member: star and fork the starter
+
+Open https://github.com/hungdn1701/microservices-assignment-starter, click **⭐ Star**, then **Fork** (into your personal account).
+Your fork stays public and untouched — it is only your bookmark of the starter and an easy way to see updates.
+Do **not** commit project work to it.
+
+### 2.2 One member: create the team's private repository
+
+1. Get an **empty private repository** for your team in the course organization, as announced on the LMS
+   (no README, no `.gitignore`, no license — completely empty). Ask the instructor if you lack permission to create it.
+2. Copy the starter into it **with its history**:
 
 ```bash
-git clone https://github.com/<org>/<assignment>-<team>.git
-cd <assignment>-<team>
-make init        # or: cp .env.example .env
+git clone https://github.com/hungdn1701/microservices-assignment-starter.git <team-repo>
+cd <team-repo>
+git remote rename origin upstream          # the starter, for future updates
+git remote add origin https://github.com/<course-org>/<team-repo>.git
+git push -u origin main
 ```
 
-6. In the first week, fill in the **Team** table and **Problem & Idea** section of `README.md`.
+> No command line? Use GitHub's **Import repository** (`+` → *Import repository*) with source `https://github.com/hungdn1701/microservices-assignment-starter.git`,
+> choosing the course organization as owner and **Private** visibility.
 
-> Do **not** fork the public starter repository — forks are public and other teams could copy your work.
-> If the instructor updates the starter during the semester, they will announce what to copy over.
+3. In the repository settings, give your teammates **Write** access (if the organization does not already).
+
+### 2.3 Every member: clone the team repository
+
+```bash
+git clone https://github.com/<course-org>/<team-repo>.git
+cd <team-repo>
+git remote add upstream https://github.com/hungdn1701/microservices-assignment-starter.git    # optional, to receive starter updates
+make init                            # or: cp .env.example .env
+```
+
+In the first week, fill in the **Team** table and **Problem & Idea** section of `README.md`.
+
+### 2.4 Getting starter updates
+
+When the instructor announces an update (new version in `INSTRUCTION.md`), one member runs:
+
+```bash
+git pull upstream main     # resolve conflicts if any, then
+git push
+```
+
+Keep the `LICENSE` file and the "Based on …" line at the bottom of `README.md`.
 
 ---
 

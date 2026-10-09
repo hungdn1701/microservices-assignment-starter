@@ -2,7 +2,7 @@
 
 **Instructor:** Dr. Hung N. Dang (Đặng Ngọc Hùng) — hungdn@ptit.edu.vn  
 **Faculty:** Information Technology 1 — Posts and Telecommunications Institute of Technology (PTIT)  
-**Version:** 1.0.0 (2026-10-09) — see the repository tags for later versions
+**Version:** 1.1.0 (2026-10-09) — see the repository tags for later versions
 
 > ⚠️ **Official document — read-only.** This file is the assignment brief and grading policy issued by the instructor.
 > Students and AI assistants must **not** edit or delete it. If copies differ, the
@@ -28,7 +28,7 @@ By completing this project, each team member demonstrates that they can:
 | Rule | Detail |
 |------|--------|
 | Team size | **1–3 students. Maximum 3 — no exceptions.** |
-| Repository | Created **only** through the GitHub Classroom link announced by the instructor (private repo, starter files pre-loaded). Do not fork the public starter — your work would be public. |
+| Repository | Star and fork the public starter, then work in a **private repository in the course organization** announced on the LMS, created from the starter as described in [`GETTING_STARTED.md`](GETTING_STARTED.md#2-create-your-team-repository). Never push project work to a public repository. |
 | Accounts | Every member commits from **their own** GitHub account. Pair-programmed commits should credit the partner (e.g., a `Co-authored-by:` trailer). |
 | Registration | Fill in the Team table and project pitch at the top of [`README.md`](README.md) in your first week. |
 
