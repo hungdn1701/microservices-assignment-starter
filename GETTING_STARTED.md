@@ -35,7 +35,7 @@ make init        # or: cp .env.example .env
 6. In the first week, fill in the **Team** table and **Problem & Idea** section of `README.md`.
 
 > Do **not** fork the public starter repository — forks are public and other teams could copy your work.
-> If the instructor updates the starter during the semester, they will announce what to copy over (CI tells you if `INSTRUCTION.md` is outdated).
+> If the instructor updates the starter during the semester, they will announce what to copy over.
 
 ---
 
@@ -75,7 +75,7 @@ flowchart LR
 ### M1 — Proposal
 
 - [ ] Choose a domain and **one** business process (5–15 steps, 2–4 actors).
-- [ ] Complete [`docs/proposal.md`](docs/proposal.md); fill in README Team and Problem & Idea. Tag `m1`.
+- [ ] Complete [`docs/proposal.md`](docs/proposal.md); fill in README Team and Problem & Idea.
 
 ### M2 — Design & Walking Skeleton
 
@@ -85,12 +85,12 @@ flowchart LR
 - [ ] Complete [`docs/architecture.md`](docs/architecture.md) — patterns traced back to your NFRs.
 - [ ] Write OpenAPI specs in [`docs/api-specs/`](docs/api-specs/) matching Part 3 contracts.
 - [ ] Rename services to match your design (folders, `docker-compose.yml`, specs, readmes).
-- [ ] Every component builds and starts; gateway and services answer `GET /health`; one request goes through the gateway. Tag `m2`.
+- [ ] Every component builds and starts; gateway and services answer `GET /health`; one request goes through the gateway.
 
 ### M3 — Final
 
 - [ ] Implement the business process end-to-end, following your specs.
-- [ ] Update each component's `readme.md` and the README. Tag `final`.
+- [ ] Update each component's `readme.md` and the README.
 
 **Log AI usage as you go** in [`docs/ai-log.md`](docs/ai-log.md) — two minutes after each significant session is far easier than reconstructing it the night before the deadline.
 
@@ -129,7 +129,7 @@ Split work **by service** (spec + code + data + readme), not by layer, so each m
 
 ## Submission Checklist
 
-Before tagging `final`:
+Before the deadline:
 
 - [ ] **README:** Team, Problem & Idea, Architecture, Quick Start, Demo evidence — filled in, no template placeholders left.
 - [ ] **AI Disclosure** (README §8) and [`docs/ai-log.md`](docs/ai-log.md) complete.
@@ -140,4 +140,3 @@ Before tagging `final`:
 - [ ] The business process works end-to-end through the gateway.
 - [ ] No `localhost` in inter-service calls; no secrets in code; `.env.example` lists every variable.
 - [ ] Every member can explain every part they claim — see the self-check in [`.ai/ai-guide.md`](.ai/ai-guide.md#4-prepare-for-the-oral-defense).
-- [ ] CI is green on `main`.

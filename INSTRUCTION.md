@@ -1,11 +1,11 @@
-# Assignment Brief & Grading Policy — Service-Oriented Software Development
+# Assignment Brief & Grading Policy — Service-Oriented Software Development (INT1448)
 
 **Instructor:** Dr. Hung N. Dang (Đặng Ngọc Hùng) — hungdn@ptit.edu.vn
 **Faculty:** Information Technology 1 — Posts and Telecommunications Institute of Technology (PTIT)
 
 > ⚠️ **Official document — read-only.** This file is the assignment brief and grading policy issued by the instructor.
-> Students and AI assistants must **not** edit or delete it. CI checks that it matches the
-> [official version](https://github.com/hungdn1701/microservices-assignment-starter/blob/main/INSTRUCTION.md).
+> Students and AI assistants must **not** edit or delete it. If copies differ, the
+> [official version](https://github.com/hungdn1701/microservices-assignment-starter/blob/main/INSTRUCTION.md) applies.
 > If something is unclear or seems wrong, ask the instructor.
 
 ---
@@ -28,23 +28,24 @@ By completing this project, each team member demonstrates that they can:
 |------|--------|
 | Team size | **1–3 students. Maximum 3 — no exceptions.** |
 | Repository | Created **only** through the GitHub Classroom link announced by the instructor (private repo, starter files pre-loaded). Do not fork the public starter — your work would be public. |
-| Accounts | Every member commits from **their own** GitHub account. Pair-programmed commits must include a `Co-authored-by:` trailer. |
+| Accounts | Every member commits from **their own** GitHub account. Pair-programmed commits should credit the partner (e.g., a `Co-authored-by:` trailer). |
 | Registration | Fill in the Team table and project pitch at the top of [`README.md`](README.md) in your first week. |
 
 ---
 
 ## 3. Milestones
 
-The project is delivered in **three milestones**. Dates and whether each milestone carries marks or feedback only
-are announced by the instructor for each class.
+The project is delivered in **three milestones**. Dates, and whether a milestone carries marks or feedback only,
+are announced by the instructor for each class; milestones may be merged or adjusted to fit the class schedule.
+The three outcomes — a proposal, a design with a running skeleton, and the final product — stay the same.
 
-| Milestone | Deliverable | Where | Git tag |
-|-----------|-------------|-------|---------|
-| **M1 — Proposal** | Domain, the one business process, actors, scope, first service candidates, ownership plan | [`docs/proposal.md`](docs/proposal.md) | `m1` |
-| **M2 — Design & Walking Skeleton** | Analysis & design complete (one approach), architecture and OpenAPI specs; every component starts with `docker compose up --build`, answers `GET /health`, and **one request flows through the gateway to a service** | `docs/`, all components | `m2` |
-| **M3 — Final Product & Oral Defense** | Business process working end-to-end, README with **AI Disclosure** and **Contribution**, AI log | Whole repository | `final` |
+| Milestone | Deliverable | Where |
+|-----------|-------------|-------|
+| **M1 — Proposal** | Domain, the one business process, actors, scope, first service candidates, ownership plan | [`docs/proposal.md`](docs/proposal.md) |
+| **M2 — Design & Walking Skeleton** | Analysis & design complete (one approach), architecture and OpenAPI specs; every component starts with `docker compose up --build`, answers `GET /health`, and **one request flows through the gateway to a service** | `docs/`, all components |
+| **M3 — Final Product & Oral Defense** | Business process working end-to-end, README with **AI Disclosure** and **Contribution**, AI log | Whole repository |
 
-Tag a milestone with: `git tag m1 && git push origin m1`
+Tip: mark each milestone with a git tag (`git tag m1 && git push origin m1`) so it is easy to find later.
 
 ---
 
@@ -52,7 +53,7 @@ Tag a milestone with: `git tag m1 && git push origin m1`
 
 1. **Technology-agnostic** — any language/framework per service; services may use different stacks.
 2. **Scope** — automate **one business process** (typically 5–15 steps, 2–4 actors), not an entire system.
-3. **Design first** — complete **one** analysis approach ([Step-by-Step Action](docs/analysis-and-design.md) or [DDD](docs/analysis-and-design-ddd.md)), [`docs/architecture.md`](docs/architecture.md), and OpenAPI specs in [`docs/api-specs/`](docs/api-specs/). Implementation must match the specs.
+3. **Design first** — complete **one** analysis approach ([Step-by-Step Action](docs/analysis-and-design.md) or [DDD](docs/analysis-and-design-ddd.md)), [`docs/architecture.md`](docs/architecture.md), and OpenAPI specs in [`docs/api-specs/`](docs/api-specs/). Keep the implementation consistent with the specs.
 4. **Service autonomy** — each service owns its data (database per service; no shared tables).
 5. **Gateway** — clients reach services only through the API gateway.
 6. **Docker** — `docker compose up --build` starts the entire system from a clean clone, with no manual steps (migrations/seed data are scripted).
@@ -75,8 +76,8 @@ Pick **one business process** from a domain below **or propose your own** (origi
 
 ## 6. Grading Rubric (10 points)
 
-The rubric is shared by all three of the instructor's project courses (Network Programming, Mobile Application
-Development, Service-Oriented Software Development). Only the course-specific sub-criteria differ.
+The rubric is shared by all three of the instructor's project courses (Network Programming — INT1433, Mobile Application
+Development — INT1449, Service-Oriented Software Development — INT1448). Only the course-specific sub-criteria differ.
 
 | Part | Weight | Scored per |
 |------|:------:|-----------|
@@ -106,7 +107,7 @@ Development, Service-Oriented Software Development). Only the course-specific su
 |-----------|:------:|-----------------------|
 | **C1. Ownership** | 1.5 | Explains the services/modules they claim in the Contribution table — line by line when asked — including AI-generated code. |
 | **C2. Reasoning** | 1.5 | Justifies design decisions and trade-offs; answers "what if" questions about their design. |
-| **C3. Live Change** | 1.0 | Makes a small change or diagnoses a bug in their own code on the spot. |
+| **C3. Live Change** | 1.0 | Makes a small change or locates a bug in their own code on the spot (or walks through how they would, if time is short). |
 
 **Individual score = A + B (team) + C (individual)**, subject to the adjustments in §7 and §8.
 
@@ -119,7 +120,7 @@ ideation, design, code, tests and documentation. What is graded is **your unders
 not who typed the code.
 
 1. **Disclose.** The README **AI Disclosure** section and [`docs/ai-log.md`](docs/ai-log.md) are mandatory.
-   A submission without them is not graded until they are completed.
+   If they are missing, the instructor will ask you to complete them before the oral defense.
 2. **Own it.** You are responsible for every line in your repository. A part you cannot explain during the oral
    defense earns **no credit** — in B for the team and in C for you — even if it works.
 3. **Be honest.** Significant AI use that is not disclosed, or a disclosure that contradicts the evidence, is
@@ -145,10 +146,10 @@ not who typed the code.
 
 ## 9. Oral Defense
 
-- **Format:** about 15–20 minutes per team (adjusted per class). Every member answers individually; teammates may not
-  answer for each other.
-- **Cold-start demo first:** `docker compose down -v && docker compose up --build`, health checks, then the business
-  process end-to-end through the frontend/gateway.
+- **Format:** about 15–20 minutes per team — roughly 5 minutes per member (adjusted per class). Every member answers
+  individually; teammates may not answer for each other. Not every question type is asked to every member — the
+  instructor picks what fits the time.
+- **Short demo first (a few minutes, prepared in advance):** the system running from a fresh start, showing the main flow.
 - **Questions are drawn from:** your proposal, analysis and design documents, the code you claim, and your `ai-log.md` entries.
 - **Sample questions:**
   - Why is this a separate service rather than part of another one? Which analysis step produced it?
@@ -162,6 +163,6 @@ not who typed the code.
 
 ## 10. Final Submission
 
-- The final submission is the **last commit on `main` before the deadline**, tagged `final`.
-- Before tagging, complete the **Submission Checklist** in [`GETTING_STARTED.md`](GETTING_STARTED.md#submission-checklist).
+- The final submission is the **last commit on `main` before the deadline**.
+- Before the deadline, go through the **Submission Checklist** in [`GETTING_STARTED.md`](GETTING_STARTED.md#submission-checklist).
 - Late submissions and resubmissions follow the policy announced by the instructor.

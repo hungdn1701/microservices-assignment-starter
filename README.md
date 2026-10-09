@@ -1,6 +1,6 @@
 # Project Name
 
-> **Course:** Service-Oriented Software Development · PTIT · Instructor: Dr. Hung N. Dang
+> **Course:** Service-Oriented Software Development (INT1448) · PTIT · Instructor: Dr. Hung N. Dang
 >
 > *One-sentence pitch: what your system does and for whom.*
 

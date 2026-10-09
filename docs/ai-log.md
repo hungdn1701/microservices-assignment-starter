@@ -1,8 +1,8 @@
 # AI Usage Log
 
 > **Mandatory** — see [`INSTRUCTION.md` §7](../INSTRUCTION.md#7-ai-usage-policy).
-> Add an entry for every **significant** AI interaction: anything that produced or shaped design, code, tests or
-> documentation that ended up in this repository. Quick factual questions do not need an entry.
+> Record the AI interactions that **mattered** — ones that produced or shaped design, code, tests or documentation
+> that ended up in this repository. A few lines each is enough; you do not need to log every prompt.
 >
 > Write entries **as you go** (right after the session). The AI assistant configuration in this repo asks your
 > assistant to remind you and to suggest a draft entry — but the "what we kept / verified" column must be yours.

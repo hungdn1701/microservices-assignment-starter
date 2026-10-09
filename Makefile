@@ -3,7 +3,7 @@
 # Usage: make <target>
 # ============================================
 
-.PHONY: help up up-d down build logs logs-service clean init status restart smoke check-instruction
+.PHONY: help up up-d down build logs logs-service clean init status restart smoke
 
 help: ## Show this help message
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | \
@@ -41,6 +41,3 @@ restart: ## Restart all services
 
 smoke: ## Health-check every component that has code (system must be running)
 	@bash scripts/smoke-test.sh
-
-check-instruction: ## Check INSTRUCTION.md matches the official version
-	@bash scripts/check-instruction.sh

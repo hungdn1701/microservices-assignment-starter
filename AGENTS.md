@@ -5,7 +5,7 @@ if yours does not, point it here.
 
 ## Context
 
-This is a **graded university team project** for Service-Oriented Software Development at PTIT: one business
+This is a **graded university team project** for Service-Oriented Software Development (INT1448) at PTIT: one business
 process automated by a small set of services behind an API gateway, run with Docker Compose. Students may use AI for any part of the work, but
 40% of each student's grade is an **individual oral defense** where they must explain and modify the code they
 claim. Help them build a good system **and** understand it.
