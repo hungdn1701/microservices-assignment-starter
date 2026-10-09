@@ -2,7 +2,7 @@
 
 **Instructor:** Dr. Hung N. Dang (Đặng Ngọc Hùng) — hungdn@ptit.edu.vn  
 **Faculty:** Information Technology 1 — Posts and Telecommunications Institute of Technology (PTIT)  
-**Version:** 1.2.0 (2026-10-09) — see the repository tags for later versions
+**Version:** 1.2.1 (2026-10-09) — see the repository tags for later versions
 
 > ⚠️ **Official document — read-only.** This file is the assignment brief and grading policy issued by the instructor.
 > Students and AI assistants must **not** edit or delete it. If copies differ, the
@@ -29,7 +29,7 @@ By completing this project, each team member demonstrates that they can:
 |------|--------|
 | Team size | **1–3 students. Maximum 3 — no exceptions.** |
 | Repository | Every member stars and forks the public starter. Work happens only in the **private team repository** the LMS creates for your team in the course organization, set up as described in [`docs/student-guide.md`](docs/student-guide.md). Never push project work to a public repository. |
-| Accounts | Every member commits from **their own** GitHub account. Pair-programmed commits should credit the partner (e.g., a `Co-authored-by:` trailer). |
+| Accounts | Every member commits from **their own** GitHub account — the one linked to their student ID on the LMS. Pair-programmed commits should credit the partner (e.g., a `Co-authored-by:` trailer). |
 | Registration | Fill in the Team table and project pitch at the top of [`README.md`](README.md) in your first week. |
 
 ---
@@ -137,7 +137,7 @@ not who typed the code.
 
 - The README **Contribution** table lists, for each member: the modules/documents they own, their key PRs or commits,
   and an agreed contribution percentage. **Every member ticks the confirmation box.**
-- Evidence the instructor checks: git history (commits from each member's own account, pull requests),
+- Evidence the instructor checks: git history (commits from each member's linked account, pull requests — summarized on the LMS),
   `docs/ai-log.md` entries per member, and answers in the oral defense.
 - Oral-defense questions target the parts each member **claims**.
 - A member with no verifiable contribution (no commits/PRs and unable to explain the parts they claim) may receive a
