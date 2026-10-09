@@ -1,7 +1,7 @@
 # Assignment Brief & Grading Policy — Service-Oriented Software Development (INT1448)
 
-**Instructor:** Dr. Hung N. Dang (Đặng Ngọc Hùng) — hungdn@ptit.edu.vn
-**Faculty:** Information Technology 1 — Posts and Telecommunications Institute of Technology (PTIT)
+**Instructor:** Dr. Hung N. Dang (Đặng Ngọc Hùng) — hungdn@ptit.edu.vn  
+**Faculty:** Information Technology 1 — Posts and Telecommunications Institute of Technology (PTIT)  
 **Version:** 1.0.0 (2026-10-09) — see the repository tags for later versions
 
 > ⚠️ **Official document — read-only.** This file is the assignment brief and grading policy issued by the instructor.
