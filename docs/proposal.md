@@ -14,7 +14,7 @@
 ## 2. Problem
 
 - What problem are you solving, and **who** has it?
-- How is it solved today (existing apps/protocols)? Why is that not good enough for your scenario?
+- How is it solved today (existing solutions)? Why is that not good enough for your scenario?
 
 ## 3. Idea
 
