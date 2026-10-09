@@ -27,17 +27,10 @@ flowchart LR
 
 ---
 
-## Step 1 — GitHub account and Git identity
+## Step 1 — GitHub account
 
-1. Use **one** GitHub account for the whole course (create one at https://github.com/signup if needed).
-   Set your real name in your GitHub profile so the instructor can recognise you.
-2. Tell Git who you are — use the **same email as your GitHub account**, otherwise your commits are not linked to
-   you and do not count as evidence of your contribution:
-
-```bash
-git config --global user.name  "Your Full Name"
-git config --global user.email "the-email-on-your-github-account@example.com"
-```
+Use the GitHub account you **linked to your student ID on the LMS**, for the whole course, and commit and push only
+with that account. The LMS uses it to recognise your commits and pull requests as your contribution.
 
 ---
 
@@ -123,7 +116,7 @@ git push -u origin docs/team-info
 4. Open a **Pull Request** to `main` on GitHub, ask a teammate to review it, then merge.
 
 From now on, work the same way: **one branch per task → pull request → review → merge**.
-Every member commits from their own account — your commits and pull requests are the evidence of your contribution.
+Every member commits from their own linked account — your commits and pull requests are the evidence of your contribution.
 
 ---
 
@@ -162,7 +155,7 @@ Keep the `LICENSE` file and the "Based on …" line at the bottom of `README.md`
 | `git push` rejected later in the project | Teammates pushed before you | `git pull --rebase`, then push again |
 | `Repository not found` | Wrong URL, or you have not accepted the invitation yet | Check the URL from the LMS; accept the invitation (email or https://github.com/notifications) |
 | `! [rejected] main -> main (fetch first)` on the first push | The team repository is not empty (e.g., someone added a README) | Ask the instructor to reset it, or `git pull origin main --allow-unrelated-histories`, resolve, push |
-| Commits show a different or unknown author | `user.email` does not match your GitHub account | Redo Step 1; fix future commits from then on |
+| Your commits do not show up as yours on the LMS | Commits made with another GitHub account or an email not on your linked account | Use your linked account; check `git config user.email` |
 | `Cannot connect to the Docker daemon` | Docker Desktop is not running | Start Docker Desktop and wait until it is ready |
 | `port is already allocated` | Another program uses the port (e.g., 8080) | Stop that program, or change the port in `.env` |
 | Project work pushed to your **public fork** by mistake | Wrong remote | Push it to the team repository, then delete the fork (Settings → Delete) and fork again; tell the instructor |
