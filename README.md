@@ -4,7 +4,7 @@
 >
 > *One-sentence pitch: what your system does and for whom.*
 
-📜 Assignment brief & grading: [`INSTRUCTION.md`](INSTRUCTION.md) · 🚀 Setup & workflow: [`GETTING_STARTED.md`](GETTING_STARTED.md)
+👋 **New here? Read first:** [`docs/student-guide.md`](docs/student-guide.md) · 📜 Brief & grading: [`INSTRUCTION.md`](INSTRUCTION.md) · 🚀 Workflow: [`GETTING_STARTED.md`](GETTING_STARTED.md)
 
 > **Template note:** replace every *(italic placeholder)* below. Sections marked **(mandatory)** are required for grading.
 
