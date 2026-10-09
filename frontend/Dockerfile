@@ -1,6 +1,6 @@
 # Frontend — Dockerfile
 # Replace with your actual setup.
-# See .ai/prompts/create-dockerfile.md for templates (React, Vue, Angular, static, SSR).
+# Language guides: https://docs.docker.com/guides/ (pick your stack).
 #
 # Requirements: expose port 3000, production-ready build.
 

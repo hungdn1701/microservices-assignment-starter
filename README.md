@@ -1,32 +1,48 @@
 # Project Name
 
-[![Stars](https://img.shields.io/github/stars/hungdn1701/microservices-assignment-starter?style=social)](https://github.com/hungdn1701/microservices-assignment-starter/stargazers)
-[![Forks](https://img.shields.io/github/forks/hungdn1701/microservices-assignment-starter?style=social)](https://github.com/hungdn1701/microservices-assignment-starter/network/members)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+> **Course:** Service-Oriented Software Development (INT1448) · PTIT · Instructor: Dr. Hung N. Dang
+>
+> *One-sentence pitch: what your system does and for whom.*
 
-> Brief description of the business process being automated and the service-oriented solution.
+📜 Assignment brief & grading: [`INSTRUCTION.md`](INSTRUCTION.md) · 🚀 Setup & workflow: [`GETTING_STARTED.md`](GETTING_STARTED.md)
 
-> **New to this repo?** See [`GETTING_STARTED.md`](GETTING_STARTED.md) for setup instructions, workflow guide, and submission checklist.
-
----
-
-## Team Members
-
-| Name | Student ID | Role | Contribution |
-|------|------------|------|-------------|
-|      |            |      |             |
+> **Template note:** replace every *(italic placeholder)* below. Sections marked **(mandatory)** are required for grading.
 
 ---
 
-## Business Process
+## 1. Team (mandatory)
 
-*(Summarize the **one business process** being automated — domain, actors, scope. Example: "Customer places an order and receives delivery in the Online Food Delivery domain.")*
+| # | Full name | Student ID | Class | GitHub | Role |
+|:-:|-----------|:----------:|:-----:|--------|------|
+| 1 | | | | @ | |
+| 2 | | | | @ | |
+| 3 | | | | @ | |
+
+**Business process:** *(e.g., "Customer places a food order and receives delivery")*
 
 ---
 
-## Architecture
+## 2. Problem & Idea (mandatory)
 
-*(Paste or update the architecture diagram from [`docs/architecture.md`](docs/architecture.md) here.)*
+- **Problem:** *(What problem are you solving? Who has it?)*
+- **Our idea:** *(Your solution in 2–3 sentences.)*
+- **Actors & scope:** *(Who takes part; where the process starts and ends.)*
+- **What makes it non-trivial:** *(e.g., a multi-service transaction, availability limits, async notifications.)*
+- **Out of scope:** *(What you deliberately do not build.)*
+
+Full proposal: [`docs/proposal.md`](docs/proposal.md)
+
+---
+
+## 3. Features
+
+- [ ] *(Process step / capability 1)*
+- [ ] *(Process step / capability 2)*
+- [ ] *(Process step / capability 3)*
+
+---
+
+## 4. Architecture
 
 ```mermaid
 graph LR
@@ -38,42 +54,89 @@ graph LR
     SB --> DB2[(Database B)]
 ```
 
-| Component     | Responsibility | Tech Stack | Port |
-|---------------|----------------|------------|------|
-| **Frontend**  |                |            | 3000 |
-| **Gateway**   |                |            | 8080 |
-| **Service A** |                |            | 5001 |
-| **Service B** |                |            | 5002 |
+| Component | Responsibility | Tech stack | Host port | Owner |
+|-----------|----------------|------------|:---------:|-------|
+| Frontend | | | 3000 | |
+| Gateway | | | 8080 | |
+| *(Service A — rename)* | | | 5001 | |
+| *(Service B — rename)* | | | 5002 | |
+
+Details: [`docs/architecture.md`](docs/architecture.md) · API contracts: [`docs/api-specs/`](docs/api-specs/)
 
 ---
 
-## Quick Start
+## 5. Quick Start
 
 ```bash
-docker compose up --build
+cp .env.example .env            # or: make init
+docker compose up --build       # or: make up
+make smoke                      # health checks of all components
 ```
 
-Verify: `curl http://localhost:8080/health`
-
-> For full setup instructions, prerequisites, and development commands, see [`GETTING_STARTED.md`](GETTING_STARTED.md).
+*(Add how to open the frontend and run through the business process.)*
 
 ---
 
-## Documentation
+## 6. Demo & Evidence
 
-| Document | Description |
-|----------|-------------|
-| [`GETTING_STARTED.md`](GETTING_STARTED.md) | Setup, workflow, submission checklist |
-| [`docs/analysis-and-design.md`](docs/analysis-and-design.md) | Analysis & Design — Step-by-Step Action approach |
-| [`docs/analysis-and-design-ddd.md`](docs/analysis-and-design-ddd.md) | Analysis & Design — Domain-Driven Design approach |
-| [`docs/architecture.md`](docs/architecture.md) | Architecture patterns, components & deployment |
-| [`docs/api-specs/`](docs/api-specs/) | OpenAPI 3.0 specifications for each service |
+*(Screenshots or request/response logs of the business process end-to-end. Put images in `docs/asset/`.)*
 
 ---
 
-## License
+## 7. Documentation
 
-This project uses the [MIT License](LICENSE).
+| Document | Content |
+|----------|---------|
+| [`docs/proposal.md`](docs/proposal.md) | M1 — problem, idea, scope, plan |
+| [`docs/analysis-and-design.md`](docs/analysis-and-design.md) **or** [`docs/analysis-and-design-ddd.md`](docs/analysis-and-design-ddd.md) | Analysis & service design (one approach) |
+| [`docs/architecture.md`](docs/architecture.md) | Patterns, components, communication, deployment |
+| [`docs/api-specs/`](docs/api-specs/) | OpenAPI 3.0 specifications |
+| [`docs/ai-log.md`](docs/ai-log.md) | AI usage log |
 
-> Template by [Hung Dang](https://github.com/hungdn1701) · [Template guide](GETTING_STARTED.md)
+---
 
+## 8. AI Disclosure (mandatory)
+
+> Policy: [`INSTRUCTION.md` §7](INSTRUCTION.md#7-ai-usage-policy). Disclosing AI use never lowers your score — hiding it does.
+
+### 8.1 Summary
+
+| Tool / model | Used by | Used for | Files / modules | Level |
+|--------------|---------|----------|-----------------|-------|
+| *(e.g., Claude)* | *(member)* | *(e.g., draft OpenAPI spec, review service decomposition)* | *(paths)* | *(Assist / Co-write / Generated)* |
+
+**Levels:** **Assist** — explanations, suggestions, review; we wrote the code. **Co-write** — AI drafted parts, we
+substantially rewrote. **Generated** — AI wrote most of it; we reviewed, tested and can explain it.
+
+### 8.2 Decisions we made ourselves
+
+*(Key design decisions made by the team, possibly after comparing AI-suggested options. E.g., "Merged Menu and
+Restaurant into one service because they always change together in our process.")*
+
+### 8.3 Where AI was wrong — and how we found out
+
+*(At least one concrete example: a bug, wrong assumption or bad design from AI, and how you detected and fixed it.)*
+
+### 8.4 Full log
+
+See [`docs/ai-log.md`](docs/ai-log.md).
+
+---
+
+## 9. Contribution (mandatory)
+
+| Member | Owns (modules / documents) | Key PRs / commits | AI-assisted parts | Contribution % |
+|--------|----------------------------|-------------------|-------------------|:--------------:|
+| | *(e.g., `services/order-service/`, `docs/api-specs/order-service.yaml`)* | *(e.g., #3, #7)* | *(e.g., gateway routing — Generated)* | |
+| | | | | |
+| | | | | |
+
+We confirm the table above is accurate and agreed by all members:
+
+- [ ] Member 1
+- [ ] Member 2
+- [ ] Member 3
+
+---
+
+<sub>Based on the [microservices-assignment-starter](https://github.com/hungdn1701/microservices-assignment-starter) template by Hung N. Dang.</sub>

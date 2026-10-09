@@ -212,7 +212,7 @@ C4Container
 - Orchestrated via Docker Compose
 - Single command: `docker compose up --build`
 
-> 💡 **Service communication inside Docker Compose:** Use Docker Compose service names as hostnames (e.g., `http://service-a:5001`), not `localhost`. The Gateway handles all inbound external traffic on port 8080.
+> 💡 **Service communication inside Docker Compose:** Use Docker Compose service names as hostnames and the **container** port (e.g., `http://service-a:5000`), not `localhost` or the host-published port (5001). The Gateway handles all inbound external traffic on port 8080.
 
 ---
 

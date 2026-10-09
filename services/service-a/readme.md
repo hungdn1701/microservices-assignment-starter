@@ -53,7 +53,7 @@ service-a/
 
 | Variable   | Description         | Default   |
 |------------|---------------------|-----------|
-| `DB_HOST`  | Database hostname   | localhost |
+| `DB_HOST`  | Database hostname (Compose service name) | service-a-db |
 | `DB_PORT`  | Database port       | 5432      |
 
 

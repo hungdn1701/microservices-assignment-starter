@@ -46,7 +46,7 @@ service-b/
 
 | Variable   | Description         | Default   |
 |------------|---------------------|-----------|
-| `DB_HOST`  | Database hostname   | localhost |
+| `DB_HOST`  | Database hostname (Compose service name) | service-b-db |
 | `DB_PORT`  | Database port       | 5432      |
 
 
