@@ -2,7 +2,7 @@
 
 **Instructor:** Dr. Hung N. Dang (Đặng Ngọc Hùng) — hungdn@ptit.edu.vn  
 **Faculty:** Information Technology 1 — Posts and Telecommunications Institute of Technology (PTIT)  
-**Version:** 1.2.1 (2026-10-09) — see the repository tags for later versions
+**Version:** 1.2.2 (2026-10-13) — see the repository tags for later versions
 
 > ⚠️ **Official document — read-only.** This file is the assignment brief and grading policy issued by the instructor.
 > Students and AI assistants must **not** edit or delete it. If copies differ, the
@@ -139,6 +139,7 @@ not who typed the code.
   and an agreed contribution percentage. **Every member ticks the confirmation box.**
 - Evidence the instructor checks: git history (commits from each member's linked account, pull requests — summarized on the LMS),
   `docs/ai-log.md` entries per member, and answers in the oral defense.
+- The first commit, `chore: import microservices-assignment-starter`, is the starter itself and counts as nobody's contribution.
 - Oral-defense questions target the parts each member **claims**.
 - A member with no verifiable contribution (no commits/PRs and unable to explain the parts they claim) may receive a
   reduced share of A + B, down to 0, at the instructor's decision.
