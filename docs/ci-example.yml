@@ -1,0 +1,28 @@
+# CI example — NOT enabled. GitHub only runs workflows placed under .github/workflows/.
+# Turn it on once your services have code worth checking:
+#   mkdir -p .github/workflows && cp docs/ci-example.yml .github/workflows/ci.yml
+# Why it is off by default: an empty template has nothing to test, and every fork running
+# CI on each push spends GitHub Actions minutes.
+#
+# It builds and starts the whole system, then health-checks every component that has code
+# (same as `make up-d && make smoke`). Add each service's own tests as extra steps.
+
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - run: cp .env.example .env
+      - run: docker compose up --build -d
+      - run: bash scripts/smoke-test.sh
+      # - run: <your test command per service, e.g. cd services/service-a && ./mvnw test>
+      - if: failure()
+        run: docker compose logs --tail=100
+      - if: always()
+        run: docker compose down -v

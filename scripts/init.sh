@@ -39,11 +39,7 @@ else
   exit 1
 fi
 
-# --- 4. Build containers ---
-echo ""
-echo "📦 Building containers..."
-cd "$PROJECT_DIR"
-docker compose build
+# No build here: the Dockerfiles are placeholders until you pick a stack (next steps 2-3).
 
 echo ""
 echo "==========================================="

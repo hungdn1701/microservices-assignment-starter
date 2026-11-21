@@ -94,6 +94,8 @@ flowchart LR
 | `make down` | Stop everything |
 | `make clean` | Remove containers, volumes and images |
 
+CI is not enabled by default. When you have code, copy `docs/ci-example.yml` to `.github/workflows/ci.yml`.
+
 ---
 
 ## 6. Team Git Workflow
